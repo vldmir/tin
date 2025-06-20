@@ -24,7 +24,7 @@ final class Denmark extends CountryHandler
     /**
      * @var string
      */
-    public const PATTERN = '[0-3]\d[0-1]\d{8}';
+    public const PATTERN = '[0-3]\d[0-1]\d{3}\d{4}';
 
     /**
      * @var string
