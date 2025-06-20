@@ -170,18 +170,24 @@ final class TIN
      */
     public static function getMaskForCountry(string $countryCode): array
     {
-        // Use a dummy TIN to create the instance
-        $tin = self::from($countryCode, '123456789');
-        
-        try {
-            return [
-                'mask' => $tin->getInputMask(),
-                'placeholder' => $tin->getPlaceholder(),
-                'country' => $countryCode,
-            ];
-        } catch (TINException $e) {
+        // Check if country is supported first
+        if (!self::isCountrySupported($countryCode)) {
             throw TINException::invalidCountry($countryCode);
         }
+        
+        // Create handler directly without TIN validation
+        foreach (self::$algorithms as $algorithm) {
+            if ($algorithm::supports($countryCode)) {
+                $handler = new $algorithm();
+                return [
+                    'mask' => $handler->getInputMask(),
+                    'placeholder' => $handler->getPlaceholder(),
+                    'country' => $countryCode,
+                ];
+            }
+        }
+        
+        throw TINException::invalidCountry($countryCode);
     }
 
     /**
