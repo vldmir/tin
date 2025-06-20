@@ -24,6 +24,16 @@ final class Netherlands extends CountryHandler
      */
     public const PATTERN = '\d{9}';
 
+    /**
+     * @var string
+     */
+    public const MASK = '999-999-999';
+
+    public function getPlaceholder(): string
+    {
+        return '123-456-789';
+    }
+
     protected function hasValidRule(string $tin): bool
     {
         $c1 = $this->digitAt($tin, 0);

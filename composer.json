@@ -1,9 +1,14 @@
 {
-    "name": "loophp/tin",
-    "description": "Provide validation tools for Taxpayer Identification Number",
+    "name": "vldmir/tin",
+    "description": "Enhanced Taxpayer Identification Number validator with input masks (fork of loophp/tin)",
     "license": "MIT",
     "type": "library",
+    "keywords": ["tin", "tax", "validation", "input-mask", "bsn", "nino", "ssn"],
     "authors": [
+        {
+            "name": "Volodymyr Romantsov",
+            "email": "vld.romantsov@gmail.com"
+        },
         {
             "name": "Thomas Portelange",
             "email": "thomas@lekoala.be"
@@ -13,10 +18,10 @@
             "email": "pol.dellaiera@protonmail.com"
         }
     ],
-    "homepage": "https://github.com/loophp/tin",
+    "homepage": "https://github.com/vldmir/tin",
     "support": {
-        "issues": "https://github.com/loophp/tin/issues",
-        "source": "https://github.com/loophp/tin"
+        "issues": "https://github.com/vldmir/tin/issues",
+        "source": "https://github.com/vldmir/tin"
     },
     "require": {
         "php": ">= 8.1"

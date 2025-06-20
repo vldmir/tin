@@ -19,6 +19,16 @@ final class Romania extends CountryHandler
      */
     public const LENGTH = 13;
 
+    /**
+     * @var string
+     */
+    public const PATTERN = '[1-8]\d{2}[0-1]\d[0-3]\d{6}';
+
+    /**
+     * @var string
+     */
+    public const MASK = '9999999999999';
+
     protected function hasValidDate(string $tin): bool
     {
         $year = (int) (substr($tin, 1, 2));
@@ -46,5 +56,10 @@ final class Romania extends CountryHandler
         }
 
         return true;
+    }
+
+    public function getPlaceholder(): string
+    {
+        return '1630615123457';
     }
 }

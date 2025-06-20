@@ -27,6 +27,11 @@ final class Luxembourg extends CountryHandler
     public const PATTERN = '(1[89]|20)\d{2}(0[1-9]|1[012])(0[1-9]|[1-2][0-9]|3[0-1])\d{5}';
 
     /**
+     * @var string
+     */
+    public const MASK = '9999999999999';
+
+    /**
      * @var array<int, array<int, int>>
      */
     private static $D = [
@@ -117,5 +122,10 @@ final class Luxembourg extends CountryHandler
         }
 
         return 0 === $check;
+    }
+
+    public function getPlaceholder(): string
+    {
+        return '1893120105732';
     }
 }

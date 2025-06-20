@@ -46,6 +46,11 @@ final class Sweden extends CountryHandler
      */
     public const PATTERN_4 = '(1[89]|20)\d{2}(0[1-9]|1[012])(6[1-9]|[7-8][0-9]|9[0-1])\d{4}';
 
+    /**
+     * @var string
+     */
+    public const MASK = '999999-9999';
+
     protected function hasValidLength(string $tin): bool
     {
         return $this->isFollowLength1And2($tin) || $this->isFollowLength3And4($tin);
@@ -208,5 +213,10 @@ final class Sweden extends CountryHandler
         }
 
         return 0 === $c12;
+    }
+
+    public function getPlaceholder(): string
+    {
+        return '640823-3234';
     }
 }

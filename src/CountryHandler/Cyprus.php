@@ -24,7 +24,17 @@ final class Cyprus extends CountryHandler
     /**
      * @var string
      */
-    public const PATTERN = '[0,9]\d{7}[A-Z]';
+    public const PATTERN = '\d{8}[a-zA-Z]';
+
+    /**
+     * @var string
+     */
+    public const MASK = '99999999A';
+
+    public function getPlaceholder(): string
+    {
+        return '12345678L';
+    }
 
     protected function hasValidRule(string $tin): bool
     {

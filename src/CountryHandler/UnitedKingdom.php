@@ -36,6 +36,11 @@ final class UnitedKingdom extends CountryHandler
      */
     public const PATTERN_2 = '[a-ceg-hj-pr-tw-zA-CEG-HJ-PR-TW-Z][a-ceg-hj-npr-tw-zA-CEG-HJ-NPR-TW-Z]\d{6}[abcdABCD ]';
 
+    /**
+     * @var string
+     */
+    public const MASK = 'AA999999A';
+
     protected function hasValidLength(string $tin): bool
     {
         $tin = str_pad($tin, 9, ' ', STR_PAD_RIGHT);
@@ -83,5 +88,10 @@ final class UnitedKingdom extends CountryHandler
         $c1c2 = substr($tin, 0, 2);
 
         return 'GB' !== $c1c2 && 'NK' !== $c1c2 && 'TN' !== $c1c2 && 'ZZ' !== $c1c2;
+    }
+
+    public function getPlaceholder(): string
+    {
+        return 'AB123456C';
     }
 }

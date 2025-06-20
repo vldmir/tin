@@ -24,6 +24,11 @@ final class Lithuania extends CountryHandler
      */
     public const PATTERN = '[1-6]\d{2}[0-1]\d[0-3]\d{5}';
 
+    /**
+     * @var string
+     */
+    public const MASK = '99999999999';
+
     protected function hasValidRule(string $tin): bool
     {
         $sum = 0;
@@ -121,5 +126,10 @@ final class Lithuania extends CountryHandler
             default:
                 return -1;
         }
+    }
+
+    public function getPlaceholder(): string
+    {
+        return '33309240064';
     }
 }

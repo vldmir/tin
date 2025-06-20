@@ -34,6 +34,11 @@ final class Poland extends CountryHandler
      */
     public const PATTERN_2 = '\d{11}';
 
+    /**
+     * @var string
+     */
+    public const MASK = '99999999999';
+
     protected function hasValidDateWhenPattern2(string $tin): bool
     {
         $year = (int) (substr($tin, 0, 2));
@@ -159,5 +164,10 @@ final class Poland extends CountryHandler
         $lastDigit = $sum % 10;
 
         return 10 - $lastDigit === $this->digitAt($tin, 10);
+    }
+
+    public function getPlaceholder(): string
+    {
+        return '85071803874';
     }
 }

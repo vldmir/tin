@@ -24,6 +24,11 @@ final class Hungary extends CountryHandler
      */
     public const PATTERN = '8\d{9}';
 
+    /**
+     * @var string
+     */
+    public const MASK = '9999999999';
+
     protected function hasValidRule(string $tin): bool
     {
         $c10 = $this->digitAt($tin, 9);
@@ -36,5 +41,10 @@ final class Hungary extends CountryHandler
         $remainderBy11 = $sum % 11;
 
         return $remainderBy11 === $c10;
+    }
+
+    public function getPlaceholder(): string
+    {
+        return '8071592153';
     }
 }

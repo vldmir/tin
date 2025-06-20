@@ -24,6 +24,11 @@ final class Finland extends CountryHandler
      */
     public const PATTERN = '[0-3]\d[0-1]\d{3}[+-A]\d{3}[0-9A-Z]';
 
+    /**
+     * @var string
+     */
+    public const MASK = '999999-999A';
+
     protected function hasValidDate(string $tin): bool
     {
         $day = (int) (substr($tin, 0, 2));
@@ -124,5 +129,10 @@ final class Finland extends CountryHandler
             default:
                 return ' ';
         }
+    }
+
+    public function getPlaceholder(): string
+    {
+        return '131052-308T';
     }
 }

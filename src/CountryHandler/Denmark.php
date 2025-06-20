@@ -24,7 +24,12 @@ final class Denmark extends CountryHandler
     /**
      * @var string
      */
-    public const PATTERN = '[0-3]\d[0-1]\d{3}\d{4}';
+    public const PATTERN = '[0-3]\d[0-1]\d{8}';
+
+    /**
+     * @var string
+     */
+    public const MASK = '999999-9999';
 
     protected function hasValidDate(string $tin): bool
     {
@@ -105,5 +110,10 @@ final class Denmark extends CountryHandler
         }
 
         return 11 - $remainderBy11 === $c10;
+    }
+
+    public function getPlaceholder(): string
+    {
+        return '211062-5629';
     }
 }

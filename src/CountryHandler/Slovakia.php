@@ -23,6 +23,11 @@ final class Slovakia extends CountryHandler
 
     public const PATTERN = '([1-9]\d[234789]\d{7})|(\d{2}[0156]\d[0-3]\d{4,5})';
 
+    /**
+     * @var string
+     */
+    public const MASK = '9999999999';
+
     public function hasValidRule(string $tin): bool
     {
         if (strlen($tin) === 10) {
@@ -46,5 +51,10 @@ final class Slovakia extends CountryHandler
         }
 
         return $hasValidLength;
+    }
+
+    public function getPlaceholder(): string
+    {
+        return '7103192745';
     }
 }

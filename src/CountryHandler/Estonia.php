@@ -24,6 +24,11 @@ final class Estonia extends CountryHandler
      */
     public const PATTERN = '[1-6]\d{2}[0-1]\d[0-3]\d{5}';
 
+    /**
+     * @var string
+     */
+    public const MASK = '99999999999';
+
     protected function hasValidDate(string $tin): bool
     {
         $year = (int) (substr($tin, 1, 2));
@@ -79,5 +84,10 @@ final class Estonia extends CountryHandler
         $remainderBy11 = $sum % 11;
 
         return (10 > $remainderBy11 && $remainderBy11 === $c11) || (10 === $remainderBy11 && 0 === $c11);
+    }
+
+    public function getPlaceholder(): string
+    {
+        return '37605030299';
     }
 }

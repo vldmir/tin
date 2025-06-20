@@ -24,6 +24,11 @@ final class Bulgaria extends CountryHandler
      */
     public const PATTERN = '\d{10}';
 
+    /**
+     * @var string
+     */
+    public const MASK = '9999999999';
+
     protected function hasValidDate(string $tin): bool
     {
         $year = (int) (substr($tin, 0, 2));
@@ -61,5 +66,10 @@ final class Bulgaria extends CountryHandler
         }
 
         return $remainderBy11 === $c10;
+    }
+
+    public function getPlaceholder(): string
+    {
+        return '7523169263';
     }
 }
