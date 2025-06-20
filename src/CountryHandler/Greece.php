@@ -18,4 +18,19 @@ final class Greece extends CountryHandler
      * @var int
      */
     public const LENGTH = 9;
+
+    /**
+     * @var string
+     */
+    public const PATTERN = '\d{9}';
+
+    /**
+     * @var string
+     */
+    public const MASK = '999999999';
+
+    public function getPlaceholder(): string
+    {
+        return '123456789';
+    }
 }

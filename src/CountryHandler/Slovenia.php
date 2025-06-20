@@ -24,6 +24,16 @@ final class Slovenia extends CountryHandler
      */
     public const PATTERN = '[1-9]\d{7}';
 
+    /**
+     * @var string
+     */
+    public const MASK = '99999999';
+
+    public function getPlaceholder(): string
+    {
+        return '15012557';
+    }
+
     protected function hasValidRule(string $tin): bool
     {
         return $this->isFollowRangeRule($tin) && $this->isFollowSloveniaRule($tin);

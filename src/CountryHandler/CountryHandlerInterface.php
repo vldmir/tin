@@ -27,6 +27,11 @@ interface CountryHandlerInterface
     public const PATTERN = '';
 
     /**
+     * @var string
+     */
+    public const MASK = '';
+
+    /**
      * Check if the algorithm supports the TIN.
      *
      * @param string $country
@@ -43,4 +48,20 @@ interface CountryHandlerInterface
      * @throws TINException
      */
     public function validate(string $tin): bool;
+
+    /**
+     * Get input mask for TIN format.
+     *
+     * @return string
+     *   Input mask (e.g., "999999999" or "AA999999A")
+     */
+    public function getInputMask(): string;
+
+    /**
+     * Get placeholder text for TIN input.
+     *
+     * @return string
+     *   Placeholder text (e.g., "123456789")
+     */
+    public function getPlaceholder(): string;
 }

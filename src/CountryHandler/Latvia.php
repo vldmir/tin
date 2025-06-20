@@ -19,6 +19,16 @@ final class Latvia extends CountryHandler
      */
     public const LENGTH = 11;
 
+    /**
+     * @var string
+     */
+    public const PATTERN = '[0-3]\d[0-1]\d{3}\d{5}';
+
+    /**
+     * @var string
+     */
+    public const MASK = '999999-99999';
+
     protected function hasValidDate(string $tin): bool
     {
         $c1c2 = substr($tin, 0, 2);
@@ -34,5 +44,10 @@ final class Latvia extends CountryHandler
         $y2 = checkdate($month, $day, 2000 + $year);
 
         return $y1 && $y2;
+    }
+
+    public function getPlaceholder(): string
+    {
+        return '161175-19997';
     }
 }

@@ -24,6 +24,11 @@ final class France extends CountryHandler
      */
     public const PATTERN = '[0-3]\d{12}';
 
+    /**
+     * @var string
+     */
+    public const MASK = '9 99 99 99 999 999';
+
     protected function hasValidRule(string $tin): bool
     {
         $number = (int) (substr($tin, 0, 10));
@@ -35,5 +40,10 @@ final class France extends CountryHandler
             (int) (substr($tin, 10, 13));
 
         return $remainderBy511 === $checkDigits;
+    }
+
+    public function getPlaceholder(): string
+    {
+        return '1 23 45 67 890 123';
     }
 }

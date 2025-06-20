@@ -24,6 +24,11 @@ final class Austria extends CountryHandler
      */
     public const PATTERN = '\d{9}';
 
+    /**
+     * @var string
+     */
+    public const MASK = '999999999';
+
     protected function hasValidRule(string $tin): bool
     {
         $c1 = $this->digitAt($tin, 0);
@@ -50,5 +55,10 @@ final class Austria extends CountryHandler
         $check = $this->getLastDigit(100 - $sum);
 
         return $c9 === $check;
+    }
+
+    public function getPlaceholder(): string
+    {
+        return '123456789';
     }
 }

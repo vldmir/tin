@@ -39,6 +39,11 @@ final class Italy extends CountryHandler
     // phpcs:enable
 
     /**
+     * @var string
+     */
+    public const MASK = 'AAAAAANNANNANAAA';
+
+    /**
      * @var array<int, string>
      */
     private $listSet = [];
@@ -295,5 +300,10 @@ final class Italy extends CountryHandler
             default:
                 return -1;
         }
+    }
+
+    public function getPlaceholder(): string
+    {
+        return 'RSSMRA85T10A562S';
     }
 }

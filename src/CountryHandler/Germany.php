@@ -36,6 +36,11 @@ final class Germany extends CountryHandler
      */
     public const PATTERN_2 = '[1-9]\d{10}';
 
+    /**
+     * @var string
+     */
+    public const MASK = '999 999 999 99';
+
     protected function hasValidLength(string $tin): bool
     {
         return $this->isFollowLength1($tin) || $this->isFollowLength2($tin);
@@ -226,5 +231,10 @@ final class Germany extends CountryHandler
     private function isFollowRuleGermany2(string $tin): bool
     {
         return $this->digitAt($tin, 10) === $this->calculateCheckDigit($tin);
+    }
+
+    public function getPlaceholder(): string
+    {
+        return '123 456 789 01';
     }
 }

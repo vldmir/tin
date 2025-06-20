@@ -127,6 +127,64 @@ final class TIN
     }
 
     /**
+     * Get input mask for the TIN country.
+     * 
+     * @throws TINException
+     */
+    public function getInputMask(): string
+    {
+        $parsedTin = $this->parse($this->slug, false);
+        $handler = $this->getAlgorithm($parsedTin['country']);
+        
+        return $handler->getInputMask();
+    }
+
+    /**
+     * Get placeholder text for the TIN country.
+     * 
+     * @throws TINException
+     */
+    public function getPlaceholder(): string
+    {
+        $parsedTin = $this->parse($this->slug, false);
+        $handler = $this->getAlgorithm($parsedTin['country']);
+        
+        return $handler->getPlaceholder();
+    }
+
+    /**
+     * Format input according to TIN mask.
+     * 
+     * @throws TINException
+     */
+    public function formatInput(string $input): string
+    {
+        $parsedTin = $this->parse($this->slug, false);
+        $handler = $this->getAlgorithm($parsedTin['country']);
+        
+        return $handler->formatInput($input);
+    }
+
+    /**
+     * Get mask and placeholder for a specific country.
+     */
+    public static function getMaskForCountry(string $countryCode): array
+    {
+        // Use a dummy TIN to create the instance
+        $tin = self::from($countryCode, '123456789');
+        
+        try {
+            return [
+                'mask' => $tin->getInputMask(),
+                'placeholder' => $tin->getPlaceholder(),
+                'country' => $countryCode,
+            ];
+        } catch (TINException $e) {
+            throw TINException::invalidCountry($countryCode);
+        }
+    }
+
+    /**
      * @throws TINException
      */
     private function getAlgorithm(string $country): CountryHandlerInterface

@@ -36,6 +36,11 @@ final class Ireland extends CountryHandler
      */
     public const PATTERN_2 = '\d{7}[a-wA-W]';
 
+    /**
+     * @var string
+     */
+    public const MASK = '9999999AA';
+
     protected function hasValidLength(string $tin): bool
     {
         return $this->isFollowLength1($tin) || $this->isFollowLength2($tin);
@@ -98,5 +103,10 @@ final class Ireland extends CountryHandler
         }
 
         return $this->getAlphabeticalPosition($toConv);
+    }
+
+    public function getPlaceholder(): string
+    {
+        return '1234567FA';
     }
 }

@@ -59,6 +59,11 @@ final class Spain extends CountryHandler
      */
     public const PATTERN_2 = '(^[ABCDEFGHJKLMNPQRSUVW])(\d{7})([' . self::CONTROL_2 . '\d]$)';
 
+    /**
+     * @var string
+     */
+    public const MASK = '99999999A';
+
     protected function hasValidPattern(string $tin): bool
     {
         return $this->isFollowPattern1($tin) || $this->isFollowPattern2($tin);
@@ -150,5 +155,10 @@ final class Spain extends CountryHandler
         $digit = (false === strpos(self::CONTROL_2, $tinChecksum));
 
         return $this->getChecksum($tinNumber, $digit) === $tinChecksum;
+    }
+
+    public function getPlaceholder(): string
+    {
+        return '12345678Z';
     }
 }

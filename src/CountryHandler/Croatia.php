@@ -24,6 +24,11 @@ final class Croatia extends CountryHandler
      */
     public const PATTERN = '\d{11}';
 
+    /**
+     * @var string
+     */
+    public const MASK = '99999999999';
+
     protected function hasValidRule(string $tin): bool
     {
         $rest = 0;
@@ -38,5 +43,10 @@ final class Croatia extends CountryHandler
         $lastDigit = $this->digitAt($tin, 10);
 
         return (1 === $rest && 0 === $lastDigit) || $lastDigit === $diff;
+    }
+
+    public function getPlaceholder(): string
+    {
+        return '12345678903';
     }
 }

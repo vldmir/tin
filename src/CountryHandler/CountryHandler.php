@@ -115,4 +115,67 @@ abstract class CountryHandler implements CountryHandlerInterface
 
         return '';
     }
+
+    /**
+     * Get input mask for TIN format.
+     * Override in child classes for custom masks.
+     */
+    public function getInputMask(): string
+    {
+        return static::MASK ?? str_repeat('9', static::LENGTH);
+    }
+
+    /**
+     * Get placeholder text for TIN input.
+     * Override in child classes for custom placeholders.
+     */
+    public function getPlaceholder(): string
+    {
+        $mask = $this->getInputMask();
+        return str_replace(['9', 'A', 'a'], ['1', 'A', 'a'], $mask);
+    }
+
+    /**
+     * Format TIN input according to mask (for display purposes).
+     */
+    public function formatInput(string $input): string
+    {
+        $mask = $this->getInputMask();
+        $normalized = $this->normalizeTin($input);
+        $result = '';
+        $inputIndex = 0;
+        
+        for ($i = 0; $i < strlen($mask) && $inputIndex < strlen($normalized); $i++) {
+            $maskChar = $mask[$i];
+            $inputChar = $normalized[$inputIndex] ?? '';
+            
+            if ($maskChar === '9') {
+                if (ctype_digit($inputChar)) {
+                    $result .= $inputChar;
+                    $inputIndex++;
+                } else {
+                    break;
+                }
+            } elseif ($maskChar === 'A') {
+                if (ctype_alpha($inputChar)) {
+                    $result .= strtoupper($inputChar);
+                    $inputIndex++;
+                } else {
+                    break;
+                }
+            } elseif ($maskChar === 'a') {
+                if (ctype_alpha($inputChar)) {
+                    $result .= strtolower($inputChar);
+                    $inputIndex++;
+                } else {
+                    break;
+                }
+            } else {
+                // Separator character (space, dash, etc.)
+                $result .= $maskChar;
+            }
+        }
+        
+        return $result;
+    }
 }

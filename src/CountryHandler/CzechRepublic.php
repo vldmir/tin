@@ -36,6 +36,11 @@ final class CzechRepublic extends CountryHandler
      */
     public const PATTERN = '^(?<year>\d{2})(?<month>\d{2})(?<day>\d{2})(?<slash>\/)?(?<sequence>\d{3})(?<modulo>\d{1})?$';
 
+    /**
+     * @var string
+     */
+    public const MASK = '999999/9999';
+
     // phpcs:enable
 
     /**
@@ -149,5 +154,10 @@ final class CzechRepublic extends CountryHandler
     private function isFollowLength2(string $tin): bool
     {
         return $this->matchLength($tin, self::LENGTH_2);
+    }
+
+    public function getPlaceholder(): string
+    {
+        return '855230/3174';
     }
 }

@@ -24,6 +24,11 @@ final class Portugal extends CountryHandler
      */
     public const PATTERN = '\d{9}';
 
+    /**
+     * @var string
+     */
+    public const MASK = '999999999';
+
     protected function hasValidRule(string $tin): bool
     {
         $c1 = $this->digitAt($tin, 0);
@@ -48,5 +53,10 @@ final class Portugal extends CountryHandler
         }
 
         return 0 === $c9;
+    }
+
+    public function getPlaceholder(): string
+    {
+        return '123456789';
     }
 }

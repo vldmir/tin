@@ -24,6 +24,11 @@ final class Belgium extends CountryHandler
      */
     public const PATTERN = '\d{2}[0-1]\d[0-3]\d{6}';
 
+    /**
+     * @var string
+     */
+    public const MASK = '99.99.99-999.99';
+
     protected function hasValidDate(string $tin): bool
     {
         return 0 !== $this->getDateType($tin);
@@ -84,5 +89,10 @@ final class Belgium extends CountryHandler
         $dateType = $this->getDateType($tin);
 
         return $this->isFollowBelgiumRule2($tin) && 2 <= $dateType;
+    }
+
+    public function getPlaceholder(): string
+    {
+        return '85.07.30-033.61';
     }
 }
