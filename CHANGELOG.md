@@ -5,6 +5,37 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0](https://github.com/vldmir/tin/compare/1.1.1...2.0.0) - 2025-06-23
+
+### Added
+
+- **Input Mask Support**: Added `getInputMask()` method to provide format masks for TIN input fields
+- **Placeholder Generation**: Added `getPlaceholder()` method to generate example values for input fields
+- **Input Formatting**: Added `formatInput()` method to format user input according to TIN mask
+- **TIN Type Identification**: Added `identifyTinType()` method to identify specific TIN types (DNI, NIE, CIF, etc.)
+- **TIN Types API**: Added `getTinTypes()` and `getTinTypesForCountry()` methods to get available TIN types
+- **Static Methods**: Added `getMaskForCountry()` for getting mask info without TIN validation
+- **Docker Support**: Complete Docker setup with PHP 8.3, pcov extension, and Composer
+- **Enhanced Documentation**: Updated README and DOCKER.md with comprehensive usage examples
+
+### Changed
+
+- **PHP Version**: Updated minimum PHP requirement to 8.1
+- **Enhanced Error Messages**: Improved exception messages with more descriptive information
+- **Code Coverage**: Added pcov extension for comprehensive test coverage reporting
+
+### Fixed
+
+- **Array to String Conversion**: Fixed display issue in test script for TIN type information
+- **Docker Compatibility**: Resolved PHP version conflicts and missing extensions
+- **Git Ownership**: Fixed repository ownership issues in Docker containers
+
+### Technical
+
+- **Docker Configuration**: Added Dockerfile with PHP 8.3 and required extensions
+- **Composer Integration**: Updated composer.json with new dependencies and scripts
+- **Test Infrastructure**: Enhanced test suite with better coverage and Docker support
+
 ## [1.1.1](https://github.com/loophp/tin/compare/1.1.0...1.1.1)
 
 ### Fixed
