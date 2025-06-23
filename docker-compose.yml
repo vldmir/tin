@@ -1,0 +1,28 @@
+services:
+  tin-php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tin-php
+    working_dir: /var/www/html
+    volumes:
+      - .:/var/www/html
+    command: tail -f /dev/null
+    networks:
+      - tin-network
+
+  tin-composer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tin-composer
+    working_dir: /var/www/html
+    volumes:
+      - .:/var/www/html
+    command: composer install
+    networks:
+      - tin-network
+
+networks:
+  tin-network:
+    driver: bridge

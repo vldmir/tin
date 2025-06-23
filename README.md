@@ -53,6 +53,8 @@ the algorithm and the tests.
 
 ## Usage & API
 
+### Basic Validation
+
 To simply check the validity of a TIN number:
 
 ```php
@@ -81,6 +83,68 @@ try {
     // do something with the exception.
 }
 ```
+
+### Input Masks and Formatting
+
+The library provides input masks and formatting capabilities for TIN numbers:
+
+```php
+<?php
+
+use loophp\Tin\TIN;
+
+// Get the input mask for a country
+$tin = TIN::fromSlug('be71102512345');
+$mask = $tin->getInputMask(); // Returns: "99.99.99-999.99"
+
+// Get a placeholder example
+$placeholder = $tin->getPlaceholder(); // Returns: "85.07.30-033.61"
+
+// Format raw input according to the country's mask
+$formatted = $tin->formatInput('71102512345'); // Returns: "71.10.25-123.45"
+
+// Get mask information without creating a TIN instance
+$maskInfo = TIN::getMaskForCountry('BE');
+// Returns: ['mask' => '99.99.99-999.99', 'placeholder' => '85.07.30-033.61']
+```
+
+### TIN Type Identification
+
+Different countries may have multiple types of TINs. The library can identify and categorize them:
+
+```php
+<?php
+
+use loophp\Tin\TIN;
+
+// Get all TIN types for a country
+$types = TIN::getTinTypesForCountry('ES');
+// Returns information about DNI, NIE, and CIF types
+
+// Identify the type of a specific TIN
+$tin = TIN::fromSlug('es12345678Z');
+$type = $tin->identifyTinType(); // Returns: "DNI"
+
+// Get TIN types for the current TIN's country
+$allTypes = $tin->getTinTypes();
+```
+
+### Examples by Country
+
+| Country | Mask | Placeholder | TIN Types |
+|---------|------|-------------|-----------|
+| Belgium (BE) | `99.99.99-999.99` | `85.07.30-033.61` | - |
+| Spain (ES) | `99999999A` | `12345678Z` | DNI, NIE, CIF |
+| Germany (DE) | `999 999 999 99` | `123 456 789 01` | IdNr, StNr |
+| United Kingdom (UK) | `AA999999A` | `AB123456C` | UTR, NINO |
+| France (FR) | `99 99 999 999 999` | `12 34 567 890 123` | - |
+| Italy (IT) | `AAAAAA99A99A999A` | `RSSMRA80A01H501U` | - |
+
+**Mask Format:**
+- `9` - Digit (0-9)
+- `A` - Uppercase letter
+- `a` - Lowercase letter
+- Other characters (`.`, `-`, space) - Separators
 
 ## Strict Mode
 

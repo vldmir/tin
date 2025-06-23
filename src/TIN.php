@@ -191,6 +191,56 @@ final class TIN
     }
 
     /**
+     * Get all TIN types for a specific country.
+     * 
+     * @throws TINException
+     */
+    public static function getTinTypesForCountry(string $countryCode): array
+    {
+        // Check if country is supported first
+        if (!self::isCountrySupported($countryCode)) {
+            throw TINException::invalidCountry($countryCode);
+        }
+        
+        // Create handler directly without TIN validation
+        foreach (self::$algorithms as $algorithm) {
+            if ($algorithm::supports($countryCode)) {
+                $handler = new $algorithm();
+                return $handler->getTinTypes();
+            }
+        }
+        
+        throw TINException::invalidCountry($countryCode);
+    }
+
+    /**
+     * Get all TIN types supported by this TIN instance's country.
+     * 
+     * @throws TINException
+     */
+    public function getTinTypes(): array
+    {
+        $parsedTin = $this->parse($this->slug, false);
+        $handler = $this->getAlgorithm($parsedTin['country']);
+        
+        return $handler->getTinTypes();
+    }
+
+    /**
+     * Identify the TIN type for this TIN instance.
+     * 
+     * @throws TINException
+     * @return array{code: string, name: string, description?: string}|null
+     */
+    public function identifyTinType(): ?array
+    {
+        $parsedTin = $this->parse($this->slug, false);
+        $handler = $this->getAlgorithm($parsedTin['country']);
+        
+        return $handler->identifyTinType($parsedTin['tin']);
+    }
+
+    /**
      * @throws TINException
      */
     private function getAlgorithm(string $country): CountryHandlerInterface

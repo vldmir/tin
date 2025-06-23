@@ -64,4 +64,23 @@ interface CountryHandlerInterface
      *   Placeholder text (e.g., "123456789")
      */
     public function getPlaceholder(): string;
+
+    /**
+     * Get all TIN types supported by this country.
+     *
+     * @return array<int, array{code: string, name: string, description?: string}>
+     *   Array of TIN types indexed by pattern number
+     */
+    public function getTinTypes(): array;
+
+    /**
+     * Identify the TIN type for a given TIN.
+     *
+     * @param string $tin
+     *   The TIN to identify
+     *
+     * @return array{code: string, name: string, description?: string}|null
+     *   The TIN type information or null if not identifiable
+     */
+    public function identifyTinType(string $tin): ?array;
 }
