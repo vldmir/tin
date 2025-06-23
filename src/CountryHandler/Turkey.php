@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace loophp\Tin\CountryHandler;
+namespace vldmir\Tin\CountryHandler;
+
+use function strlen;
 
 /**
  * Turkey TIN validation.
@@ -16,12 +18,6 @@ final class Turkey extends CountryHandler
     public const COUNTRYCODE = 'TR';
 
     /**
-     * Combined pattern for all types
-     * @var string
-     */
-    public const PATTERN = '^\d{10,11}$';
-
-    /**
      * @var int
      */
     public const LENGTH = 11; // Maximum length
@@ -31,117 +27,19 @@ final class Turkey extends CountryHandler
      */
     public const MASK = '99999999999'; // Default to personal
 
-    protected function hasValidPattern(string $tin): bool
-    {
-        return $this->matchPattern($tin, self::PATTERN);
-    }
-
-    protected function hasValidLength(string $tin): bool
-    {
-        $length = strlen($tin);
-        return $length === 10 || $length === 11;
-    }
-
-    protected function hasValidRule(string $tin): bool
-    {
-        $length = strlen($tin);
-        
-        if ($length === 11) {
-            return $this->isValidPersonalID($tin);
-        }
-        
-        if ($length === 10) {
-            return $this->isValidBusinessID($tin);
-        }
-        
-        return false;
-    }
+    /**
+     * Combined pattern for all types.
+     *
+     * @var string
+     */
+    public const PATTERN = '^\d{10,11}$';
 
     /**
-     * Validate T.C. Kimlik No (personal ID).
-     * Uses specific checksum algorithm.
+     * Get placeholder text.
      */
-    private function isValidPersonalID(string $id): bool
+    public function getPlaceholder(): string
     {
-        // First digit cannot be 0
-        if ($id[0] === '0') {
-            return false;
-        }
-        
-        // Cannot be all same digits
-        if (preg_match('/^(\d)\1{10}$/', $id)) {
-            return false;
-        }
-        
-        // Calculate first check digit (10th digit)
-        $oddSum = 0;
-        $evenSum = 0;
-        
-        for ($i = 0; $i < 9; $i++) {
-            if ($i % 2 === 0) {
-                $oddSum += (int) $id[$i];
-            } else {
-                $evenSum += (int) $id[$i];
-            }
-        }
-        
-        $checkDigit1 = ((7 * $oddSum) - $evenSum) % 10;
-        if ($checkDigit1 < 0) {
-            $checkDigit1 += 10;
-        }
-        
-        if ($checkDigit1 !== (int) $id[9]) {
-            return false;
-        }
-        
-        // Calculate second check digit (11th digit)
-        $totalSum = 0;
-        for ($i = 0; $i < 10; $i++) {
-            $totalSum += (int) $id[$i];
-        }
-        
-        $checkDigit2 = $totalSum % 10;
-        
-        return $checkDigit2 === (int) $id[10];
-    }
-
-    /**
-     * Validate Vergi Kimlik No (business tax ID).
-     */
-    private function isValidBusinessID(string $id): bool
-    {
-        // Cannot be all zeros
-        if ($id === '0000000000') {
-            return false;
-        }
-        
-        // Apply checksum algorithm
-        $v = [];
-        for ($i = 0; $i < 9; $i++) {
-            $v[$i + 1] = (int) $id[$i];
-        }
-        
-        $lastDigit = (int) $id[9];
-        
-        for ($i = 1; $i <= 9; $i++) {
-            $v[$i] = ($v[$i] + $i) % 10;
-        }
-        
-        for ($i = 1; $i <= 9; $i++) {
-            $v[$i] = ($v[$i] * pow(2, $i)) % 9;
-            if ($v[$i] === 0) {
-                $v[$i] = 9;
-            }
-        }
-        
-        $sum = 0;
-        for ($i = 1; $i <= 9; $i++) {
-            $sum += $v[$i];
-        }
-        
-        $checkDigit = (10 - ($sum % 10)) % 10;
-        
-        return $checkDigit === $lastDigit;
+        return '12345678901';
     }
 
     /**
@@ -169,23 +67,134 @@ final class Turkey extends CountryHandler
     public function identifyTinType(string $tin): ?array
     {
         $normalizedTin = $this->normalizeTin($tin);
-        
+
         if (strlen($normalizedTin) === 11 && $this->isValidPersonalID($normalizedTin)) {
             return $this->getTinTypes()[1]; // T.C. Kimlik No
         }
-        
+
         if (strlen($normalizedTin) === 10 && $this->isValidBusinessID($normalizedTin)) {
             return $this->getTinTypes()[2]; // Vergi Kimlik No
         }
-        
+
         return null;
     }
 
-    /**
-     * Get placeholder text.
-     */
-    public function getPlaceholder(): string
+    protected function hasValidLength(string $tin): bool
     {
-        return '12345678901';
+        $length = strlen($tin);
+
+        return 10 === $length || 11 === $length;
     }
-} 
+
+    protected function hasValidPattern(string $tin): bool
+    {
+        return $this->matchPattern($tin, self::PATTERN);
+    }
+
+    protected function hasValidRule(string $tin): bool
+    {
+        $length = strlen($tin);
+
+        if (11 === $length) {
+            return $this->isValidPersonalID($tin);
+        }
+
+        if (10 === $length) {
+            return $this->isValidBusinessID($tin);
+        }
+
+        return false;
+    }
+
+    /**
+     * Validate Vergi Kimlik No (business tax ID).
+     */
+    private function isValidBusinessID(string $id): bool
+    {
+        // Cannot be all zeros
+        if ('0000000000' === $id) {
+            return false;
+        }
+
+        // Apply checksum algorithm
+        $v = [];
+
+        for ($i = 0; 9 > $i; ++$i) {
+            $v[$i + 1] = (int) $id[$i];
+        }
+
+        $lastDigit = (int) $id[9];
+
+        for ($i = 1; 9 >= $i; ++$i) {
+            $v[$i] = ($v[$i] + $i) % 10;
+        }
+
+        for ($i = 1; 9 >= $i; ++$i) {
+            $v[$i] = ($v[$i] * 2 ** $i) % 9;
+
+            if (0 === $v[$i]) {
+                $v[$i] = 9;
+            }
+        }
+
+        $sum = 0;
+
+        for ($i = 1; 9 >= $i; ++$i) {
+            $sum += $v[$i];
+        }
+
+        $checkDigit = (10 - ($sum % 10)) % 10;
+
+        return $checkDigit === $lastDigit;
+    }
+
+    /**
+     * Validate T.C. Kimlik No (personal ID).
+     * Uses specific checksum algorithm.
+     */
+    private function isValidPersonalID(string $id): bool
+    {
+        // First digit cannot be 0
+        if ('0' === $id[0]) {
+            return false;
+        }
+
+        // Cannot be all same digits
+        if (preg_match('/^(\d)\1{10}$/', $id)) {
+            return false;
+        }
+
+        // Calculate first check digit (10th digit)
+        $oddSum = 0;
+        $evenSum = 0;
+
+        for ($i = 0; 9 > $i; ++$i) {
+            if ($i % 2 === 0) {
+                $oddSum += (int) $id[$i];
+            } else {
+                $evenSum += (int) $id[$i];
+            }
+        }
+
+        $checkDigit1 = ((7 * $oddSum) - $evenSum) % 10;
+
+        if (0 > $checkDigit1) {
+            $checkDigit1 += 10;
+        }
+
+        if ((int) $id[9] !== $checkDigit1) {
+            return false;
+        }
+
+        // Calculate second check digit (11th digit)
+        $totalSum = 0;
+
+        for ($i = 0; 10 > $i; ++$i) {
+            $totalSum += (int) $id[$i];
+        }
+
+        $checkDigit2 = $totalSum % 10;
+
+        return (int) $id[10] === $checkDigit2;
+    }
+}

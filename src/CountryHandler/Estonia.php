@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace loophp\Tin\CountryHandler;
+namespace vldmir\Tin\CountryHandler;
 
 /**
  * Estonia.
@@ -22,12 +22,31 @@ final class Estonia extends CountryHandler
     /**
      * @var string
      */
-    public const PATTERN = '[1-6]\d{2}[0-1]\d[0-3]\d{5}';
+    public const MASK = '99999999999';
 
     /**
      * @var string
      */
-    public const MASK = '99999999999';
+    public const PATTERN = '[1-6]\d{2}[0-1]\d[0-3]\d{5}';
+
+    public function getPlaceholder(): string
+    {
+        return '37605030299';
+    }
+
+    /**
+     * Get all TIN types supported by Estonia.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'IK',
+                'name' => 'Estonian IK',
+                'description' => 'Estonian Personal Identification Code (Isikukood)',
+            ],
+        ];
+    }
 
     protected function hasValidDate(string $tin): bool
     {
@@ -84,24 +103,5 @@ final class Estonia extends CountryHandler
         $remainderBy11 = $sum % 11;
 
         return (10 > $remainderBy11 && $remainderBy11 === $c11) || (10 === $remainderBy11 && 0 === $c11);
-    }
-
-    public function getPlaceholder(): string
-    {
-        return '37605030299';
-    }
-
-    /**
-     * Get all TIN types supported by Estonia.
-     */
-    public function getTinTypes(): array
-    {
-        return [
-            1 => [
-                'code' => 'IK',
-                'name' => 'Estonian IK',
-                'description' => 'Estonian Personal Identification Code (Isikukood)',
-            ],
-        ];
     }
 }

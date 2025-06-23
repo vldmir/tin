@@ -5,6 +5,68 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.3](https://github.com/vldmir/tin/compare/2.0.2...2.0.3) - 2025-01-02
+
+### Breaking Changes
+
+- **Namespace Migration**: Complete migration from `loophp\Tin` to `vldmir\Tin` namespace
+- **Directory Structure**: Moved all spec files from `spec/loophp/` to `spec/vldmir/`
+
+### Changed
+
+- **Primary Namespace**: Updated main namespace from `loophp\Tin` to `vldmir\Tin`
+- **All Classes**: Updated namespace in all source files:
+  - `src/TIN.php` - Main TIN class with new namespace
+  - `src/Exception/TINException.php` - Exception class namespace
+  - All 46 CountryHandler classes in `src/CountryHandler/`
+- **Test Namespace**: Updated all test files to use `tests\vldmir\Tin` namespace
+- **Spec Namespace**: Migrated all PHPSpec files to `spec\vldmir\Tin` namespace
+- **Autoloader Configuration**: Updated Composer autoload configuration
+- **Documentation**: Updated all code examples to use new namespace in:
+  - `README.md` - All usage examples
+  - `DOCKER.md` - Docker examples
+  - `docs/TIN-Global-Countries.md` - Documentation examples
+  - `CLAUDE.md` - Development documentation
+
+### Fixed
+
+- **GrumPHP Configuration**: Added `allow_risky: true` to PHP CS Fixer configuration
+- **Code Standards**: Fixed PHP CS Fixer risky rules compatibility
+- **Path References**: Updated all file paths and namespace references
+- **Git Structure**: Properly handled file moves and deletions in git history
+
+### Technical
+
+- **Composer PSR-4**: Updated autoload mapping from `loophp\\Tin\\` to `vldmir\\Tin\\`
+- **Development Tools**: Updated PHPSpec, GrumPHP, and other dev tool configurations
+- **File Structure**: Maintained complete backward compatibility for functionality while updating namespace
+- **Test Coverage**: All existing tests migrated and passing with new namespace
+
+### Migration Guide
+
+**For existing users upgrading from 2.0.2 to 2.0.3:**
+
+```php
+// OLD (2.0.2 and earlier)
+use loophp\Tin\TIN;
+use loophp\Tin\Exception\TINException;
+
+// NEW (2.0.3+)
+use vldmir\Tin\TIN;
+use vldmir\Tin\Exception\TINException;
+
+// All functionality remains identical
+$tin = TIN::fromSlug('BE71102512345');
+$isValid = $tin->isValid();
+```
+
+**Automated Migration:**
+```bash
+# Replace namespace in your codebase
+find . -name "*.php" -exec sed -i 's/use loophp\\Tin/use vldmir\\Tin/g' {} \;
+find . -name "*.php" -exec sed -i 's/loophp\\Tin/vldmir\\Tin/g' {} \;
+```
+
 ## [2.0.2](https://github.com/vldmir/tin/compare/2.0.1...2.0.2) - 2025-06-23
 
 ### Added

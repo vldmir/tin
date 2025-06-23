@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace loophp\Tin\CountryHandler;
+namespace vldmir\Tin\CountryHandler;
+
+use function in_array;
 
 use const STR_PAD_LEFT;
 
@@ -37,6 +39,11 @@ final class Spain extends CountryHandler
     public const LENGTH = 9;
 
     /**
+     * @var string
+     */
+    public const MASK = '99999999A';
+
+    /**
      * @var array<string>
      */
     public const NIE = ['X', 'Y', 'Z'];
@@ -59,10 +66,60 @@ final class Spain extends CountryHandler
      */
     public const PATTERN_2 = '(^[ABCDEFGHJKLMNPQRSUVW])(\d{7})([' . self::CONTROL_2 . '\d]$)';
 
+    public function getPlaceholder(): string
+    {
+        return '12345678Z';
+    }
+
     /**
-     * @var string
+     * Get all TIN types supported by Spain.
      */
-    public const MASK = '99999999A';
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'DNI',
+                'name' => 'Documento Nacional de Identidad',
+                'description' => 'Spanish Natural Persons ID',
+            ],
+            2 => [
+                'code' => 'NIE',
+                'name' => 'Número de Identidad de Extranjero',
+                'description' => 'Foreigners Identification Number',
+            ],
+            3 => [
+                'code' => 'CIF',
+                'name' => 'Código de Identificación Fiscal',
+                'description' => 'Tax Identification Code for Legal Entities',
+            ],
+        ];
+    }
+
+    /**
+     * Identify the TIN type for a given Spanish TIN.
+     */
+    public function identifyTinType(string $tin): ?array
+    {
+        $normalizedTin = $this->normalizeTin($tin);
+
+        // Pattern 1: DNI or NIE
+        if ($this->isFollowPattern1($normalizedTin)) {
+            // Check if it starts with X, Y, or Z (NIE)
+            if (in_array($normalizedTin[0], self::NIE, true)) {
+                return $this->getTinTypes()[2]; // NIE
+            }
+
+            // Otherwise it's a DNI
+            return $this->getTinTypes()[1]; // DNI
+        }
+
+        // Pattern 2: CIF (Legal entities)
+        if ($this->isFollowPattern2($normalizedTin)) {
+            return $this->getTinTypes()[3]; // CIF
+        }
+
+        return null;
+    }
 
     protected function hasValidPattern(string $tin): bool
     {
@@ -155,59 +212,5 @@ final class Spain extends CountryHandler
         $digit = (false === strpos(self::CONTROL_2, $tinChecksum));
 
         return $this->getChecksum($tinNumber, $digit) === $tinChecksum;
-    }
-
-    public function getPlaceholder(): string
-    {
-        return '12345678Z';
-    }
-
-    /**
-     * Get all TIN types supported by Spain.
-     */
-    public function getTinTypes(): array
-    {
-        return [
-            1 => [
-                'code' => 'DNI',
-                'name' => 'Documento Nacional de Identidad',
-                'description' => 'Spanish Natural Persons ID',
-            ],
-            2 => [
-                'code' => 'NIE',
-                'name' => 'Número de Identidad de Extranjero',
-                'description' => 'Foreigners Identification Number',
-            ],
-            3 => [
-                'code' => 'CIF',
-                'name' => 'Código de Identificación Fiscal',
-                'description' => 'Tax Identification Code for Legal Entities',
-            ],
-        ];
-    }
-
-    /**
-     * Identify the TIN type for a given Spanish TIN.
-     */
-    public function identifyTinType(string $tin): ?array
-    {
-        $normalizedTin = $this->normalizeTin($tin);
-        
-        // Pattern 1: DNI or NIE
-        if ($this->isFollowPattern1($normalizedTin)) {
-            // Check if it starts with X, Y, or Z (NIE)
-            if (in_array($normalizedTin[0], self::NIE, true)) {
-                return $this->getTinTypes()[2]; // NIE
-            }
-            // Otherwise it's a DNI
-            return $this->getTinTypes()[1]; // DNI
-        }
-        
-        // Pattern 2: CIF (Legal entities)
-        if ($this->isFollowPattern2($normalizedTin)) {
-            return $this->getTinTypes()[3]; // CIF
-        }
-        
-        return null;
     }
 }

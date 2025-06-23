@@ -454,7 +454,7 @@ $ein = TIN::fromSlug('US12-3456789');
 
 ### Basic Validation
 ```php
-use loophp\Tin\TIN;
+use vldmir\Tin\TIN;
 
 // Create TIN from country code + number
 $tin = TIN::from('BR', '12345678909');

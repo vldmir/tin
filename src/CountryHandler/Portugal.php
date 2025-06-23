@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace loophp\Tin\CountryHandler;
+namespace vldmir\Tin\CountryHandler;
 
 /**
  * Portugal.
@@ -22,12 +22,31 @@ final class Portugal extends CountryHandler
     /**
      * @var string
      */
-    public const PATTERN = '\d{9}';
+    public const MASK = '999999999';
 
     /**
      * @var string
      */
-    public const MASK = '999999999';
+    public const PATTERN = '\d{9}';
+
+    public function getPlaceholder(): string
+    {
+        return '123456789';
+    }
+
+    /**
+     * Get all TIN types supported by Portugal.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'NIF',
+                'name' => 'Portuguese NIF',
+                'description' => 'Portuguese Tax Identification Number (Número de Identificação Fiscal)',
+            ],
+        ];
+    }
 
     protected function hasValidRule(string $tin): bool
     {
@@ -53,24 +72,5 @@ final class Portugal extends CountryHandler
         }
 
         return 0 === $c9;
-    }
-
-    public function getPlaceholder(): string
-    {
-        return '123456789';
-    }
-
-    /**
-     * Get all TIN types supported by Portugal.
-     */
-    public function getTinTypes(): array
-    {
-        return [
-            1 => [
-                'code' => 'NIF',
-                'name' => 'Portuguese NIF',
-                'description' => 'Portuguese Tax Identification Number (Número de Identificação Fiscal)',
-            ],
-        ];
     }
 }

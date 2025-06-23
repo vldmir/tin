@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace loophp\Tin\CountryHandler;
+namespace vldmir\Tin\CountryHandler;
 
 /**
  * Nigeria TIN validation.
@@ -16,12 +16,6 @@ final class Nigeria extends CountryHandler
     public const COUNTRYCODE = 'NG';
 
     /**
-     * TIN Pattern: 10 digits (can be formatted as 9999999999)
-     * @var string
-     */
-    public const PATTERN = '^\d{10}$';
-
-    /**
      * @var int
      */
     public const LENGTH = 10;
@@ -31,30 +25,12 @@ final class Nigeria extends CountryHandler
      */
     public const MASK = '9999999999';
 
-    protected function hasValidPattern(string $tin): bool
-    {
-        return $this->matchPattern($tin, self::PATTERN);
-    }
-
-    protected function hasValidRule(string $tin): bool
-    {
-        // Check if all digits are zeros (invalid)
-        if (preg_match('/^0+$/', $tin)) {
-            return false;
-        }
-        
-        // Check if all digits are the same (invalid)
-        if (preg_match('/^(\d)\1{9}$/', $tin)) {
-            return false;
-        }
-        
-        // First digit should not be 0
-        if ($tin[0] === '0') {
-            return false;
-        }
-        
-        return true;
-    }
+    /**
+     * TIN Pattern: 10 digits (can be formatted as 9999999999).
+     *
+     * @var string
+     */
+    public const PATTERN = '^\d{10}$';
 
     /**
      * Get placeholder text.
@@ -77,4 +53,29 @@ final class Nigeria extends CountryHandler
             ],
         ];
     }
-} 
+
+    protected function hasValidPattern(string $tin): bool
+    {
+        return $this->matchPattern($tin, self::PATTERN);
+    }
+
+    protected function hasValidRule(string $tin): bool
+    {
+        // Check if all digits are zeros (invalid)
+        if (preg_match('/^0+$/', $tin)) {
+            return false;
+        }
+
+        // Check if all digits are the same (invalid)
+        if (preg_match('/^(\d)\1{9}$/', $tin)) {
+            return false;
+        }
+
+        // First digit should not be 0
+        if ('0' === $tin[0]) {
+            return false;
+        }
+
+        return true;
+    }
+}

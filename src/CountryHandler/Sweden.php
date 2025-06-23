@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace loophp\Tin\CountryHandler;
+namespace vldmir\Tin\CountryHandler;
 
 use function strlen;
 
@@ -29,6 +29,11 @@ final class Sweden extends CountryHandler
     /**
      * @var string
      */
+    public const MASK = '999999-9999';
+
+    /**
+     * @var string
+     */
     public const PATTERN_1 = '\d{2}[0-1]\d[0-3]\d{5}';
 
     /**
@@ -46,10 +51,24 @@ final class Sweden extends CountryHandler
      */
     public const PATTERN_4 = '(1[89]|20)\d{2}(0[1-9]|1[012])(6[1-9]|[7-8][0-9]|9[0-1])\d{4}';
 
+    public function getPlaceholder(): string
+    {
+        return '640823-3234';
+    }
+
     /**
-     * @var string
+     * Get all TIN types supported by Sweden.
      */
-    public const MASK = '999999-9999';
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'PN',
+                'name' => 'Swedish PN',
+                'description' => 'Swedish Personal Number (Personnummer)',
+            ],
+        ];
+    }
 
     protected function hasValidLength(string $tin): bool
     {
@@ -213,24 +232,5 @@ final class Sweden extends CountryHandler
         }
 
         return 0 === $c12;
-    }
-
-    public function getPlaceholder(): string
-    {
-        return '640823-3234';
-    }
-
-    /**
-     * Get all TIN types supported by Sweden.
-     */
-    public function getTinTypes(): array
-    {
-        return [
-            1 => [
-                'code' => 'PN',
-                'name' => 'Swedish PN',
-                'description' => 'Swedish Personal Number (Personnummer)',
-            ],
-        ];
     }
 }

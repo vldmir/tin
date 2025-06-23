@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace tests\loophp\Tin;
+namespace tests\vldmir\Tin;
 
-use loophp\Tin\Exception\TINException;
 use PhpSpec\Exception\Example\SkippingException;
 use PhpSpec\ObjectBehavior;
+use vldmir\Tin\Exception\TINException;
 
 use function get_class;
+use function sprintf;
 
 abstract class AbstractAlgorithmSpec extends ObjectBehavior
 {

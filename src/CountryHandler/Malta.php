@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace loophp\Tin\CountryHandler;
+namespace vldmir\Tin\CountryHandler;
 
 use function in_array;
 
@@ -24,19 +24,12 @@ final class Malta extends CountryHandler
     /**
      * @var string
      */
-    public const PATTERN = '\d{7}[MGAPLHBZ]';
+    public const MASK = '9999999A';
 
     /**
      * @var string
      */
-    public const MASK = '9999999A';
-
-    protected function hasValidRule(string $tin): bool
-    {
-        $valid = ['M', 'G', 'A', 'P', 'L', 'H', 'B', 'Z'];
-
-        return in_array($tin[7], $valid, true);
-    }
+    public const PATTERN = '\d{7}[MGAPLHBZ]';
 
     public function getPlaceholder(): string
     {
@@ -55,5 +48,12 @@ final class Malta extends CountryHandler
                 'description' => 'Malta Tax Identification Number',
             ],
         ];
+    }
+
+    protected function hasValidRule(string $tin): bool
+    {
+        $valid = ['M', 'G', 'A', 'P', 'L', 'H', 'B', 'Z'];
+
+        return in_array($tin[7], $valid, true);
     }
 }

@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace loophp\Tin\CountryHandler;
+namespace vldmir\Tin\CountryHandler;
+
+use function strlen;
 
 /**
  * Indonesia TIN validation.
@@ -16,12 +18,6 @@ final class Indonesia extends CountryHandler
     public const COUNTRYCODE = 'ID';
 
     /**
-     * NPWP Pattern: 16 digits (can be formatted as 99.999.999.9-999.999)
-     * @var string
-     */
-    public const PATTERN = '^\d{2}\.?\d{3}\.?\d{3}\.?\d{1}-?\d{3}\.?\d{3}$|^\d{16}$';
-
-    /**
      * @var int
      */
     public const LENGTH = 16;
@@ -31,45 +27,37 @@ final class Indonesia extends CountryHandler
      */
     public const MASK = '99.999.999.9-999.999';
 
-    protected function hasValidPattern(string $tin): bool
-    {
-        return $this->matchPattern($tin, self::PATTERN);
-    }
+    /**
+     * NPWP Pattern: 16 digits (can be formatted as 99.999.999.9-999.999).
+     *
+     * @var string
+     */
+    public const PATTERN = '^\d{2}\.?\d{3}\.?\d{3}\.?\d{1}-?\d{3}\.?\d{3}$|^\d{16}$';
 
-    protected function hasValidLength(string $tin): bool
+    /**
+     * Format input according to NPWP format.
+     */
+    public function formatInput(string $input): string
     {
-        $normalizedTin = preg_replace('/[^0-9]/', '', $tin);
-        return strlen($normalizedTin) === self::LENGTH;
-    }
+        $normalized = preg_replace('/[^0-9]/', '', $input);
 
-    protected function hasValidRule(string $tin): bool
-    {
-        $normalizedTin = preg_replace('/[^0-9]/', '', $tin);
-        
-        if (strlen($normalizedTin) !== 16) {
-            return false;
+        if ('' === $normalized) {
+            return '';
         }
-        
-        // Check if all digits are zeros (invalid)
-        if (preg_match('/^0+$/', $normalizedTin)) {
-            return false;
+
+        // Format as: 99.999.999.9-999.999
+        $result = '';
+
+        for ($i = 0; strlen($normalized) > $i && 16 > $i; ++$i) {
+            if (2 === $i || 5 === $i || 8 === $i || 12 === $i) {
+                $result .= '.';
+            } elseif (9 === $i) {
+                $result .= '-';
+            }
+            $result .= $normalized[$i];
         }
-        
-        // First 2 digits are the tax office code
-        $taxOfficeCode = substr($normalizedTin, 0, 2);
-        
-        // Tax office code should not be 00
-        if ($taxOfficeCode === '00') {
-            return false;
-        }
-        
-        // Digits 10-12 are the branch code (KPP)
-        $branchCode = substr($normalizedTin, 9, 3);
-        
-        // Branch code 000 is for head office, others for branches
-        // Both are valid, so no additional check needed
-        
-        return true;
+
+        return $result;
     }
 
     /**
@@ -94,28 +82,45 @@ final class Indonesia extends CountryHandler
         ];
     }
 
-    /**
-     * Format input according to NPWP format.
-     */
-    public function formatInput(string $input): string
+    protected function hasValidLength(string $tin): bool
     {
-        $normalized = preg_replace('/[^0-9]/', '', $input);
-        
-        if (strlen($normalized) === 0) {
-            return '';
-        }
-        
-        // Format as: 99.999.999.9-999.999
-        $result = '';
-        for ($i = 0; $i < strlen($normalized) && $i < 16; $i++) {
-            if ($i === 2 || $i === 5 || $i === 8 || $i === 12) {
-                $result .= '.';
-            } elseif ($i === 9) {
-                $result .= '-';
-            }
-            $result .= $normalized[$i];
-        }
-        
-        return $result;
+        $normalizedTin = preg_replace('/[^0-9]/', '', $tin);
+
+        return strlen($normalizedTin) === self::LENGTH;
     }
-} 
+
+    protected function hasValidPattern(string $tin): bool
+    {
+        return $this->matchPattern($tin, self::PATTERN);
+    }
+
+    protected function hasValidRule(string $tin): bool
+    {
+        $normalizedTin = preg_replace('/[^0-9]/', '', $tin);
+
+        if (strlen($normalizedTin) !== 16) {
+            return false;
+        }
+
+        // Check if all digits are zeros (invalid)
+        if (preg_match('/^0+$/', $normalizedTin)) {
+            return false;
+        }
+
+        // First 2 digits are the tax office code
+        $taxOfficeCode = substr($normalizedTin, 0, 2);
+
+        // Tax office code should not be 00
+        if ('00' === $taxOfficeCode) {
+            return false;
+        }
+
+        // Digits 10-12 are the branch code (KPP)
+        $branchCode = substr($normalizedTin, 9, 3);
+
+        // Branch code 000 is for head office, others for branches
+        // Both are valid, so no additional check needed
+
+        return true;
+    }
+}

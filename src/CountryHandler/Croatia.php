@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace loophp\Tin\CountryHandler;
+namespace vldmir\Tin\CountryHandler;
 
 /**
  * Croatia.
@@ -22,28 +22,12 @@ final class Croatia extends CountryHandler
     /**
      * @var string
      */
-    public const PATTERN = '\d{11}';
+    public const MASK = '99999999999';
 
     /**
      * @var string
      */
-    public const MASK = '99999999999';
-
-    protected function hasValidRule(string $tin): bool
-    {
-        $rest = 0;
-        $sum = $this->digitAt($tin, 0) + 10;
-
-        for ($i = 1; 11 > $i; ++$i) {
-            $rest = $sum % 10;
-            $rest = ((0 === $rest) ? 10 : $rest) * 2 % 11;
-            $sum = $rest + $this->digitAt($tin, $i);
-        }
-        $diff = 11 - $rest;
-        $lastDigit = $this->digitAt($tin, 10);
-
-        return (1 === $rest && 0 === $lastDigit) || $lastDigit === $diff;
-    }
+    public const PATTERN = '\d{11}';
 
     public function getPlaceholder(): string
     {
@@ -62,5 +46,21 @@ final class Croatia extends CountryHandler
                 'description' => 'Croatian Personal Identification Number (Osobni identifikacijski broj)',
             ],
         ];
+    }
+
+    protected function hasValidRule(string $tin): bool
+    {
+        $rest = 0;
+        $sum = $this->digitAt($tin, 0) + 10;
+
+        for ($i = 1; 11 > $i; ++$i) {
+            $rest = $sum % 10;
+            $rest = ((0 === $rest) ? 10 : $rest) * 2 % 11;
+            $sum = $rest + $this->digitAt($tin, $i);
+        }
+        $diff = 11 - $rest;
+        $lastDigit = $this->digitAt($tin, 10);
+
+        return (1 === $rest && 0 === $lastDigit) || $lastDigit === $diff;
     }
 }

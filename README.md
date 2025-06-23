@@ -112,7 +112,7 @@ To simply check the validity of a TIN number:
 
 require __DIR__ . '/vendor/autoload.php';
 
-use loophp\Tin\TIN;
+use vldmir\Tin\TIN;
 
 $bool = TIN::fromSlug('be71102512345')->isValid();
 ```
@@ -124,8 +124,8 @@ If you want to get the reason why a number is invalid, you can use:
 
 require __DIR__ . '/vendor/autoload.php';
 
-use loophp\Tin\TIN;
-use loophp\Tin\Exception\TINException;
+use vldmir\Tin\TIN;
+use vldmir\Tin\Exception\TINException;
 
 try {
     TIN::fromSlug('be71102512345')->check();
@@ -143,7 +143,7 @@ The library provides comprehensive input mask and formatting capabilities:
 ```php
 <?php
 
-use loophp\Tin\TIN;
+use vldmir\Tin\TIN;
 
 // Get the input mask for a country
 $tin = TIN::fromSlug('be71102512345');
@@ -171,7 +171,7 @@ Different countries may have multiple types of TINs. The library can identify an
 ```php
 <?php
 
-use loophp\Tin\TIN;
+use vldmir\Tin\TIN;
 
 // Get all TIN types for a country
 $types = TIN::getTinTypesForCountry('ES');
@@ -204,7 +204,7 @@ $allTypes = $tin->getTinTypes();
 ```php
 <?php
 
-use loophp\Tin\TIN;
+use vldmir\Tin\TIN;
 
 // Every country supports getTinTypes() - here are some examples:
 
@@ -241,7 +241,7 @@ The library provides methods to get information about all supported countries:
 ```php
 <?php
 
-use loophp\Tin\TIN;
+use vldmir\Tin\TIN;
 
 // Get simple list of all supported country codes
 $countries = TIN::getSupportedCountries();
@@ -282,8 +282,8 @@ if (TIN::isCountrySupported('UA')) {
 
 require __DIR__ . '/vendor/autoload.php';
 
-use loophp\Tin\TIN;
-use loophp\Tin\Exception\TINException;
+use vldmir\Tin\TIN;
+use vldmir\Tin\Exception\TINException;
 
 // Test different countries (EU and Global)
 $testCases = [

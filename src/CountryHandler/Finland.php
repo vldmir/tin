@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace loophp\Tin\CountryHandler;
+namespace vldmir\Tin\CountryHandler;
 
 /**
  * Finland.
@@ -22,12 +22,31 @@ final class Finland extends CountryHandler
     /**
      * @var string
      */
-    public const PATTERN = '[0-3]\d[0-1]\d{3}[+-A]\d{3}[0-9A-Z]';
+    public const MASK = '999999-999A';
 
     /**
      * @var string
      */
-    public const MASK = '999999-999A';
+    public const PATTERN = '[0-3]\d[0-1]\d{3}[+-A]\d{3}[0-9A-Z]';
+
+    public function getPlaceholder(): string
+    {
+        return '131052-308T';
+    }
+
+    /**
+     * Get all TIN types supported by Finland.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'HETU',
+                'name' => 'Finnish HETU',
+                'description' => 'Finnish Personal Identity Code (Henkilötunnus)',
+            ],
+        ];
+    }
 
     protected function hasValidDate(string $tin): bool
     {
@@ -129,24 +148,5 @@ final class Finland extends CountryHandler
             default:
                 return ' ';
         }
-    }
-
-    public function getPlaceholder(): string
-    {
-        return '131052-308T';
-    }
-
-    /**
-     * Get all TIN types supported by Finland.
-     */
-    public function getTinTypes(): array
-    {
-        return [
-            1 => [
-                'code' => 'HETU',
-                'name' => 'Finnish HETU',
-                'description' => 'Finnish Personal Identity Code (Henkilötunnus)',
-            ],
-        ];
     }
 }

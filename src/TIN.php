@@ -2,56 +2,57 @@
 
 declare(strict_types=1);
 
-namespace loophp\Tin;
+namespace vldmir\Tin;
 
-use loophp\Tin\CountryHandler\Argentina;
-use loophp\Tin\CountryHandler\Australia;
-use loophp\Tin\CountryHandler\Austria;
-use loophp\Tin\CountryHandler\Belgium;
-use loophp\Tin\CountryHandler\Brazil;
-use loophp\Tin\CountryHandler\Bulgaria;
-use loophp\Tin\CountryHandler\Canada;
-use loophp\Tin\CountryHandler\China;
-use loophp\Tin\CountryHandler\CountryHandlerInterface;
-use loophp\Tin\CountryHandler\Croatia;
-use loophp\Tin\CountryHandler\Cyprus;
-use loophp\Tin\CountryHandler\CzechRepublic;
-use loophp\Tin\CountryHandler\Denmark;
-use loophp\Tin\CountryHandler\Estonia;
-use loophp\Tin\CountryHandler\Finland;
-use loophp\Tin\CountryHandler\France;
-use loophp\Tin\CountryHandler\Germany;
-use loophp\Tin\CountryHandler\Greece;
-use loophp\Tin\CountryHandler\Hungary;
-use loophp\Tin\CountryHandler\India;
-use loophp\Tin\CountryHandler\Indonesia;
-use loophp\Tin\CountryHandler\Ireland;
-use loophp\Tin\CountryHandler\Italy;
-use loophp\Tin\CountryHandler\Japan;
-use loophp\Tin\CountryHandler\Latvia;
-use loophp\Tin\CountryHandler\Lithuania;
-use loophp\Tin\CountryHandler\Luxembourg;
-use loophp\Tin\CountryHandler\Malta;
-use loophp\Tin\CountryHandler\Mexico;
-use loophp\Tin\CountryHandler\Netherlands;
-use loophp\Tin\CountryHandler\Nigeria;
-use loophp\Tin\CountryHandler\Poland;
-use loophp\Tin\CountryHandler\Portugal;
-use loophp\Tin\CountryHandler\Romania;
-use loophp\Tin\CountryHandler\Russia;
-use loophp\Tin\CountryHandler\SaudiArabia;
-use loophp\Tin\CountryHandler\Slovakia;
-use loophp\Tin\CountryHandler\Slovenia;
-use loophp\Tin\CountryHandler\SouthAfrica;
-use loophp\Tin\CountryHandler\SouthKorea;
-use loophp\Tin\CountryHandler\Spain;
-use loophp\Tin\CountryHandler\Sweden;
-use loophp\Tin\CountryHandler\Switzerland;
-use loophp\Tin\CountryHandler\Turkey;
-use loophp\Tin\CountryHandler\Ukraine;
-use loophp\Tin\CountryHandler\UnitedKingdom;
-use loophp\Tin\CountryHandler\UnitedStates;
-use loophp\Tin\Exception\TINException;
+use Exception;
+use vldmir\Tin\CountryHandler\Argentina;
+use vldmir\Tin\CountryHandler\Australia;
+use vldmir\Tin\CountryHandler\Austria;
+use vldmir\Tin\CountryHandler\Belgium;
+use vldmir\Tin\CountryHandler\Brazil;
+use vldmir\Tin\CountryHandler\Bulgaria;
+use vldmir\Tin\CountryHandler\Canada;
+use vldmir\Tin\CountryHandler\China;
+use vldmir\Tin\CountryHandler\CountryHandlerInterface;
+use vldmir\Tin\CountryHandler\Croatia;
+use vldmir\Tin\CountryHandler\Cyprus;
+use vldmir\Tin\CountryHandler\CzechRepublic;
+use vldmir\Tin\CountryHandler\Denmark;
+use vldmir\Tin\CountryHandler\Estonia;
+use vldmir\Tin\CountryHandler\Finland;
+use vldmir\Tin\CountryHandler\France;
+use vldmir\Tin\CountryHandler\Germany;
+use vldmir\Tin\CountryHandler\Greece;
+use vldmir\Tin\CountryHandler\Hungary;
+use vldmir\Tin\CountryHandler\India;
+use vldmir\Tin\CountryHandler\Indonesia;
+use vldmir\Tin\CountryHandler\Ireland;
+use vldmir\Tin\CountryHandler\Italy;
+use vldmir\Tin\CountryHandler\Japan;
+use vldmir\Tin\CountryHandler\Latvia;
+use vldmir\Tin\CountryHandler\Lithuania;
+use vldmir\Tin\CountryHandler\Luxembourg;
+use vldmir\Tin\CountryHandler\Malta;
+use vldmir\Tin\CountryHandler\Mexico;
+use vldmir\Tin\CountryHandler\Netherlands;
+use vldmir\Tin\CountryHandler\Nigeria;
+use vldmir\Tin\CountryHandler\Poland;
+use vldmir\Tin\CountryHandler\Portugal;
+use vldmir\Tin\CountryHandler\Romania;
+use vldmir\Tin\CountryHandler\Russia;
+use vldmir\Tin\CountryHandler\SaudiArabia;
+use vldmir\Tin\CountryHandler\Slovakia;
+use vldmir\Tin\CountryHandler\Slovenia;
+use vldmir\Tin\CountryHandler\SouthAfrica;
+use vldmir\Tin\CountryHandler\SouthKorea;
+use vldmir\Tin\CountryHandler\Spain;
+use vldmir\Tin\CountryHandler\Sweden;
+use vldmir\Tin\CountryHandler\Switzerland;
+use vldmir\Tin\CountryHandler\Turkey;
+use vldmir\Tin\CountryHandler\Ukraine;
+use vldmir\Tin\CountryHandler\UnitedKingdom;
+use vldmir\Tin\CountryHandler\UnitedStates;
+use vldmir\Tin\Exception\TINException;
 
 /**
  * The main class to validate TIN numbers.
@@ -130,6 +131,19 @@ final class TIN
         return $this->getAlgorithm($parsedTin['country'])->validate($parsedTin['tin']);
     }
 
+    /**
+     * Format input according to TIN mask.
+     *
+     * @throws TINException
+     */
+    public function formatInput(string $input): string
+    {
+        $parsedTin = $this->parse($this->slug, false);
+        $handler = $this->getAlgorithm($parsedTin['country']);
+
+        return $handler->formatInput($input);
+    }
+
     public static function from(string $countryCode, string $tin): TIN
     {
         return self::fromSlug($countryCode . $tin);
@@ -138,6 +152,149 @@ final class TIN
     public static function fromSlug(string $slug): TIN
     {
         return new self($slug);
+    }
+
+    /**
+     * Get input mask for the TIN country.
+     *
+     * @throws TINException
+     */
+    public function getInputMask(): string
+    {
+        $parsedTin = $this->parse($this->slug, false);
+        $handler = $this->getAlgorithm($parsedTin['country']);
+
+        return $handler->getInputMask();
+    }
+
+    /**
+     * Get mask and placeholder for a specific country.
+     */
+    public static function getMaskForCountry(string $countryCode): array
+    {
+        // Check if country is supported first
+        if (!self::isCountrySupported($countryCode)) {
+            throw TINException::invalidCountry($countryCode);
+        }
+
+        // Create handler directly without TIN validation
+        foreach (self::$algorithms as $algorithm) {
+            if ($algorithm::supports($countryCode)) {
+                $handler = new $algorithm();
+
+                return [
+                    'mask' => $handler->getInputMask(),
+                    'placeholder' => $handler->getPlaceholder(),
+                    'country' => $countryCode,
+                ];
+            }
+        }
+
+        throw TINException::invalidCountry($countryCode);
+    }
+
+    /**
+     * Get placeholder text for the TIN country.
+     *
+     * @throws TINException
+     */
+    public function getPlaceholder(): string
+    {
+        $parsedTin = $this->parse($this->slug, false);
+        $handler = $this->getAlgorithm($parsedTin['country']);
+
+        return $handler->getPlaceholder();
+    }
+
+    /**
+     * Get all supported countries.
+     *
+     * @return array<string> Array of country codes
+     */
+    public static function getSupportedCountries(): array
+    {
+        return array_keys(self::$algorithms);
+    }
+
+    /**
+     * Get all supported countries with additional information.
+     *
+     * @return array<string, array> Array of countries with their details
+     */
+    public static function getSupportedCountriesWithDetails(): array
+    {
+        $countries = [];
+
+        foreach (self::$algorithms as $countryCode => $algorithmClass) {
+            try {
+                $handler = new $algorithmClass();
+                $countries[$countryCode] = [
+                    'country_code' => $countryCode,
+                    'mask' => $handler->getInputMask(),
+                    'placeholder' => $handler->getPlaceholder(),
+                    'length' => $algorithmClass::LENGTH,
+                    'pattern' => $algorithmClass::PATTERN,
+                    'tin_types' => $handler->getTinTypes(),
+                ];
+            } catch (Exception $e) {
+                // Skip countries that can't be instantiated
+                continue;
+            }
+        }
+
+        return $countries;
+    }
+
+    /**
+     * Get all TIN types supported by this TIN instance's country.
+     *
+     * @throws TINException
+     */
+    public function getTinTypes(): array
+    {
+        $parsedTin = $this->parse($this->slug, false);
+        $handler = $this->getAlgorithm($parsedTin['country']);
+
+        return $handler->getTinTypes();
+    }
+
+    /**
+     * Get all TIN types for a specific country.
+     *
+     * @throws TINException
+     */
+    public static function getTinTypesForCountry(string $countryCode): array
+    {
+        // Check if country is supported first
+        if (!self::isCountrySupported($countryCode)) {
+            throw TINException::invalidCountry($countryCode);
+        }
+
+        // Create handler directly without TIN validation
+        foreach (self::$algorithms as $algorithm) {
+            if ($algorithm::supports($countryCode)) {
+                $handler = new $algorithm();
+
+                return $handler->getTinTypes();
+            }
+        }
+
+        throw TINException::invalidCountry($countryCode);
+    }
+
+    /**
+     * Identify the TIN type for this TIN instance.
+     *
+     * @throws TINException
+     *
+     * @return array{code: string, name: string, description?: string}|null
+     */
+    public function identifyTinType(): ?array
+    {
+        $parsedTin = $this->parse($this->slug, false);
+        $handler = $this->getAlgorithm($parsedTin['country']);
+
+        return $handler->identifyTinType($parsedTin['tin']);
     }
 
     public static function isCountrySupported(string $countryCode): bool
@@ -160,159 +317,6 @@ final class TIN
         }
 
         return true;
-    }
-
-    /**
-     * Get input mask for the TIN country.
-     * 
-     * @throws TINException
-     */
-    public function getInputMask(): string
-    {
-        $parsedTin = $this->parse($this->slug, false);
-        $handler = $this->getAlgorithm($parsedTin['country']);
-        
-        return $handler->getInputMask();
-    }
-
-    /**
-     * Get placeholder text for the TIN country.
-     * 
-     * @throws TINException
-     */
-    public function getPlaceholder(): string
-    {
-        $parsedTin = $this->parse($this->slug, false);
-        $handler = $this->getAlgorithm($parsedTin['country']);
-        
-        return $handler->getPlaceholder();
-    }
-
-    /**
-     * Format input according to TIN mask.
-     * 
-     * @throws TINException
-     */
-    public function formatInput(string $input): string
-    {
-        $parsedTin = $this->parse($this->slug, false);
-        $handler = $this->getAlgorithm($parsedTin['country']);
-        
-        return $handler->formatInput($input);
-    }
-
-    /**
-     * Get mask and placeholder for a specific country.
-     */
-    public static function getMaskForCountry(string $countryCode): array
-    {
-        // Check if country is supported first
-        if (!self::isCountrySupported($countryCode)) {
-            throw TINException::invalidCountry($countryCode);
-        }
-        
-        // Create handler directly without TIN validation
-        foreach (self::$algorithms as $algorithm) {
-            if ($algorithm::supports($countryCode)) {
-                $handler = new $algorithm();
-                return [
-                    'mask' => $handler->getInputMask(),
-                    'placeholder' => $handler->getPlaceholder(),
-                    'country' => $countryCode,
-                ];
-            }
-        }
-        
-        throw TINException::invalidCountry($countryCode);
-    }
-
-    /**
-     * Get all TIN types for a specific country.
-     * 
-     * @throws TINException
-     */
-    public static function getTinTypesForCountry(string $countryCode): array
-    {
-        // Check if country is supported first
-        if (!self::isCountrySupported($countryCode)) {
-            throw TINException::invalidCountry($countryCode);
-        }
-        
-        // Create handler directly without TIN validation
-        foreach (self::$algorithms as $algorithm) {
-            if ($algorithm::supports($countryCode)) {
-                $handler = new $algorithm();
-                return $handler->getTinTypes();
-            }
-        }
-        
-        throw TINException::invalidCountry($countryCode);
-    }
-
-    /**
-     * Get all supported countries.
-     * 
-     * @return array<string> Array of country codes
-     */
-    public static function getSupportedCountries(): array
-    {
-        return array_keys(self::$algorithms);
-    }
-
-    /**
-     * Get all supported countries with additional information.
-     * 
-     * @return array<string, array> Array of countries with their details
-     */
-    public static function getSupportedCountriesWithDetails(): array
-    {
-        $countries = [];
-        
-        foreach (self::$algorithms as $countryCode => $algorithmClass) {
-            try {
-                $handler = new $algorithmClass();
-                $countries[$countryCode] = [
-                    'country_code' => $countryCode,
-                    'mask' => $handler->getInputMask(),
-                    'placeholder' => $handler->getPlaceholder(),
-                    'length' => $algorithmClass::LENGTH,
-                    'pattern' => $algorithmClass::PATTERN,
-                    'tin_types' => $handler->getTinTypes(),
-                ];
-            } catch (\Exception $e) {
-                // Skip countries that can't be instantiated
-                continue;
-            }
-        }
-        
-        return $countries;
-    }
-
-    /**
-     * Get all TIN types supported by this TIN instance's country.
-     * 
-     * @throws TINException
-     */
-    public function getTinTypes(): array
-    {
-        $parsedTin = $this->parse($this->slug, false);
-        $handler = $this->getAlgorithm($parsedTin['country']);
-        
-        return $handler->getTinTypes();
-    }
-
-    /**
-     * Identify the TIN type for this TIN instance.
-     * 
-     * @throws TINException
-     * @return array{code: string, name: string, description?: string}|null
-     */
-    public function identifyTinType(): ?array
-    {
-        $parsedTin = $this->parse($this->slug, false);
-        $handler = $this->getAlgorithm($parsedTin['country']);
-        
-        return $handler->identifyTinType($parsedTin['tin']);
     }
 
     /**

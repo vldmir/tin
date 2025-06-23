@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace loophp\Tin\CountryHandler;
+namespace vldmir\Tin\CountryHandler;
 
 /**
  * Latvia.
@@ -22,29 +22,12 @@ final class Latvia extends CountryHandler
     /**
      * @var string
      */
-    public const PATTERN = '[0-3]\d[0-1]\d{3}\d{5}';
+    public const MASK = '999999-99999';
 
     /**
      * @var string
      */
-    public const MASK = '999999-99999';
-
-    protected function hasValidDate(string $tin): bool
-    {
-        $c1c2 = substr($tin, 0, 2);
-
-        if ('32' === $c1c2) {
-            return true;
-        }
-        $day = (int) $c1c2;
-        $month = (int) (substr($tin, 2, 2));
-        $year = (int) (substr($tin, 4, 2));
-
-        $y1 = checkdate($month, $day, 1900 + $year);
-        $y2 = checkdate($month, $day, 2000 + $year);
-
-        return $y1 && $y2;
-    }
+    public const PATTERN = '[0-3]\d[0-1]\d{3}\d{5}';
 
     public function getPlaceholder(): string
     {
@@ -63,5 +46,22 @@ final class Latvia extends CountryHandler
                 'description' => 'Latvian Personal Code (Personas kods)',
             ],
         ];
+    }
+
+    protected function hasValidDate(string $tin): bool
+    {
+        $c1c2 = substr($tin, 0, 2);
+
+        if ('32' === $c1c2) {
+            return true;
+        }
+        $day = (int) $c1c2;
+        $month = (int) (substr($tin, 2, 2));
+        $year = (int) (substr($tin, 4, 2));
+
+        $y1 = checkdate($month, $day, 1900 + $year);
+        $y2 = checkdate($month, $day, 2000 + $year);
+
+        return $y1 && $y2;
     }
 }

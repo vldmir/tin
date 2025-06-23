@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace loophp\Tin\CountryHandler;
+namespace vldmir\Tin\CountryHandler;
 
 use function strlen;
 
@@ -29,6 +29,11 @@ final class Ireland extends CountryHandler
     /**
      * @var string
      */
+    public const MASK = '9999999AA';
+
+    /**
+     * @var string
+     */
     public const PATTERN_1 = '\d{7}[a-wA-W]([a-iA-I]|W)';
 
     /**
@@ -36,10 +41,24 @@ final class Ireland extends CountryHandler
      */
     public const PATTERN_2 = '\d{7}[a-wA-W]';
 
+    public function getPlaceholder(): string
+    {
+        return '1234567FA';
+    }
+
     /**
-     * @var string
+     * Get all TIN types supported by Ireland.
      */
-    public const MASK = '9999999AA';
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'PPS',
+                'name' => 'Irish PPS',
+                'description' => 'Irish Personal Public Service Number',
+            ],
+        ];
+    }
 
     protected function hasValidLength(string $tin): bool
     {
@@ -103,24 +122,5 @@ final class Ireland extends CountryHandler
         }
 
         return $this->getAlphabeticalPosition($toConv);
-    }
-
-    public function getPlaceholder(): string
-    {
-        return '1234567FA';
-    }
-
-    /**
-     * Get all TIN types supported by Ireland.
-     */
-    public function getTinTypes(): array
-    {
-        return [
-            1 => [
-                'code' => 'PPS',
-                'name' => 'Irish PPS',
-                'description' => 'Irish Personal Public Service Number',
-            ],
-        ];
     }
 }

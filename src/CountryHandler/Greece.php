@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace loophp\Tin\CountryHandler;
+namespace vldmir\Tin\CountryHandler;
 
 /**
  * Greece.
@@ -22,12 +22,12 @@ final class Greece extends CountryHandler
     /**
      * @var string
      */
-    public const PATTERN = '\d{9}';
+    public const MASK = '999999999';
 
     /**
      * @var string
      */
-    public const MASK = '999999999';
+    public const PATTERN = '\d{9}';
 
     public function getPlaceholder(): string
     {

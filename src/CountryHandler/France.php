@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace loophp\Tin\CountryHandler;
+namespace vldmir\Tin\CountryHandler;
 
 /**
  * France.
@@ -22,25 +22,12 @@ final class France extends CountryHandler
     /**
      * @var string
      */
-    public const PATTERN = '[0-3]\d{12}';
+    public const MASK = '9 99 99 99 999 999';
 
     /**
      * @var string
      */
-    public const MASK = '9 99 99 99 999 999';
-
-    protected function hasValidRule(string $tin): bool
-    {
-        $number = (int) (substr($tin, 0, 10));
-
-        $remainderBy511 = $number % 511;
-
-        $checkDigits = 100 > $remainderBy511 ?
-            10 > $remainderBy511 ? (int) (substr($tin, 12, 13)) : (int) (substr($tin, 11, 13)) :
-            (int) (substr($tin, 10, 13));
-
-        return $remainderBy511 === $checkDigits;
-    }
+    public const PATTERN = '[0-3]\d{12}';
 
     public function getPlaceholder(): string
     {
@@ -59,5 +46,18 @@ final class France extends CountryHandler
                 'description' => 'French Tax Identification Number (Numéro de Sécurité Sociale)',
             ],
         ];
+    }
+
+    protected function hasValidRule(string $tin): bool
+    {
+        $number = (int) (substr($tin, 0, 10));
+
+        $remainderBy511 = $number % 511;
+
+        $checkDigits = 100 > $remainderBy511
+            ? 10 > $remainderBy511 ? (int) (substr($tin, 12, 13)) : (int) (substr($tin, 11, 13))
+            : (int) (substr($tin, 10, 13));
+
+        return $remainderBy511 === $checkDigits;
     }
 }

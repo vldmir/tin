@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace loophp\Tin\CountryHandler;
+namespace vldmir\Tin\CountryHandler;
+
+use function strlen;
 
 /**
  * South Korea TIN validation.
@@ -16,24 +18,6 @@ final class SouthKorea extends CountryHandler
     public const COUNTRYCODE = 'KR';
 
     /**
-     * RRN Pattern: XXXXXX-XXXXXXX (13 digits with dash)
-     * @var string
-     */
-    public const PATTERN_RRN = '^\d{6}-?\d{7}$';
-
-    /**
-     * BRN Pattern: 999-99-99999 (10 digits)
-     * @var string
-     */
-    public const PATTERN_BRN = '^\d{3}-?\d{2}-?\d{5}$';
-
-    /**
-     * Combined pattern for all types
-     * @var string
-     */
-    public const PATTERN = '^(\d{6}-?\d{7}|\d{3}-?\d{2}-?\d{5})$';
-
-    /**
      * @var int
      */
     public const LENGTH = 13; // Maximum length (RRN)
@@ -43,150 +27,51 @@ final class SouthKorea extends CountryHandler
      */
     public const MASK = '999999-9999999'; // Default to RRN
 
-    protected function hasValidPattern(string $tin): bool
-    {
-        return $this->matchPattern($tin, self::PATTERN);
-    }
-
-    protected function hasValidLength(string $tin): bool
-    {
-        $normalizedTin = preg_replace('/[^0-9]/', '', $tin);
-        $length = strlen($normalizedTin);
-        return $length === 10 || $length === 13;
-    }
-
-    protected function hasValidRule(string $tin): bool
-    {
-        $normalizedTin = preg_replace('/[^0-9]/', '', $tin);
-        
-        if (strlen($normalizedTin) === 13) {
-            return $this->isValidRRN($normalizedTin);
-        }
-        
-        if (strlen($normalizedTin) === 10) {
-            return $this->isValidBRN($normalizedTin);
-        }
-        
-        return false;
-    }
+    /**
+     * Combined pattern for all types.
+     *
+     * @var string
+     */
+    public const PATTERN = '^(\d{6}-?\d{7}|\d{3}-?\d{2}-?\d{5})$';
 
     /**
-     * Validate Resident Registration Number.
+     * BRN Pattern: 999-99-99999 (10 digits).
+     *
+     * @var string
      */
-    private function isValidRRN(string $rrn): bool
-    {
-        // Extract date components
-        $year = substr($rrn, 0, 2);
-        $month = substr($rrn, 2, 2);
-        $day = substr($rrn, 4, 2);
-        $genderCentury = (int) substr($rrn, 6, 1);
-        
-        // Determine century based on gender digit
-        $century = $this->getCentury($genderCentury);
-        if ($century === null) {
-            return false;
-        }
-        
-        $fullYear = $century + (int) $year;
-        
-        // Validate date
-        if (!$this->isValidBirthDate($fullYear, (int) $month, (int) $day)) {
-            return false;
-        }
-        
-        // Validate checksum
-        return $this->isValidRRNChecksum($rrn);
-    }
+    public const PATTERN_BRN = '^\d{3}-?\d{2}-?\d{5}$';
 
     /**
-     * Get century based on gender/century digit.
+     * RRN Pattern: XXXXXX-XXXXXXX (13 digits with dash).
+     *
+     * @var string
      */
-    private function getCentury(int $genderDigit): ?int
-    {
-        switch ($genderDigit) {
-            case 1:
-            case 2:
-                return 1900; // Born 1900-1999
-            case 3:
-            case 4:
-                return 2000; // Born 2000-2099
-            case 5:
-            case 6:
-                return 1900; // Foreigner born 1900-1999
-            case 7:
-            case 8:
-                return 2000; // Foreigner born 2000-2099
-            case 9:
-            case 0:
-                return 1800; // Born 1800-1899
-            default:
-                return null;
-        }
-    }
+    public const PATTERN_RRN = '^\d{6}-?\d{7}$';
 
     /**
-     * Validate birth date.
+     * Format input according to TIN type.
      */
-    private function isValidBirthDate(int $year, int $month, int $day): bool
+    public function formatInput(string $input): string
     {
-        // Basic range validation
-        if ($month < 1 || $month > 12) {
-            return false;
-        }
-        
-        if ($day < 1 || $day > 31) {
-            return false;
-        }
-        
-        // Check if date is valid
-        if (!checkdate($month, $day, $year)) {
-            return false;
-        }
-        
-        // Birth year should not be in the future
-        if ($year > (int) date('Y')) {
-            return false;
-        }
-        
-        return true;
-    }
+        $normalized = preg_replace('/[^0-9]/', '', $input);
 
-    /**
-     * Validate RRN checksum.
-     */
-    private function isValidRRNChecksum(string $rrn): bool
-    {
-        $weights = [2, 3, 4, 5, 6, 7, 8, 9, 2, 3, 4, 5];
-        $sum = 0;
-        
-        for ($i = 0; $i < 12; $i++) {
-            $sum += ((int) $rrn[$i]) * $weights[$i];
+        if ('' === $normalized) {
+            return '';
         }
-        
-        $checkDigit = (11 - ($sum % 11)) % 10;
-        
-        return $checkDigit === (int) $rrn[12];
-    }
 
-    /**
-     * Validate Business Registration Number.
-     */
-    private function isValidBRN(string $brn): bool
-    {
-        // Apply checksum algorithm
-        $weights = [1, 3, 7, 1, 3, 7, 1, 3, 5];
-        $sum = 0;
-        
-        for ($i = 0; $i < 9; $i++) {
-            $sum += ((int) $brn[$i]) * $weights[$i];
+        // RRN format: 999999-9999999
+        if (strlen($normalized) > 6 && strlen($normalized) <= 13) {
+            return substr($normalized, 0, 6) . '-' . substr($normalized, 6, 7);
         }
-        
-        // Add the quotient of the 9th digit * 5 / 10
-        $sum += ((int) (((int) $brn[8]) * 5 / 10));
-        
-        $checkDigit = (10 - ($sum % 10)) % 10;
-        
-        return $checkDigit === (int) $brn[9];
+
+        // BRN format: 999-99-99999
+        if (strlen($normalized) === 10) {
+            return substr($normalized, 0, 3) . '-'
+                   . substr($normalized, 3, 2) . '-'
+                   . substr($normalized, 5, 5);
+        }
+
+        return $normalized;
     }
 
     /**
@@ -231,41 +116,168 @@ final class SouthKorea extends CountryHandler
     public function identifyTinType(string $tin): ?array
     {
         $normalizedTin = preg_replace('/[^0-9]/', '', $this->normalizeTin($tin));
-        
+
         if (strlen($normalizedTin) === 13 && $this->isValidRRN($normalizedTin)) {
             return $this->getTinTypes()[1]; // RRN
         }
-        
+
         if (strlen($normalizedTin) === 10 && $this->isValidBRN($normalizedTin)) {
             return $this->getTinTypes()[2]; // BRN
         }
-        
+
         return null;
     }
 
-    /**
-     * Format input according to TIN type.
-     */
-    public function formatInput(string $input): string
+    protected function hasValidLength(string $tin): bool
     {
-        $normalized = preg_replace('/[^0-9]/', '', $input);
-        
-        if (strlen($normalized) === 0) {
-            return '';
-        }
-        
-        // RRN format: 999999-9999999
-        if (strlen($normalized) > 6 && strlen($normalized) <= 13) {
-            return substr($normalized, 0, 6) . '-' . substr($normalized, 6, 7);
-        }
-        
-        // BRN format: 999-99-99999
-        if (strlen($normalized) === 10) {
-            return substr($normalized, 0, 3) . '-' . 
-                   substr($normalized, 3, 2) . '-' . 
-                   substr($normalized, 5, 5);
-        }
-        
-        return $normalized;
+        $normalizedTin = preg_replace('/[^0-9]/', '', $tin);
+        $length = strlen($normalizedTin);
+
+        return 10 === $length || 13 === $length;
     }
-} 
+
+    protected function hasValidPattern(string $tin): bool
+    {
+        return $this->matchPattern($tin, self::PATTERN);
+    }
+
+    protected function hasValidRule(string $tin): bool
+    {
+        $normalizedTin = preg_replace('/[^0-9]/', '', $tin);
+
+        if (strlen($normalizedTin) === 13) {
+            return $this->isValidRRN($normalizedTin);
+        }
+
+        if (strlen($normalizedTin) === 10) {
+            return $this->isValidBRN($normalizedTin);
+        }
+
+        return false;
+    }
+
+    /**
+     * Get century based on gender/century digit.
+     */
+    private function getCentury(int $genderDigit): ?int
+    {
+        switch ($genderDigit) {
+            case 1:
+            case 2:
+                return 1900; // Born 1900-1999
+
+            case 3:
+            case 4:
+                return 2000; // Born 2000-2099
+
+            case 5:
+            case 6:
+                return 1900; // Foreigner born 1900-1999
+
+            case 7:
+            case 8:
+                return 2000; // Foreigner born 2000-2099
+
+            case 9:
+            case 0:
+                return 1800; // Born 1800-1899
+
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * Validate birth date.
+     */
+    private function isValidBirthDate(int $year, int $month, int $day): bool
+    {
+        // Basic range validation
+        if (1 > $month || 12 < $month) {
+            return false;
+        }
+
+        if (1 > $day || 31 < $day) {
+            return false;
+        }
+
+        // Check if date is valid
+        if (!checkdate($month, $day, $year)) {
+            return false;
+        }
+
+        // Birth year should not be in the future
+        if ((int) date('Y') < $year) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Validate Business Registration Number.
+     */
+    private function isValidBRN(string $brn): bool
+    {
+        // Apply checksum algorithm
+        $weights = [1, 3, 7, 1, 3, 7, 1, 3, 5];
+        $sum = 0;
+
+        for ($i = 0; 9 > $i; ++$i) {
+            $sum += ((int) $brn[$i]) * $weights[$i];
+        }
+
+        // Add the quotient of the 9th digit * 5 / 10
+        $sum += ((int) (((int) $brn[8]) * 5 / 10));
+
+        $checkDigit = (10 - ($sum % 10)) % 10;
+
+        return (int) $brn[9] === $checkDigit;
+    }
+
+    /**
+     * Validate Resident Registration Number.
+     */
+    private function isValidRRN(string $rrn): bool
+    {
+        // Extract date components
+        $year = substr($rrn, 0, 2);
+        $month = substr($rrn, 2, 2);
+        $day = substr($rrn, 4, 2);
+        $genderCentury = (int) substr($rrn, 6, 1);
+
+        // Determine century based on gender digit
+        $century = $this->getCentury($genderCentury);
+
+        if (null === $century) {
+            return false;
+        }
+
+        $fullYear = $century + (int) $year;
+
+        // Validate date
+        if (!$this->isValidBirthDate($fullYear, (int) $month, (int) $day)) {
+            return false;
+        }
+
+        // Validate checksum
+        return $this->isValidRRNChecksum($rrn);
+    }
+
+    /**
+     * Validate RRN checksum.
+     */
+    private function isValidRRNChecksum(string $rrn): bool
+    {
+        $weights = [2, 3, 4, 5, 6, 7, 8, 9, 2, 3, 4, 5];
+        $sum = 0;
+
+        for ($i = 0; 12 > $i; ++$i) {
+            $sum += ((int) $rrn[$i]) * $weights[$i];
+        }
+
+        $checkDigit = (11 - ($sum % 11)) % 10;
+
+        return (int) $rrn[12] === $checkDigit;
+    }
+}
