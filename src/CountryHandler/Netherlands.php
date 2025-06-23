@@ -31,7 +31,7 @@ final class Netherlands extends CountryHandler
 
     public function getPlaceholder(): string
     {
-        return '123-456-789';
+        return '123456782';
     }
 
     protected function hasValidRule(string $tin): bool
@@ -53,5 +53,19 @@ final class Netherlands extends CountryHandler
         }
 
         return $c9 === $remainderBy11;
+    }
+
+    /**
+     * Get all TIN types supported by Netherlands.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'BSN',
+                'name' => 'Dutch BSN',
+                'description' => 'Dutch Burgerservicenummer (BSN) - Citizen Service Number',
+            ],
+        ];
     }
 }

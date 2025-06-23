@@ -47,6 +47,20 @@ final class Croatia extends CountryHandler
 
     public function getPlaceholder(): string
     {
-        return '12345678903';
+        return '94577403194';
+    }
+
+    /**
+     * Get all TIN types supported by Croatia.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'OIB',
+                'name' => 'Croatian OIB',
+                'description' => 'Croatian Personal Identification Number (Osobni identifikacijski broj)',
+            ],
+        ];
     }
 }

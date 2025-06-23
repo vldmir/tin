@@ -90,4 +90,18 @@ final class Estonia extends CountryHandler
     {
         return '37605030299';
     }
+
+    /**
+     * Get all TIN types supported by Estonia.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'IK',
+                'name' => 'Estonian IK',
+                'description' => 'Estonian Personal Identification Code (Isikukood)',
+            ],
+        ];
+    }
 }

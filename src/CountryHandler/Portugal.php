@@ -59,4 +59,18 @@ final class Portugal extends CountryHandler
     {
         return '123456789';
     }
+
+    /**
+     * Get all TIN types supported by Portugal.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'NIF',
+                'name' => 'Portuguese NIF',
+                'description' => 'Portuguese Tax Identification Number (Número de Identificação Fiscal)',
+            ],
+        ];
+    }
 }

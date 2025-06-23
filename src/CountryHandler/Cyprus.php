@@ -95,4 +95,18 @@ final class Cyprus extends CountryHandler
 
         return 1;
     }
+
+    /**
+     * Get all TIN types supported by Cyprus.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'TIN',
+                'name' => 'Cypriot TIN',
+                'description' => 'Cyprus Tax Identification Number',
+            ],
+        ];
+    }
 }

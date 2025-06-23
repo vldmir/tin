@@ -62,4 +62,18 @@ final class Romania extends CountryHandler
     {
         return '1630615123457';
     }
+
+    /**
+     * Get all TIN types supported by Romania.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'CNP',
+                'name' => 'Romanian CNP',
+                'description' => 'Romanian Personal Numerical Code (Codul Numeric Personal)',
+            ],
+        ];
+    }
 }

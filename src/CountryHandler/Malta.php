@@ -40,6 +40,20 @@ final class Malta extends CountryHandler
 
     public function getPlaceholder(): string
     {
-        return '1234567M';
+        return '12345678';
+    }
+
+    /**
+     * Get all TIN types supported by Malta.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'TIN',
+                'name' => 'Maltese TIN',
+                'description' => 'Malta Tax Identification Number',
+            ],
+        ];
     }
 }

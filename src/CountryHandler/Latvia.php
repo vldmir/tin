@@ -50,4 +50,18 @@ final class Latvia extends CountryHandler
     {
         return '161175-19997';
     }
+
+    /**
+     * Get all TIN types supported by Latvia.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'PK',
+                'name' => 'Latvian PK',
+                'description' => 'Latvian Personal Code (Personas kods)',
+            ],
+        ];
+    }
 }

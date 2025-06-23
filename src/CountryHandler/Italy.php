@@ -306,4 +306,18 @@ final class Italy extends CountryHandler
     {
         return 'RSSMRA85T10A562S';
     }
+
+    /**
+     * Get all TIN types supported by Italy.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'CF',
+                'name' => 'Italian CF',
+                'description' => 'Italian Fiscal Code (Codice Fiscale)',
+            ],
+        ];
+    }
 }

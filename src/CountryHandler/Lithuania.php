@@ -132,4 +132,18 @@ final class Lithuania extends CountryHandler
     {
         return '33309240064';
     }
+
+    /**
+     * Get all TIN types supported by Lithuania.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'AK',
+                'name' => 'Lithuanian AK',
+                'description' => 'Lithuanian Personal Code (Asmens kodas)',
+            ],
+        ];
+    }
 }

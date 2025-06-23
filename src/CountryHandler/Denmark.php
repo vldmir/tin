@@ -114,6 +114,20 @@ final class Denmark extends CountryHandler
 
     public function getPlaceholder(): string
     {
-        return '211062-5629';
+        return '2110625629';
+    }
+
+    /**
+     * Get all TIN types supported by Denmark.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'CPR',
+                'name' => 'Danish CPR',
+                'description' => 'Danish Central Person Register Number (CPR-nummer)',
+            ],
+        ];
     }
 }

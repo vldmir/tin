@@ -5,6 +5,47 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.2](https://github.com/vldmir/tin/compare/2.0.1...2.0.2) - 2025-06-23
+
+### Added
+
+- **🇺🇦 Ukraine Support**: Added complete Ukraine TIN validation with 10-digit Individual Tax Number support
+- **Ukraine TIN Handler**: Implemented `src/CountryHandler/Ukraine.php` with checksum validation algorithm
+- **Ukraine Tests**: Added comprehensive PHPSpec tests in `spec/loophp/Tin/CountryHandler/UkraineSpec.php`
+- **Complete getTinTypes() Coverage**: All 46 countries now have complete `getTinTypes()` method implementation
+- **Enhanced TIN Types**: Added proper localized TIN type names and descriptions for all countries
+- **Documentation Updates**: Updated country count from 45 to 46 countries in README.md
+- **Global Countries Documentation**: Enhanced documentation with complete country coverage details
+
+### Changed
+
+- **TIN Registration**: Updated main TIN class to register Ukraine with country code 'UA'
+- **Country Handler Methods**: Standardized all country handlers to have complete `getTinTypes()` support
+- **Test Coverage**: Improved test coverage with Ukraine achieving 80% methods, 90.62% lines coverage
+- **Statistical Updates**: Updated global features documentation with new country statistics
+
+### Fixed
+
+- **Ukraine Validation**: Implemented proper checksum validation algorithm for Ukrainian TIN numbers
+- **Missing Methods**: Added required methods `getCountryCode()`, `getLength()`, `getPattern()` to Ukraine handler
+- **TIN Type Identification**: Fixed `identifyTinType()` method to work correctly with Ukraine TIN validation
+- **Test Compatibility**: Updated Ukraine tests with valid TIN numbers that pass checksum validation
+
+### Technical
+
+- **Algorithm Implementation**: Ukrainian TIN uses weighted sum checksum with modulo 10 validation
+- **Pattern Matching**: 10-digit pattern validation with proper normalization support
+- **Country Code**: Ukraine registered with 'UA' country code following ISO 3166-1 standard
+- **Test Infrastructure**: Enhanced test suite with 47 specs covering all countries plus main TIN class
+
+### Statistics
+
+- **Total Countries**: 46 (up from 45)
+- **Total TIN Types**: 62 across all countries
+- **Test Coverage**: 341 examples with 221 passed, 90 skipped, 14 failed, 16 broken
+- **Ukraine Coverage**: Methods 80%, Lines 90.62%
+- **getTinTypes() Coverage**: 100% (all 46 countries)
+
 ## [2.0.1](https://github.com/vldmir/tin/compare/2.0.0...2.0.1) - 2025-06-23
 
 ### Added

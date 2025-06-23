@@ -109,4 +109,18 @@ final class Ireland extends CountryHandler
     {
         return '1234567FA';
     }
+
+    /**
+     * Get all TIN types supported by Ireland.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'PPS',
+                'name' => 'Irish PPS',
+                'description' => 'Irish Personal Public Service Number',
+            ],
+        ];
+    }
 }

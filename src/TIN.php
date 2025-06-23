@@ -4,9 +4,14 @@ declare(strict_types=1);
 
 namespace loophp\Tin;
 
+use loophp\Tin\CountryHandler\Argentina;
+use loophp\Tin\CountryHandler\Australia;
 use loophp\Tin\CountryHandler\Austria;
 use loophp\Tin\CountryHandler\Belgium;
+use loophp\Tin\CountryHandler\Brazil;
 use loophp\Tin\CountryHandler\Bulgaria;
+use loophp\Tin\CountryHandler\Canada;
+use loophp\Tin\CountryHandler\China;
 use loophp\Tin\CountryHandler\CountryHandlerInterface;
 use loophp\Tin\CountryHandler\Croatia;
 use loophp\Tin\CountryHandler\Cyprus;
@@ -18,21 +23,34 @@ use loophp\Tin\CountryHandler\France;
 use loophp\Tin\CountryHandler\Germany;
 use loophp\Tin\CountryHandler\Greece;
 use loophp\Tin\CountryHandler\Hungary;
+use loophp\Tin\CountryHandler\India;
+use loophp\Tin\CountryHandler\Indonesia;
 use loophp\Tin\CountryHandler\Ireland;
 use loophp\Tin\CountryHandler\Italy;
+use loophp\Tin\CountryHandler\Japan;
 use loophp\Tin\CountryHandler\Latvia;
 use loophp\Tin\CountryHandler\Lithuania;
 use loophp\Tin\CountryHandler\Luxembourg;
 use loophp\Tin\CountryHandler\Malta;
+use loophp\Tin\CountryHandler\Mexico;
 use loophp\Tin\CountryHandler\Netherlands;
+use loophp\Tin\CountryHandler\Nigeria;
 use loophp\Tin\CountryHandler\Poland;
 use loophp\Tin\CountryHandler\Portugal;
 use loophp\Tin\CountryHandler\Romania;
+use loophp\Tin\CountryHandler\Russia;
+use loophp\Tin\CountryHandler\SaudiArabia;
 use loophp\Tin\CountryHandler\Slovakia;
 use loophp\Tin\CountryHandler\Slovenia;
+use loophp\Tin\CountryHandler\SouthAfrica;
+use loophp\Tin\CountryHandler\SouthKorea;
 use loophp\Tin\CountryHandler\Spain;
 use loophp\Tin\CountryHandler\Sweden;
+use loophp\Tin\CountryHandler\Switzerland;
+use loophp\Tin\CountryHandler\Turkey;
+use loophp\Tin\CountryHandler\Ukraine;
 use loophp\Tin\CountryHandler\UnitedKingdom;
+use loophp\Tin\CountryHandler\UnitedStates;
 use loophp\Tin\Exception\TINException;
 
 /**
@@ -44,9 +62,15 @@ final class TIN
      * @var array<string, class-string>
      */
     private static $algorithms = [
+        'AR' => Argentina::class,
         'AT' => Austria::class,
+        'AU' => Australia::class,
         'BE' => Belgium::class,
         'BG' => Bulgaria::class,
+        'BR' => Brazil::class,
+        'CA' => Canada::class,
+        'CH' => Switzerland::class,
+        'CN' => China::class,
         'CY' => Cyprus::class,
         'CZ' => CzechRepublic::class,
         'DE' => Germany::class,
@@ -58,20 +82,32 @@ final class TIN
         'GR' => Greece::class,
         'HR' => Croatia::class,
         'HU' => Hungary::class,
+        'ID' => Indonesia::class,
         'IE' => Ireland::class,
+        'IN' => India::class,
         'IT' => Italy::class,
+        'JP' => Japan::class,
+        'KR' => SouthKorea::class,
         'LT' => Lithuania::class,
         'LU' => Luxembourg::class,
         'LV' => Latvia::class,
         'MT' => Malta::class,
+        'MX' => Mexico::class,
+        'NG' => Nigeria::class,
         'NL' => Netherlands::class,
         'PL' => Poland::class,
         'PT' => Portugal::class,
         'RO' => Romania::class,
+        'RU' => Russia::class,
+        'SA' => SaudiArabia::class,
         'SE' => Sweden::class,
         'SI' => Slovenia::class,
         'SK' => Slovakia::class,
+        'TR' => Turkey::class,
+        'UA' => Ukraine::class,
         'UK' => UnitedKingdom::class,
+        'US' => UnitedStates::class,
+        'ZA' => SouthAfrica::class,
     ];
 
     /**
@@ -211,6 +247,45 @@ final class TIN
         }
         
         throw TINException::invalidCountry($countryCode);
+    }
+
+    /**
+     * Get all supported countries.
+     * 
+     * @return array<string> Array of country codes
+     */
+    public static function getSupportedCountries(): array
+    {
+        return array_keys(self::$algorithms);
+    }
+
+    /**
+     * Get all supported countries with additional information.
+     * 
+     * @return array<string, array> Array of countries with their details
+     */
+    public static function getSupportedCountriesWithDetails(): array
+    {
+        $countries = [];
+        
+        foreach (self::$algorithms as $countryCode => $algorithmClass) {
+            try {
+                $handler = new $algorithmClass();
+                $countries[$countryCode] = [
+                    'country_code' => $countryCode,
+                    'mask' => $handler->getInputMask(),
+                    'placeholder' => $handler->getPlaceholder(),
+                    'length' => $algorithmClass::LENGTH,
+                    'pattern' => $algorithmClass::PATTERN,
+                    'tin_types' => $handler->getTinTypes(),
+                ];
+            } catch (\Exception $e) {
+                // Skip countries that can't be instantiated
+                continue;
+            }
+        }
+        
+        return $countries;
     }
 
     /**

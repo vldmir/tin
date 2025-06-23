@@ -33,4 +33,18 @@ final class Greece extends CountryHandler
     {
         return '123456789';
     }
+
+    /**
+     * Get all TIN types supported by Greece.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'AFM',
+                'name' => 'Greek AFM',
+                'description' => 'Greek Tax Registration Number (Arithmos Forologikou Mitroou)',
+            ],
+        ];
+    }
 }

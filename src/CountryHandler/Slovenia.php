@@ -34,6 +34,20 @@ final class Slovenia extends CountryHandler
         return '15012557';
     }
 
+    /**
+     * Get all TIN types supported by Slovenia.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'EMSO',
+                'name' => 'Slovenian EMSO',
+                'description' => 'Slovenian Unique Master Citizen Number (Enotna matična številka občana)',
+            ],
+        ];
+    }
+
     protected function hasValidRule(string $tin): bool
     {
         return $this->isFollowRangeRule($tin) && $this->isFollowSloveniaRule($tin);

@@ -59,6 +59,20 @@ final class Austria extends CountryHandler
 
     public function getPlaceholder(): string
     {
-        return '123456789';
+        return '12 310170';
+    }
+
+    /**
+     * Get all TIN types supported by Austria.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'TIN',
+                'name' => 'Austrian TIN',
+                'description' => 'Austrian Tax Identification Number (Steuernummer)',
+            ],
+        ];
     }
 }

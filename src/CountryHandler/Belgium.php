@@ -95,4 +95,18 @@ final class Belgium extends CountryHandler
     {
         return '85.07.30-033.61';
     }
+
+    /**
+     * Get all TIN types supported by Belgium.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'TIN',
+                'name' => 'Belgian TIN',
+                'description' => 'Belgian Tax Identification Number (Numéro de Registre National)',
+            ],
+        ];
+    }
 }

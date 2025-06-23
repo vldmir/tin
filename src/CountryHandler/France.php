@@ -46,4 +46,18 @@ final class France extends CountryHandler
     {
         return '1 23 45 67 890 123';
     }
+
+    /**
+     * Get all TIN types supported by France.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'TIN',
+                'name' => 'French TIN',
+                'description' => 'French Tax Identification Number (Numéro de Sécurité Sociale)',
+            ],
+        ];
+    }
 }

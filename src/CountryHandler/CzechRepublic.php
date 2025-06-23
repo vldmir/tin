@@ -160,4 +160,18 @@ final class CzechRepublic extends CountryHandler
     {
         return '855230/3174';
     }
+
+    /**
+     * Get all TIN types supported by Czech Republic.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'RC',
+                'name' => 'Czech RC',
+                'description' => 'Czech Birth Number (Rodné číslo)',
+            ],
+        ];
+    }
 }

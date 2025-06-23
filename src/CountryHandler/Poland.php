@@ -170,4 +170,18 @@ final class Poland extends CountryHandler
     {
         return '85071803874';
     }
+
+    /**
+     * Get all TIN types supported by Poland.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'PESEL',
+                'name' => 'Polish PESEL',
+                'description' => 'Polish National Identity Number (Powszechny Elektroniczny System Ewidencji Ludności)',
+            ],
+        ];
+    }
 }

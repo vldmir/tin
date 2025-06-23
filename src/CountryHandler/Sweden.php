@@ -219,4 +219,18 @@ final class Sweden extends CountryHandler
     {
         return '640823-3234';
     }
+
+    /**
+     * Get all TIN types supported by Sweden.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'PN',
+                'name' => 'Swedish PN',
+                'description' => 'Swedish Personal Number (Personnummer)',
+            ],
+        ];
+    }
 }

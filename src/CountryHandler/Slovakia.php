@@ -57,4 +57,18 @@ final class Slovakia extends CountryHandler
     {
         return '7103192745';
     }
+
+    /**
+     * Get all TIN types supported by Slovakia.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'RC',
+                'name' => 'Slovak RC',
+                'description' => 'Slovak Birth Number (Rodné číslo)',
+            ],
+        ];
+    }
 }

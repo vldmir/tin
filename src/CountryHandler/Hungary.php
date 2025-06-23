@@ -45,6 +45,20 @@ final class Hungary extends CountryHandler
 
     public function getPlaceholder(): string
     {
-        return '8071592153';
+        return '12345678';
+    }
+
+    /**
+     * Get all TIN types supported by Hungary.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'ANUM',
+                'name' => 'Hungarian ANUM',
+                'description' => 'Hungarian Tax Number (Adóazonosító szám)',
+            ],
+        ];
     }
 }

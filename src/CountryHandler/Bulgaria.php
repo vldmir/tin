@@ -72,4 +72,18 @@ final class Bulgaria extends CountryHandler
     {
         return '7523169263';
     }
+
+    /**
+     * Get all TIN types supported by Bulgaria.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'EGN',
+                'name' => 'Bulgarian EGN',
+                'description' => 'Bulgarian Unique Civil Number (Edinen Grazhdanski Nomer)',
+            ],
+        ];
+    }
 }

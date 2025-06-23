@@ -128,4 +128,18 @@ final class Luxembourg extends CountryHandler
     {
         return '1893120105732';
     }
+
+    /**
+     * Get all TIN types supported by Luxembourg.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'TIN',
+                'name' => 'Luxembourg TIN',
+                'description' => 'Luxembourg Tax Identification Number',
+            ],
+        ];
+    }
 }

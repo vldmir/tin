@@ -135,4 +135,18 @@ final class Finland extends CountryHandler
     {
         return '131052-308T';
     }
+
+    /**
+     * Get all TIN types supported by Finland.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'HETU',
+                'name' => 'Finnish HETU',
+                'description' => 'Finnish Personal Identity Code (Henkilötunnus)',
+            ],
+        ];
+    }
 }
