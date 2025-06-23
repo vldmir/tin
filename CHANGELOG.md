@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.3](https://github.com/vldmir/tin/compare/2.0.2...2.0.3) - 2025-01-02
+## [2.0.4](https://github.com/vldmir/tin/compare/2.0.3...2.0.4) - 2025-06-23
 
 ### Breaking Changes
 
@@ -44,14 +44,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Migration Guide
 
-**For existing users upgrading from 2.0.2 to 2.0.3:**
+**For existing users upgrading from 2.0.3 to 2.0.4:**
 
 ```php
 // OLD (2.0.2 and earlier)
 use loophp\Tin\TIN;
 use loophp\Tin\Exception\TINException;
 
-// NEW (2.0.3+)
+// NEW (2.0.4+)
 use vldmir\Tin\TIN;
 use vldmir\Tin\Exception\TINException;
 
