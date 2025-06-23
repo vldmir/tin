@@ -178,4 +178,35 @@ abstract class CountryHandler implements CountryHandlerInterface
         
         return $result;
     }
+
+    /**
+     * Get all TIN types supported by this country.
+     * Default implementation for countries with single TIN type.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'TIN',
+                'name' => 'Tax Identification Number',
+                'description' => 'Standard tax identification number for ' . static::COUNTRYCODE,
+            ],
+        ];
+    }
+
+    /**
+     * Identify the TIN type for a given TIN.
+     * Default implementation for countries with single TIN type.
+     */
+    public function identifyTinType(string $tin): ?array
+    {
+        $normalizedTin = $this->normalizeTin($tin);
+        
+        if ($this->hasValidPattern($normalizedTin)) {
+            $types = $this->getTinTypes();
+            return $types[1] ?? null;
+        }
+        
+        return null;
+    }
 }

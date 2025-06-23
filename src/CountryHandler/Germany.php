@@ -237,4 +237,42 @@ final class Germany extends CountryHandler
     {
         return '123 456 789 01';
     }
+
+    /**
+     * Get all TIN types supported by Germany.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'IdNr',
+                'name' => 'Identifikationsnummer',
+                'description' => 'Personal Identification Number',
+            ],
+            2 => [
+                'code' => 'StNr',
+                'name' => 'Steuernummer',
+                'description' => 'Tax Number',
+            ],
+        ];
+    }
+
+    /**
+     * Identify the TIN type for a given German TIN.
+     */
+    public function identifyTinType(string $tin): ?array
+    {
+        $normalizedTin = $this->normalizeTin($tin);
+        
+        // Both patterns follow specific validation rules
+        if ($this->isFollowPattern1($normalizedTin) && $this->isFollowRuleGermany1($normalizedTin)) {
+            return $this->getTinTypes()[1]; // IdNr
+        }
+        
+        if ($this->isFollowPattern2($normalizedTin) && $this->isFollowRuleGermany2($normalizedTin)) {
+            return $this->getTinTypes()[2]; // StNr
+        }
+        
+        return null;
+    }
 }

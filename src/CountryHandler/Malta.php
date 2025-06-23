@@ -24,12 +24,12 @@ final class Malta extends CountryHandler
     /**
      * @var string
      */
-    public const PATTERN = '\d{8}';
+    public const PATTERN = '\d{7}[MGAPLHBZ]';
 
     /**
      * @var string
      */
-    public const MASK = '99999999';
+    public const MASK = '9999999A';
 
     protected function hasValidRule(string $tin): bool
     {
@@ -40,6 +40,6 @@ final class Malta extends CountryHandler
 
     public function getPlaceholder(): string
     {
-        return '12345678';
+        return '1234567M';
     }
 }

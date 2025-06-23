@@ -161,4 +161,53 @@ final class Spain extends CountryHandler
     {
         return '12345678Z';
     }
+
+    /**
+     * Get all TIN types supported by Spain.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'DNI',
+                'name' => 'Documento Nacional de Identidad',
+                'description' => 'Spanish Natural Persons ID',
+            ],
+            2 => [
+                'code' => 'NIE',
+                'name' => 'Número de Identidad de Extranjero',
+                'description' => 'Foreigners Identification Number',
+            ],
+            3 => [
+                'code' => 'CIF',
+                'name' => 'Código de Identificación Fiscal',
+                'description' => 'Tax Identification Code for Legal Entities',
+            ],
+        ];
+    }
+
+    /**
+     * Identify the TIN type for a given Spanish TIN.
+     */
+    public function identifyTinType(string $tin): ?array
+    {
+        $normalizedTin = $this->normalizeTin($tin);
+        
+        // Pattern 1: DNI or NIE
+        if ($this->isFollowPattern1($normalizedTin)) {
+            // Check if it starts with X, Y, or Z (NIE)
+            if (in_array($normalizedTin[0], self::NIE, true)) {
+                return $this->getTinTypes()[2]; // NIE
+            }
+            // Otherwise it's a DNI
+            return $this->getTinTypes()[1]; // DNI
+        }
+        
+        // Pattern 2: CIF (Legal entities)
+        if ($this->isFollowPattern2($normalizedTin)) {
+            return $this->getTinTypes()[3]; // CIF
+        }
+        
+        return null;
+    }
 }
