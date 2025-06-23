@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.1](https://github.com/vldmir/tin/compare/2.0.0...2.0.1) - 2025-06-23
+
+### Added
+
+- **Comprehensive Documentation**: Updated README with complete feature documentation
+- **Docker Setup Guide**: Added detailed Docker development environment instructions
+- **Enhanced Examples**: Added complete working examples for all new features
+- **Feature Overview**: Added clear feature list with emoji icons for easy scanning
+
+### Changed
+
+- **README Structure**: Reorganized documentation for better user experience
+- **Package References**: Updated all package references to vldmir/tin
+- **Repository Links**: Updated all links to point to the correct fork
+- **Authors Section**: Added proper attribution for enhanced version
+
+### Documentation
+
+- **Input Mask Examples**: Added comprehensive examples for all supported countries
+- **TIN Type Identification**: Documented complete API with return value examples
+- **Docker Commands**: Added both make commands and manual Docker instructions
+- **Development Setup**: Added step-by-step development environment setup guide
+
 ## [2.0.0](https://github.com/vldmir/tin/compare/1.1.1...2.0.0) - 2025-06-23
 
 ### Added
