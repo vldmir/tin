@@ -206,7 +206,7 @@ abstract class CountryHandler implements CountryHandlerInterface
 
     protected function normalizeTin(string $tin): string
     {
-        if (null !== $string = preg_replace('#[^[:alnum:]\-+]#u', '', $tin)) {
+        if (null !== $string = preg_replace('#[^[:alnum:]]#u', '', $tin)) {
             return strtoupper($string);
         }
 

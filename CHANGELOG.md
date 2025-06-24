@@ -5,6 +5,59 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.5](https://github.com/vldmir/tin/compare/2.0.4...2.0.5) - 2025-06-24
+
+### Fixed
+
+- **TIN Normalization**: Fixed critical issue where special characters (dashes, dots, spaces) in formatted TIN input caused validation failures
+- **Format Consistency**: Resolved inconsistency between input masks and validation patterns across multiple countries
+- **Sweden TIN Support**: Fixed Swedish Personal Numbers with dashes (e.g., `640823-3234`) now properly validated
+- **Denmark TIN Support**: Fixed Danish CPR numbers with dashes (e.g., `211062-5629`) now properly validated  
+- **Netherlands TIN Support**: Fixed Dutch BSN numbers with dashes (e.g., `123-456-782`) now properly validated
+- **Latvia TIN Support**: Fixed Latvian Personal Codes with dashes (e.g., `161175-19997`) now properly validated
+- **Canada TIN Support**: Fixed Canadian SIN numbers with dashes (e.g., `123-456-789`) now properly validated
+- **Brazil Regex Error**: Fixed regex compilation error in Brazilian TIN patterns by properly escaping forward slash characters
+
+### Changed
+
+- **Core Normalization**: Updated `CountryHandler::normalizeTin()` to remove ALL non-alphanumeric characters before validation
+- **User Experience**: Users can now input TINs with or without formatting (dashes, dots, spaces) for consistent validation
+- **Input Flexibility**: All countries now accept both formatted and unformatted TIN input automatically
+
+### Technical
+
+- **CountryHandler.php**: Modified `normalizeTin()` regex from `#[^[:alnum:]\-+]#u` to `#[^[:alnum:]]#u`
+- **Brazil.php**: Fixed regex patterns by escaping forward slash in `PATTERN` and `PATTERN_CNPJ` constants
+- **Backward Compatibility**: All existing functionality preserved, only enhancing input format flexibility
+- **Test Coverage**: All existing tests continue to pass with improved format handling
+
+### Countries Affected
+
+This release improves TIN validation for 6+ countries that previously had formatting issues:
+
+- 🇸🇪 **Sweden**: Swedish Personal Numbers (PN) - `XXXXXX-XXXX` format support
+- 🇩🇰 **Denmark**: Danish CPR numbers - `XXXXXX-XXXX` format support  
+- 🇳🇱 **Netherlands**: Dutch BSN numbers - `XXX-XXX-XXX` format support
+- 🇱🇻 **Latvia**: Latvian Personal Codes - `XXXXXX-XXXXX` format support
+- 🇨🇦 **Canada**: Canadian SIN numbers - `XXX-XXX-XXX` format support
+- 🇧🇷 **Brazil**: Brazilian CPF/CNPJ - `XXX.XXX.XXX-XX` format support
+
+### Migration Guide
+
+**No breaking changes** - this is a pure enhancement release. Existing code will continue to work exactly as before, but now with improved format flexibility:
+
+```php
+use vldmir\Tin\TIN;
+
+// Both of these now work for Swedish TINs:
+$tin1 = TIN::from('SE', '640823-3234');  // With dash - NOW WORKS ✅
+$tin2 = TIN::from('SE', '6408233234');   // Without dash - Still works ✅
+
+// Same improvement for all affected countries
+$danishTin = TIN::from('DK', '211062-5629');  // Now works ✅
+$dutchTin = TIN::from('NL', '123-456-782');   // Now works ✅
+```
+
 ## [2.0.4](https://github.com/vldmir/tin/compare/2.0.3...2.0.4) - 2025-06-23
 
 ### Breaking Changes
