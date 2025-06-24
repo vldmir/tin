@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace loophp\Tin\CountryHandler;
+namespace vldmir\Tin\CountryHandler;
 
 /**
  * Croatia.
@@ -22,12 +22,31 @@ final class Croatia extends CountryHandler
     /**
      * @var string
      */
-    public const PATTERN = '\d{11}';
+    public const MASK = '99999999999';
 
     /**
      * @var string
      */
-    public const MASK = '99999999999';
+    public const PATTERN = '\d{11}';
+
+    public function getPlaceholder(): string
+    {
+        return '94577403194';
+    }
+
+    /**
+     * Get all TIN types supported by Croatia.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'OIB',
+                'name' => 'Croatian OIB',
+                'description' => 'Croatian Personal Identification Number (Osobni identifikacijski broj)',
+            ],
+        ];
+    }
 
     protected function hasValidRule(string $tin): bool
     {
@@ -43,10 +62,5 @@ final class Croatia extends CountryHandler
         $lastDigit = $this->digitAt($tin, 10);
 
         return (1 === $rest && 0 === $lastDigit) || $lastDigit === $diff;
-    }
-
-    public function getPlaceholder(): string
-    {
-        return '12345678903';
     }
 }

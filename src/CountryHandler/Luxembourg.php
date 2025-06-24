@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace loophp\Tin\CountryHandler;
+namespace vldmir\Tin\CountryHandler;
 
 use function count;
 
@@ -24,12 +24,12 @@ final class Luxembourg extends CountryHandler
     /**
      * @var string
      */
-    public const PATTERN = '(1[89]|20)\d{2}(0[1-9]|1[012])(0[1-9]|[1-2][0-9]|3[0-1])\d{5}';
+    public const MASK = '9999999999999';
 
     /**
      * @var string
      */
-    public const MASK = '9999999999999';
+    public const PATTERN = '(1[89]|20)\d{2}(0[1-9]|1[012])(0[1-9]|[1-2][0-9]|3[0-1])\d{5}';
 
     /**
      * @var array<int, array<int, int>>
@@ -60,6 +60,25 @@ final class Luxembourg extends CountryHandler
         [2, 7, 9, 3, 8, 0, 6, 4, 1, 5],
         [7, 0, 4, 6, 9, 1, 3, 2, 5, 8],
     ];
+
+    public function getPlaceholder(): string
+    {
+        return '1893120105732';
+    }
+
+    /**
+     * Get all TIN types supported by Luxembourg.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'TIN',
+                'name' => 'Luxembourg TIN',
+                'description' => 'Luxembourg Tax Identification Number',
+            ],
+        ];
+    }
 
     protected function hasValidDate(string $tin): bool
     {
@@ -122,10 +141,5 @@ final class Luxembourg extends CountryHandler
         }
 
         return 0 === $check;
-    }
-
-    public function getPlaceholder(): string
-    {
-        return '1893120105732';
     }
 }
