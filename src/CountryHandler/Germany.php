@@ -41,13 +41,20 @@ final class Germany extends CountryHandler
      */
     public const PATTERN_2 = '[1-9]\d{10}';
 
+    /**
+     * Returns a sample formatted German TIN for display or placeholder purposes.
+     *
+     * @return string Example TIN in the format '123 456 789 01'.
+     */
     public function getPlaceholder(): string
     {
         return '123 456 789 01';
     }
 
     /**
-     * Get all TIN types supported by Germany.
+     * Returns an array describing the supported German TIN types: IdNr (Personal Identification Number) and StNr (Tax Number).
+     *
+     * @return array An associative array with details for each supported TIN type.
      */
     public function getTinTypes(): array
     {
@@ -66,7 +73,10 @@ final class Germany extends CountryHandler
     }
 
     /**
-     * Identify the TIN type for a given German TIN.
+     * Determines the type of a German TIN (Tax Identification Number) based on its format and validation rules.
+     *
+     * @param string $tin The TIN to be analyzed.
+     * @return array|null The TIN type information if identified, or null if the TIN does not match any supported type.
      */
     public function identifyTinType(string $tin): ?array
     {
@@ -84,6 +94,12 @@ final class Germany extends CountryHandler
         return null;
     }
 
+    /**
+     * Checks if the provided TIN has a valid length for German tax identification numbers.
+     *
+     * @param string $tin The tax identification number to validate.
+     * @return bool True if the TIN matches one of the accepted lengths, false otherwise.
+     */
     protected function hasValidLength(string $tin): bool
     {
         return $this->isFollowLength1($tin) || $this->isFollowLength2($tin);
@@ -271,6 +287,12 @@ final class Germany extends CountryHandler
         return $total === $c3;
     }
 
+    /**
+     * Validates the second type of German TIN (StNr) by checking if the last digit matches the calculated check digit.
+     *
+     * @param string $tin The TIN to validate.
+     * @return bool True if the TIN passes the check digit validation; otherwise, false.
+     */
     private function isFollowRuleGermany2(string $tin): bool
     {
         return $this->digitAt($tin, 10) === $this->calculateCheckDigit($tin);

@@ -29,13 +29,20 @@ final class Greece extends CountryHandler
      */
     public const PATTERN = '\d{9}';
 
+    /**
+     * Returns a sample Greek TIN (Tax Identification Number) placeholder.
+     *
+     * @return string The placeholder TIN value for Greece.
+     */
     public function getPlaceholder(): string
     {
         return '123456789';
     }
 
     /**
-     * Get all TIN types supported by Greece.
+     * Returns an array of supported Greek TIN types with their codes, names, and descriptions.
+     *
+     * @return array An associative array describing each supported TIN type for Greece.
      */
     public function getTinTypes(): array
     {

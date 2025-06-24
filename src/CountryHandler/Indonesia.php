@@ -35,7 +35,12 @@ final class Indonesia extends CountryHandler
     public const PATTERN = '^\d{2}\.?\d{3}\.?\d{3}\.?\d{1}-?\d{3}\.?\d{3}$|^\d{16}$';
 
     /**
-     * Format input according to NPWP format.
+     * Formats a string as an Indonesian NPWP (Tax Identification Number).
+     *
+     * Removes all non-digit characters from the input and applies the standard NPWP format: 99.999.999.9-999.999. Returns an empty string if the input contains no digits.
+     *
+     * @param string $input The input string to format.
+     * @return string The formatted NPWP string, or an empty string if input is empty after normalization.
      */
     public function formatInput(string $input): string
     {
@@ -61,7 +66,9 @@ final class Indonesia extends CountryHandler
     }
 
     /**
-     * Get placeholder text.
+     * Returns a sample formatted Indonesian NPWP as a placeholder string.
+     *
+     * @return string Example NPWP in the standard format.
      */
     public function getPlaceholder(): string
     {
@@ -69,7 +76,9 @@ final class Indonesia extends CountryHandler
     }
 
     /**
-     * Get all TIN types supported by Indonesia.
+     * Returns metadata for all supported Indonesian TIN types.
+     *
+     * @return array An array containing information about the NPWP TIN type, including its code, name, and description.
      */
     public function getTinTypes(): array
     {
@@ -82,6 +91,12 @@ final class Indonesia extends CountryHandler
         ];
     }
 
+    /**
+     * Checks if the normalized TIN contains exactly 16 digits.
+     *
+     * @param string $tin The input Tax Identification Number.
+     * @return bool True if the TIN has 16 digits after removing non-digit characters; otherwise, false.
+     */
     protected function hasValidLength(string $tin): bool
     {
         $normalizedTin = preg_replace('/[^0-9]/', '', $tin);
@@ -89,11 +104,25 @@ final class Indonesia extends CountryHandler
         return strlen($normalizedTin) === self::LENGTH;
     }
 
+    /**
+     * Checks if the provided TIN matches the Indonesian NPWP format pattern.
+     *
+     * @param string $tin The Tax Identification Number to validate.
+     * @return bool True if the TIN matches the NPWP pattern; otherwise, false.
+     */
     protected function hasValidPattern(string $tin): bool
     {
         return $this->matchPattern($tin, self::PATTERN);
     }
 
+    /**
+     * Applies semantic validation rules to an Indonesian NPWP TIN.
+     *
+     * Checks that the TIN is 16 digits, not all zeros, and that the tax office code (first two digits) is not '00'.
+     *
+     * @param string $tin The TIN to validate.
+     * @return bool True if the TIN passes all rule-based checks, false otherwise.
+     */
     protected function hasValidRule(string $tin): bool
     {
         $normalizedTin = preg_replace('/[^0-9]/', '', $tin);

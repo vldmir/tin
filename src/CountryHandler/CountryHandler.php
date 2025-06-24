@@ -12,7 +12,12 @@ use function strlen;
 abstract class CountryHandler implements CountryHandlerInterface
 {
     /**
-     * Format TIN input according to mask (for display purposes).
+     * Formats a TIN input string according to the country-specific input mask for display purposes.
+     *
+     * The input is normalized and then formatted by applying the mask, inserting separators and enforcing digit or letter requirements as specified by the mask.
+     *
+     * @param string $input The raw TIN input to be formatted.
+     * @return string The formatted TIN string.
      */
     public function formatInput(string $input): string
     {
@@ -56,8 +61,11 @@ abstract class CountryHandler implements CountryHandlerInterface
     }
 
     /**
-     * Get input mask for TIN format.
-     * Override in child classes for custom masks.
+     * Returns the input mask used for formatting TINs.
+     *
+     * By default, returns the value of the `MASK` constant if defined; otherwise, returns a string of '9's with a length equal to the `LENGTH` constant. Intended to be overridden in subclasses for country-specific masks.
+     *
+     * @return string The input mask for TIN formatting.
      */
     public function getInputMask(): string
     {
@@ -65,8 +73,12 @@ abstract class CountryHandler implements CountryHandlerInterface
     }
 
     /**
-     * Get placeholder text for TIN input.
-     * Override in child classes for custom placeholders.
+     * Returns a placeholder string for TIN input based on the input mask.
+     *
+     * Replaces mask characters with representative placeholder characters to guide user input.
+     * Can be overridden in subclasses for custom placeholder formats.
+     *
+     * @return string The placeholder string for TIN input.
      */
     public function getPlaceholder(): string
     {
@@ -76,8 +88,11 @@ abstract class CountryHandler implements CountryHandlerInterface
     }
 
     /**
-     * Get all TIN types supported by this country.
-     * Default implementation for countries with single TIN type.
+     * Returns an array of TIN types supported by the country.
+     *
+     * The default implementation provides a single TIN type with code 'TIN', name 'Tax Identification Number', and a description including the country code.
+     *
+     * @return array An array of TIN type definitions.
      */
     public function getTinTypes(): array
     {
@@ -91,8 +106,12 @@ abstract class CountryHandler implements CountryHandlerInterface
     }
 
     /**
-     * Identify the TIN type for a given TIN.
-     * Default implementation for countries with single TIN type.
+     * Determines the TIN type for the provided TIN value.
+     *
+     * Returns the first TIN type from `getTinTypes()` if the normalized TIN matches the valid pattern; otherwise, returns null.
+     *
+     * @param string $tin The Tax Identification Number to identify.
+     * @return array|null The TIN type information, or null if the TIN does not match the expected pattern.
      */
     public function identifyTinType(string $tin): ?array
     {
@@ -107,6 +126,12 @@ abstract class CountryHandler implements CountryHandlerInterface
         return null;
     }
 
+    /**
+     * Determines if the handler supports the specified country code.
+     *
+     * @param string $country The country code to check.
+     * @return bool True if the handler supports the given country code; otherwise, false.
+     */
     final public static function supports(string $country): bool
     {
         return strtoupper($country) === strtoupper(static::COUNTRYCODE);
@@ -204,6 +229,12 @@ abstract class CountryHandler implements CountryHandlerInterface
         return 1 === preg_match(sprintf('/%s/i', $pattern), $subject);
     }
 
+    /**
+     * Normalizes a TIN by removing all non-alphanumeric characters and converting it to uppercase.
+     *
+     * @param string $tin The input Tax Identification Number.
+     * @return string The normalized TIN, or an empty string if normalization fails.
+     */
     protected function normalizeTin(string $tin): string
     {
         if (null !== $string = preg_replace('#[^[:alnum:]]#u', '', $tin)) {

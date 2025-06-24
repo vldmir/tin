@@ -33,7 +33,9 @@ final class Nigeria extends CountryHandler
     public const PATTERN = '^\d{10}$';
 
     /**
-     * Get placeholder text.
+     * Returns a placeholder example of a Nigerian TIN.
+     *
+     * @return string The placeholder TIN '1234567890'.
      */
     public function getPlaceholder(): string
     {
@@ -41,7 +43,9 @@ final class Nigeria extends CountryHandler
     }
 
     /**
-     * Get all TIN types supported by Nigeria.
+     * Returns an array of supported Nigerian TIN types with their metadata.
+     *
+     * @return array An associative array describing the supported TIN types for Nigeria.
      */
     public function getTinTypes(): array
     {
@@ -54,11 +58,25 @@ final class Nigeria extends CountryHandler
         ];
     }
 
+    /**
+     * Checks if the provided TIN matches the required 10-digit numeric pattern for Nigeria.
+     *
+     * @param string $tin The Tax Identification Number to validate.
+     * @return bool True if the TIN matches the 10-digit pattern, false otherwise.
+     */
     protected function hasValidPattern(string $tin): bool
     {
         return $this->matchPattern($tin, self::PATTERN);
     }
 
+    /**
+     * Determines if the provided TIN satisfies Nigerian-specific validity rules.
+     *
+     * Returns false if the TIN consists entirely of zeros, all digits are identical, or the first digit is zero; otherwise, returns true.
+     *
+     * @param string $tin The Tax Identification Number to validate.
+     * @return bool True if the TIN passes all rule-based checks; false otherwise.
+     */
     protected function hasValidRule(string $tin): bool
     {
         // Check if all digits are zeros (invalid)

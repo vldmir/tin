@@ -61,13 +61,20 @@ final class Luxembourg extends CountryHandler
         [7, 0, 4, 6, 9, 1, 3, 2, 5, 8],
     ];
 
+    /**
+     * Returns a sample valid Luxembourg TIN for use as a placeholder.
+     *
+     * @return string Example Luxembourg Tax Identification Number.
+     */
     public function getPlaceholder(): string
     {
         return '1893120105732';
     }
 
     /**
-     * Get all TIN types supported by Luxembourg.
+     * Returns an array describing the supported Tax Identification Number (TIN) types for Luxembourg.
+     *
+     * @return array An array containing information about Luxembourg TIN types, including code, name, and description.
      */
     public function getTinTypes(): array
     {
@@ -80,6 +87,14 @@ final class Luxembourg extends CountryHandler
         ];
     }
 
+    /**
+     * Checks whether the TIN contains a valid calendar date in its first eight digits.
+     *
+     * Extracts the year, month, and day from the TIN and verifies if they form a valid date.
+     *
+     * @param string $tin The Tax Identification Number to validate.
+     * @return bool True if the extracted date is valid, false otherwise.
+     */
     protected function hasValidDate(string $tin): bool
     {
         $year = (int) (substr($tin, 0, 4));
@@ -122,6 +137,14 @@ final class Luxembourg extends CountryHandler
         return 0 === $remainderBy10;
     }
 
+    /**
+     * Validates a Luxembourg TIN using the second country-specific checksum rule.
+     *
+     * Applies a permutation and transformation algorithm to the TIN digits (excluding the 12th digit) using predefined matrices, returning true if the computed check value is zero.
+     *
+     * @param string $tin The Tax Identification Number to validate.
+     * @return bool True if the TIN passes the second Luxembourg validation rule, false otherwise.
+     */
     private function isFollowLuxembourgRule2(string $tin): bool
     {
         $listNumbers = [];

@@ -50,7 +50,12 @@ final class Australia extends CountryHandler
     public const PATTERN_TFN = '^\d{8,9}$';
 
     /**
-     * Format input according to TIN type.
+     * Formats an Australian TIN input as either an ABN with spaces or a plain TFN.
+     *
+     * Normalizes the input by removing non-digit characters. If the input has 10 or more digits, it is formatted as an ABN (`99 999 999 999`). Shorter inputs (TFN) are returned as a string of digits without additional formatting.
+     *
+     * @param string $input The raw TIN input string.
+     * @return string The formatted TIN string, or an empty string if input is empty after normalization.
      */
     public function formatInput(string $input): string
     {
@@ -79,7 +84,9 @@ final class Australia extends CountryHandler
     }
 
     /**
-     * Get input mask based on the TIN type.
+     * Returns the default input mask for Australian TINs in ABN format.
+     *
+     * @return string The input mask '99 999 999 999' for formatting ABNs.
      */
     public function getInputMask(): string
     {
@@ -88,7 +95,9 @@ final class Australia extends CountryHandler
     }
 
     /**
-     * Get placeholder based on the TIN type.
+     * Returns a sample placeholder string for an Australian Business Number (ABN).
+     *
+     * @return string Example ABN placeholder.
      */
     public function getPlaceholder(): string
     {
@@ -96,7 +105,9 @@ final class Australia extends CountryHandler
     }
 
     /**
-     * Get all TIN types supported by Australia.
+     * Returns an array of supported Australian TIN types, including TFN and ABN, with their codes, names, and descriptions.
+     *
+     * @return array List of TIN types with metadata for Australia.
      */
     public function getTinTypes(): array
     {
@@ -115,7 +126,12 @@ final class Australia extends CountryHandler
     }
 
     /**
-     * Identify the TIN type for a given Australian TIN.
+     * Determines whether the provided Australian TIN is a TFN or ABN and returns the corresponding type information.
+     *
+     * Normalizes the input and validates it as either a TFN (8 or 9 digits) or an ABN (11 digits) using the appropriate rules.
+     *
+     * @param string $tin The Tax Identification Number to evaluate.
+     * @return array|null The TIN type information if valid, or null if the TIN does not match any supported type.
      */
     public function identifyTinType(string $tin): ?array
     {
@@ -135,6 +151,12 @@ final class Australia extends CountryHandler
         return null;
     }
 
+    /**
+     * Checks if the normalized TIN has a valid length for Australian TFN or ABN.
+     *
+     * @param string $tin The input Tax Identification Number.
+     * @return bool True if the TIN contains between 8 and 11 digits, inclusive; otherwise, false.
+     */
     protected function hasValidLength(string $tin): bool
     {
         $normalizedTin = preg_replace('/[^0-9]/', '', $tin);
@@ -143,11 +165,27 @@ final class Australia extends CountryHandler
         return 8 <= $length && 11 >= $length;
     }
 
+    /**
+     * Checks if the provided TIN matches the pattern for a valid Australian TFN or ABN.
+     *
+     * @param string $tin The Tax Identification Number to validate.
+     * @return bool True if the TIN matches the expected pattern, false otherwise.
+     */
     protected function hasValidPattern(string $tin): bool
     {
         return $this->matchPattern($tin, self::PATTERN);
     }
 
+    /**
+     * Validates the provided TIN using Australian TFN or ABN rules.
+     *
+     * Determines the type of TIN based on its length and applies the appropriate validation algorithm:
+     * - For 8 or 9 digits, validates as a TFN.
+     * - For 11 digits, validates as an ABN.
+     *
+     * @param string $tin The Tax Identification Number to validate.
+     * @return bool True if the TIN passes the relevant validation rules, false otherwise.
+     */
     protected function hasValidRule(string $tin): bool
     {
         $normalizedTin = preg_replace('/[^0-9]/', '', $tin);
@@ -167,7 +205,12 @@ final class Australia extends CountryHandler
     }
 
     /**
-     * Validate ABN using modulus 89 checksum.
+     * Checks if the provided Australian Business Number (ABN) is valid using the modulus 89 checksum algorithm.
+     *
+     * The function returns false if the ABN consists entirely of zeros. For other inputs, it applies the official ABN validation algorithm: subtracts 1 from the first digit, multiplies each digit by a specific weight, sums the results, and checks if the total is divisible by 89.
+     *
+     * @param string $abn The ABN to validate, consisting of 11 digits.
+     * @return bool True if the ABN is valid according to the checksum algorithm, false otherwise.
      */
     private function isValidABN(string $abn): bool
     {
@@ -195,8 +238,12 @@ final class Australia extends CountryHandler
     }
 
     /**
-     * Validate TFN.
-     * TFN uses a weighted checksum algorithm.
+     * Validates an Australian Tax File Number (TFN) using checksum and known invalid patterns.
+     *
+     * For 8-digit TFNs, applies a weighted checksum algorithm. For 9-digit TFNs, performs only basic validation, as full validation requires external data. Returns false for TFNs that are all zeros or match known invalid sequences.
+     *
+     * @param string $tfn The TFN to validate.
+     * @return bool True if the TFN is considered valid, false otherwise.
      */
     private function isValidTFN(string $tfn): bool
     {

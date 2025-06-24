@@ -122,7 +122,11 @@ final class TIN
     }
 
     /**
-     * @throws TINException
+     * Validates the TIN for the current country using the appropriate country-specific algorithm.
+     *
+     * @param bool $strict Whether to enforce strict parsing of the TIN.
+     * @return bool True if the TIN is valid for the country; false otherwise.
+     * @throws TINException If the country is unsupported or the TIN format is invalid.
      */
     public function check(bool $strict = false): bool
     {
@@ -132,9 +136,11 @@ final class TIN
     }
 
     /**
-     * Format input according to TIN mask.
+     * Formats the provided input string according to the TIN mask for the current country.
      *
-     * @throws TINException
+     * @param string $input The input string to be formatted as a TIN.
+     * @return string The formatted TIN string.
+     * @throws TINException If the country is unsupported or formatting fails.
      */
     public function formatInput(string $input): string
     {
@@ -144,20 +150,34 @@ final class TIN
         return $handler->formatInput($input);
     }
 
+    /**
+     * Creates a TIN instance from a country code and TIN value.
+     *
+     * @param string $countryCode The ISO 2-letter country code.
+     * @param string $tin The tax identification number.
+     * @return TIN The constructed TIN instance.
+     */
     public static function from(string $countryCode, string $tin): TIN
     {
         return self::fromSlug($countryCode . $tin);
     }
 
+    /**
+     * Creates a TIN instance from a slug string containing the country code and TIN.
+     *
+     * @param string $slug The slug combining the country code and TIN.
+     * @return TIN The created TIN instance.
+     */
     public static function fromSlug(string $slug): TIN
     {
         return new self($slug);
     }
 
     /**
-     * Get input mask for the TIN country.
+     * Returns the input mask pattern for the TIN of the associated country.
      *
-     * @throws TINException
+     * @return string The input mask string used for formatting TIN input.
+     * @throws TINException If the country is unsupported or the handler cannot be instantiated.
      */
     public function getInputMask(): string
     {
@@ -168,7 +188,11 @@ final class TIN
     }
 
     /**
-     * Get mask and placeholder for a specific country.
+     * Returns the input mask and placeholder for the specified country code.
+     *
+     * @param string $countryCode The ISO 2-letter country code.
+     * @return array An associative array with keys 'mask', 'placeholder', and 'country'.
+     * @throws TINException If the country is not supported.
      */
     public static function getMaskForCountry(string $countryCode): array
     {
@@ -194,9 +218,10 @@ final class TIN
     }
 
     /**
-     * Get placeholder text for the TIN country.
+     * Returns the placeholder text for the TIN format of the current country.
      *
-     * @throws TINException
+     * @return string The placeholder string for the country's TIN input.
+     * @throws TINException If the country is unsupported or an error occurs retrieving the placeholder.
      */
     public function getPlaceholder(): string
     {
@@ -207,9 +232,9 @@ final class TIN
     }
 
     /**
-     * Get all supported countries.
+     * Returns a list of all supported country codes for TIN validation.
      *
-     * @return array<string> Array of country codes
+     * @return array<string> An array of ISO 2-letter country codes.
      */
     public static function getSupportedCountries(): array
     {
@@ -217,9 +242,11 @@ final class TIN
     }
 
     /**
-     * Get all supported countries with additional information.
+     * Returns detailed information for all supported countries.
      *
-     * @return array<string, array> Array of countries with their details
+     * For each supported country, provides an array containing the country code, input mask, placeholder, expected TIN length, validation pattern, and supported TIN types. Countries whose handlers cannot be instantiated are skipped.
+     *
+     * @return array<string, array> Associative array keyed by country code, each containing country details.
      */
     public static function getSupportedCountriesWithDetails(): array
     {
@@ -246,9 +273,10 @@ final class TIN
     }
 
     /**
-     * Get all TIN types supported by this TIN instance's country.
+     * Returns all TIN types supported by the country associated with this TIN instance.
      *
-     * @throws TINException
+     * @return array An array of TIN type definitions for the country.
+     * @throws TINException If the country is invalid or unsupported.
      */
     public function getTinTypes(): array
     {
@@ -259,9 +287,11 @@ final class TIN
     }
 
     /**
-     * Get all TIN types for a specific country.
+     * Returns all supported TIN types for the specified country.
      *
-     * @throws TINException
+     * @param string $countryCode The ISO 2-letter country code.
+     * @return array An array of TIN types supported by the country.
+     * @throws TINException If the country is not supported.
      */
     public static function getTinTypesForCountry(string $countryCode): array
     {
@@ -282,12 +312,12 @@ final class TIN
         throw TINException::invalidCountry($countryCode);
     }
 
-    /**
-     * Identify the TIN type for this TIN instance.
+    /****
+     * Determines the type of TIN for the current instance using the country-specific handler.
      *
-     * @throws TINException
+     * @throws TINException If the country is unsupported or the TIN cannot be parsed.
      *
-     * @return array{code: string, name: string, description?: string}|null
+     * @return array{code: string, name: string, description?: string}|null An associative array describing the TIN type, or null if the type cannot be identified.
      */
     public function identifyTinType(): ?array
     {
@@ -297,6 +327,12 @@ final class TIN
         return $handler->identifyTinType($parsedTin['tin']);
     }
 
+    /**
+     * Determines if the specified country code is supported for TIN validation.
+     *
+     * @param string $countryCode The ISO 2-letter country code to check.
+     * @return bool True if the country is supported; false otherwise.
+     */
     public static function isCountrySupported(string $countryCode): bool
     {
         foreach (self::$algorithms as $algorithm) {
@@ -308,6 +344,14 @@ final class TIN
         return false;
     }
 
+    /**
+     * Determines if the TIN is valid for its country.
+     *
+     * Returns true if the TIN passes validation; otherwise, returns false. Does not throw exceptions on invalid input.
+     *
+     * @param bool $strict Whether to use strict validation rules.
+     * @return bool True if the TIN is valid, false otherwise.
+     */
     public function isValid(bool $strict = false): bool
     {
         try {

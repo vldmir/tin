@@ -36,7 +36,9 @@ final class SouthAfrica extends CountryHandler
     public const PATTERN = '^[0-3,9]\d{9}$';
 
     /**
-     * Get placeholder text.
+     * Returns a placeholder string representing the format of a South African Income Tax Reference Number.
+     *
+     * @return string The placeholder value '0123456789'.
      */
     public function getPlaceholder(): string
     {
@@ -44,7 +46,9 @@ final class SouthAfrica extends CountryHandler
     }
 
     /**
-     * Get all TIN types supported by South Africa.
+     * Returns an array of supported South African TIN types with their codes, names, and descriptions.
+     *
+     * @return array An associative array describing the supported TIN types.
      */
     public function getTinTypes(): array
     {
@@ -57,11 +61,25 @@ final class SouthAfrica extends CountryHandler
         ];
     }
 
+    /**
+     * Checks if the provided TIN matches the required South African format pattern.
+     *
+     * @param string $tin The Tax Identification Number to validate.
+     * @return bool True if the TIN matches the pattern; otherwise, false.
+     */
     protected function hasValidPattern(string $tin): bool
     {
         return $this->matchPattern($tin, self::PATTERN);
     }
 
+    /**
+     * Validates a South African TIN against rule-based criteria.
+     *
+     * Checks that the TIN starts with an allowed digit, does not consist of identical digits, and passes the Luhn checksum.
+     *
+     * @param string $tin The Tax Identification Number to validate.
+     * @return bool True if the TIN meets all rule-based validation criteria, false otherwise.
+     */
     protected function hasValidRule(string $tin): bool
     {
         // First digit must be 0, 1, 2, 3, or 9
@@ -79,7 +97,12 @@ final class SouthAfrica extends CountryHandler
     }
 
     /**
-     * Validate using Luhn algorithm.
+     * Validates a numeric string using the Luhn algorithm.
+     *
+     * Applies the Luhn checksum to determine if the input number is valid according to the algorithm.
+     *
+     * @param string $number The numeric string to validate.
+     * @return bool True if the number passes the Luhn check, false otherwise.
      */
     private function validateLuhn(string $number): bool
     {

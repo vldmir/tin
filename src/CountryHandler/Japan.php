@@ -35,7 +35,11 @@ final class Japan extends CountryHandler
     public const PATTERN = '^\d{12,13}$';
 
     /**
-     * Get input mask based on the TIN type.
+     * Returns the input mask string for Japanese My Number TINs (12 digits).
+     *
+     * This mask is used to guide user input for individual TINs in Japan.
+     *
+     * @return string The input mask for a 12-digit My Number.
      */
     public function getInputMask(): string
     {
@@ -44,7 +48,9 @@ final class Japan extends CountryHandler
     }
 
     /**
-     * Get placeholder based on the TIN type.
+     * Returns a placeholder example for a Japanese My Number TIN.
+     *
+     * @return string Example placeholder for a 12-digit My Number.
      */
     public function getPlaceholder(): string
     {
@@ -52,7 +58,9 @@ final class Japan extends CountryHandler
     }
 
     /**
-     * Get all TIN types supported by Japan.
+     * Returns an array of supported Japanese TIN types with their codes, names, and descriptions.
+     *
+     * @return array An associative array describing My Number and Corporate Number TIN types.
      */
     public function getTinTypes(): array
     {
@@ -71,7 +79,12 @@ final class Japan extends CountryHandler
     }
 
     /**
-     * Identify the TIN type for a given Japanese TIN.
+     * Determines the type of a Japanese TIN (My Number or Corporate Number) based on its length and validity.
+     *
+     * Normalizes the input TIN, validates it according to the rules for My Number (12 digits) or Corporate Number (13 digits), and returns the corresponding TIN type array if valid.
+     *
+     * @param string $tin The Japanese TIN to identify.
+     * @return array|null The TIN type information if valid, or null if the TIN is invalid or unrecognized.
      */
     public function identifyTinType(string $tin): ?array
     {
@@ -88,6 +101,12 @@ final class Japan extends CountryHandler
         return null;
     }
 
+    /**
+     * Checks if the TIN has a valid length for Japanese My Number (12 digits) or Corporate Number (13 digits).
+     *
+     * @param string $tin The Tax Identification Number to check.
+     * @return bool True if the length is 12 or 13 digits, false otherwise.
+     */
     protected function hasValidLength(string $tin): bool
     {
         $length = strlen($tin);
@@ -95,11 +114,25 @@ final class Japan extends CountryHandler
         return 12 === $length || 13 === $length;
     }
 
+    /**
+     * Checks if the provided TIN matches the required numeric pattern for Japanese TINs.
+     *
+     * @param string $tin The Tax Identification Number to validate.
+     * @return bool True if the TIN matches the pattern for either My Number or Corporate Number; otherwise, false.
+     */
     protected function hasValidPattern(string $tin): bool
     {
         return $this->matchPattern($tin, self::PATTERN);
     }
 
+    /**
+     * Validates the TIN using the appropriate algorithm based on its length.
+     *
+     * Applies the My Number validation for 12-digit TINs and the Corporate Number validation for 13-digit TINs.
+     *
+     * @param string $tin The Tax Identification Number to validate.
+     * @return bool True if the TIN passes the relevant validation rule, false otherwise.
+     */
     protected function hasValidRule(string $tin): bool
     {
         $length = strlen($tin);
@@ -116,8 +149,12 @@ final class Japan extends CountryHandler
     }
 
     /**
-     * Validate Corporate Number.
-     * Uses modulus 9 check digit algorithm.
+     * Validates a 13-digit Japanese Corporate Number using the modulus 9 check digit algorithm.
+     *
+     * The function checks that the first digit is non-zero, rejects numbers with all identical digits, and verifies the check digit according to the official algorithm.
+     *
+     * @param string $number The 13-digit Corporate Number to validate.
+     * @return bool True if the number is valid, false otherwise.
      */
     private function isValidCorporateNumber(string $number): bool
     {
@@ -145,8 +182,12 @@ final class Japan extends CountryHandler
     }
 
     /**
-     * Validate My Number (individual).
-     * Uses check digit algorithm.
+     * Validates a 12-digit Japanese My Number (individual TIN) using its check digit algorithm.
+     *
+     * Rejects numbers with all identical digits and verifies the check digit according to the official My Number specification.
+     *
+     * @param string $number The 12-digit My Number to validate.
+     * @return bool True if the number is a valid My Number, false otherwise.
      */
     private function isValidMyNumber(string $number): bool
     {
