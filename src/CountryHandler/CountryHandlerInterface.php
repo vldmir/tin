@@ -56,31 +56,27 @@ interface CountryHandlerInterface
     public function getTinTypes(): array;
 
     /**
-     * Identify the TIN type for a given TIN.
-     *
-     * @param string $tin
-     *   The TIN to identify
-     *
-     * @return array{code: string, name: string, description?: string}|null
-     *   The TIN type information or null if not identifiable
-     */
+ * Determines the type of a given Tax Identification Number (TIN).
+ *
+ * @param string $tin The TIN to analyze.
+ * @return array{code: string, name: string, description?: string}|null An associative array with TIN type details if identifiable, or null if the type cannot be determined.
+ */
     public function identifyTinType(string $tin): ?array;
 
     /**
-     * Check if the algorithm supports the TIN.
-     *
-     * @param string $country
-     *   The TIN.
-     *
-     * @return bool
-     *   True if it supports it, false otherwise.
-     */
+ * Determines if the handler supports TIN validation for the specified country code.
+ *
+ * @param string $country The country code to check.
+ * @return bool True if TIN validation is supported for the country, false otherwise.
+ */
     public static function supports(string $country): bool;
 
     /**
-     * Validate a tin number.
-     *
-     * @throws TINException
-     */
+ * Validates the provided Tax Identification Number (TIN).
+ *
+ * @param string $tin The TIN to validate.
+ * @return bool True if the TIN is valid.
+ * @throws TINException If the TIN is invalid.
+ */
     public function validate(string $tin): bool;
 }

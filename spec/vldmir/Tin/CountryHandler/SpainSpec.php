@@ -16,6 +16,9 @@ class SpainSpec extends AbstractAlgorithmSpec
 
     public const VALID_NUMBER = ['54237A', 'X1234567L', 'Y1234567X', 'Z1234567R', 'M2812345C', 'B05327986', 'P2009300A', 'K0867756I'];
 
+    /**
+     * Tests that a CIF-type Spanish TIN is correctly identified and its metadata returned.
+     */
     public function it_can_identify_cif_type()
     {
         $this->beConstructedWith();
@@ -28,6 +31,9 @@ class SpainSpec extends AbstractAlgorithmSpec
         ]);
     }
 
+    /**
+     * Tests that the identifyTinType method correctly identifies a DNI (Documento Nacional de Identidad) TIN.
+     */
     public function it_can_identify_dni_type()
     {
         $this->beConstructedWith();
@@ -40,6 +46,9 @@ class SpainSpec extends AbstractAlgorithmSpec
         ]);
     }
 
+    /**
+     * Tests that the identifyTinType method correctly identifies a Spanish NIE (Número de Identidad de Extranjero) TIN.
+     */
     public function it_can_identify_nie_type()
     {
         $this->beConstructedWith();
@@ -52,6 +61,9 @@ class SpainSpec extends AbstractAlgorithmSpec
         ]);
     }
 
+    /**
+     * Tests that all supported Spanish TIN types and their metadata are returned.
+     */
     public function it_returns_all_tin_types()
     {
         $this->beConstructedWith();

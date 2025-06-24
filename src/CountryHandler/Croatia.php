@@ -29,13 +29,20 @@ final class Croatia extends CountryHandler
      */
     public const PATTERN = '\d{11}';
 
+    /**
+     * Returns a sample Croatian TIN (OIB) for placeholder purposes.
+     *
+     * @return string Example Croatian TIN.
+     */
     public function getPlaceholder(): string
     {
         return '94577403194';
     }
 
     /**
-     * Get all TIN types supported by Croatia.
+     * Returns an array describing the supported Croatian TIN types.
+     *
+     * @return array An array containing metadata for each supported TIN type, including code, name, and description.
      */
     public function getTinTypes(): array
     {
@@ -48,6 +55,12 @@ final class Croatia extends CountryHandler
         ];
     }
 
+    /**
+     * Validates a Croatian TIN (OIB) using the official modulus 11 algorithm.
+     *
+     * @param string $tin The TIN to validate.
+     * @return bool True if the TIN is valid according to Croatian rules, false otherwise.
+     */
     protected function hasValidRule(string $tin): bool
     {
         $rest = 0;

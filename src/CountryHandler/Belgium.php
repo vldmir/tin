@@ -29,13 +29,20 @@ final class Belgium extends CountryHandler
      */
     public const PATTERN = '\d{2}[0-1]\d[0-3]\d{6}';
 
+    /**
+     * Returns a sample formatted Belgian TIN for use as a placeholder.
+     *
+     * @return string Example Belgian TIN in the correct format.
+     */
     public function getPlaceholder(): string
     {
         return '85.07.30-033.61';
     }
 
     /**
-     * Get all TIN types supported by Belgium.
+     * Returns an array describing the supported Tax Identification Number (TIN) types for Belgium.
+     *
+     * @return array An array containing information about each supported TIN type, including code, name, and description.
      */
     public function getTinTypes(): array
     {
@@ -48,6 +55,12 @@ final class Belgium extends CountryHandler
         ];
     }
 
+    /**
+     * Determines if the provided TIN contains a valid date component.
+     *
+     * @param string $tin The Belgian TIN to check.
+     * @return bool True if the TIN encodes a valid date; false otherwise.
+     */
     protected function hasValidDate(string $tin): bool
     {
         return 0 !== $this->getDateType($tin);
@@ -103,6 +116,12 @@ final class Belgium extends CountryHandler
         return 97 - $divisionRemainderBy97 === (int) (substr($tin, 9, 3));
     }
 
+    /**
+     * Checks if the TIN satisfies Belgian validation rule 2 and contains a valid date for the 2000s or both centuries.
+     *
+     * @param string $tin The Belgian TIN to validate.
+     * @return bool True if the TIN passes rule 2 and the date is valid for the 2000s or both centuries; otherwise, false.
+     */
     private function isFollowBelgiumRule2AndIsDateValid(string $tin): bool
     {
         $dateType = $this->getDateType($tin);

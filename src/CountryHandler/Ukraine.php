@@ -35,7 +35,9 @@ final class Ukraine extends CountryHandler
     public const PATTERN = '^\d{10}$';
 
     /**
-     * Get country code.
+     * Returns the country code for Ukraine.
+     *
+     * @return string The country code 'UA'.
      */
     public function getCountryCode(): string
     {
@@ -43,7 +45,9 @@ final class Ukraine extends CountryHandler
     }
 
     /**
-     * Get TIN length.
+     * Returns the required length of a Ukrainian TIN.
+     *
+     * @return int The number of digits in a valid Ukrainian TIN.
      */
     public function getLength(): int
     {
@@ -51,7 +55,9 @@ final class Ukraine extends CountryHandler
     }
 
     /**
-     * Get TIN pattern.
+     * Returns the regular expression pattern used to validate Ukrainian TINs.
+     *
+     * @return string The regex pattern for a valid Ukrainian TIN.
      */
     public function getPattern(): string
     {
@@ -59,7 +65,9 @@ final class Ukraine extends CountryHandler
     }
 
     /**
-     * Get placeholder text.
+     * Returns a placeholder string representing the format of a Ukrainian TIN.
+     *
+     * @return string The placeholder value '1234567890'.
      */
     public function getPlaceholder(): string
     {
@@ -67,7 +75,9 @@ final class Ukraine extends CountryHandler
     }
 
     /**
-     * Get all TIN types supported by Ukraine.
+     * Returns an array of supported Ukrainian TIN types.
+     *
+     * @return array An array describing the supported TIN types, including code, name, and description.
      */
     public function getTinTypes(): array
     {
@@ -81,7 +91,12 @@ final class Ukraine extends CountryHandler
     }
 
     /**
-     * Identify the TIN type for a given Ukrainian TIN.
+     * Determines if the provided Ukrainian TIN is a valid Individual Tax Number and returns its type information.
+     *
+     * Normalizes the input, checks length, pattern, and validation rules. Returns the TIN type array if valid, or null if invalid.
+     *
+     * @param string $tin The input Tax Identification Number to evaluate.
+     * @return array|null The TIN type information if valid, or null if the TIN is invalid.
      */
     public function identifyTinType(string $tin): ?array
     {
@@ -95,18 +110,35 @@ final class Ukraine extends CountryHandler
     }
 
     /**
-     * Normalize TIN by removing non-alphanumeric characters.
+     * Normalizes a TIN by removing all non-numeric characters.
+     *
+     * @param string $tin The input Tax Identification Number.
+     * @return string The normalized TIN containing only digits.
      */
     public function normalizeTin(string $tin): string
     {
         return preg_replace('/[^0-9]/', '', $tin);
     }
 
+    /**
+     * Checks if the provided TIN matches the required 10-digit numeric pattern.
+     *
+     * @param string $tin The Tax Identification Number to validate.
+     * @return bool True if the TIN matches the pattern, false otherwise.
+     */
     protected function hasValidPattern(string $tin): bool
     {
         return $this->matchPattern($tin, self::PATTERN);
     }
 
+    /**
+     * Determines if the provided TIN satisfies all Ukrainian-specific validation rules.
+     *
+     * Applies checks to reject TINs composed entirely of zeros, TINs with all identical digits unless the checksum is valid, and ensures the TIN passes the checksum algorithm.
+     *
+     * @param string $tin The normalized TIN to validate.
+     * @return bool True if the TIN passes all validation rules; otherwise, false.
+     */
     protected function hasValidRule(string $tin): bool
     {
         // Check if all digits are zeros (invalid)
@@ -124,8 +156,12 @@ final class Ukraine extends CountryHandler
     }
 
     /**
-     * Validate checksum using Ukrainian TIN algorithm.
-     * Uses weighted sum with modulo validation.
+     * Validates the checksum of a Ukrainian TIN using a weighted sum algorithm.
+     *
+     * Calculates a weighted sum of the first nine digits, computes the modulo 10 check digit, and verifies it against the tenth digit.
+     *
+     * @param string $tin The 10-digit Ukrainian TIN to validate.
+     * @return bool True if the checksum is valid, false otherwise.
      */
     private function validateChecksum(string $tin): bool
     {

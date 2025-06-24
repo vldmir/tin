@@ -29,13 +29,20 @@ final class Bulgaria extends CountryHandler
      */
     public const PATTERN = '\d{10}';
 
+    /**
+     * Returns a sample Bulgarian TIN (EGN) for use as a placeholder.
+     *
+     * @return string Example TIN string.
+     */
     public function getPlaceholder(): string
     {
         return '7523169263';
     }
 
     /**
-     * Get all TIN types supported by Bulgaria.
+     * Returns an array of supported Bulgarian TIN types with their codes, names, and descriptions.
+     *
+     * @return array An associative array describing each supported TIN type.
      */
     public function getTinTypes(): array
     {
@@ -48,6 +55,14 @@ final class Bulgaria extends CountryHandler
         ];
     }
 
+    /**
+     * Checks if the date portion of a Bulgarian TIN represents a valid calendar date.
+     *
+     * The method interprets the first six digits of the TIN as a date, adjusting the year and month based on Bulgarian EGN encoding rules.
+     *
+     * @param string $tin The Bulgarian TIN to validate.
+     * @return bool True if the extracted date is valid, false otherwise.
+     */
     protected function hasValidDate(string $tin): bool
     {
         $year = (int) (substr($tin, 0, 2));
@@ -65,6 +80,14 @@ final class Bulgaria extends CountryHandler
         return checkdate($month, $day, 1900 + $year);
     }
 
+    /**
+     * Validates the checksum of a Bulgarian TIN (EGN) according to official rules.
+     *
+     * The method calculates a weighted sum of the first nine digits, applies modulo 11, and checks if the result matches the last digit, with special handling if the remainder is 10.
+     *
+     * @param string $tin The Bulgarian TIN to validate.
+     * @return bool True if the TIN passes the checksum validation; otherwise, false.
+     */
     protected function hasValidRule(string $tin): bool
     {
         $c1 = $this->digitAt($tin, 0);

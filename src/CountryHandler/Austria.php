@@ -29,13 +29,20 @@ final class Austria extends CountryHandler
      */
     public const PATTERN = '\d{9}';
 
+    /**
+     * Returns a sample Austrian TIN placeholder in the standard format.
+     *
+     * @return string Example placeholder for an Austrian Tax Identification Number.
+     */
     public function getPlaceholder(): string
     {
         return '12 310170';
     }
 
     /**
-     * Get all TIN types supported by Austria.
+     * Returns an array of supported Austrian TIN types with their codes, names, and descriptions.
+     *
+     * @return array An array describing the Austrian Tax Identification Number (Steuernummer).
      */
     public function getTinTypes(): array
     {
@@ -48,6 +55,14 @@ final class Austria extends CountryHandler
         ];
     }
 
+    /**
+     * Validates an Austrian TIN using the country-specific checksum algorithm.
+     *
+     * The method checks if the provided TIN's last digit matches the calculated check digit based on weighted sums of its digits.
+     *
+     * @param string $tin The Austrian TIN to validate.
+     * @return bool True if the TIN passes the checksum validation; otherwise, false.
+     */
     protected function hasValidRule(string $tin): bool
     {
         $c1 = $this->digitAt($tin, 0);

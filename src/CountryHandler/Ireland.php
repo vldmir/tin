@@ -41,13 +41,22 @@ final class Ireland extends CountryHandler
      */
     public const PATTERN_2 = '\d{7}[a-wA-W]';
 
+    /**
+     * Returns a sample Irish Personal Public Service Number (PPS) in the correct format.
+     *
+     * @return string Example PPS number.
+     */
     public function getPlaceholder(): string
     {
         return '1234567FA';
     }
 
     /**
-     * Get all TIN types supported by Ireland.
+     * Returns an array of supported Irish TIN types.
+     *
+     * Each TIN type includes a code, name, and description. Currently, only the Irish Personal Public Service Number (PPS) is supported.
+     *
+     * @return array An array of TIN type definitions for Ireland.
      */
     public function getTinTypes(): array
     {
@@ -60,6 +69,14 @@ final class Ireland extends CountryHandler
         ];
     }
 
+    /**
+     * Checks if the provided TIN has a valid length for Irish TINs.
+     *
+     * Returns true if the TIN is either 8 or 9 characters long.
+     *
+     * @param string $tin The Tax Identification Number to validate.
+     * @return bool True if the TIN length is valid, false otherwise.
+     */
     protected function hasValidLength(string $tin): bool
     {
         return $this->isFollowLength1($tin) || $this->isFollowLength2($tin);
@@ -115,6 +132,14 @@ final class Ireland extends CountryHandler
         return $this->matchPattern($tin, self::PATTERN_2);
     }
 
+    /**
+     * Converts a letter to its corresponding number for checksum calculation.
+     *
+     * Returns 0 if the letter is 'W' or 'w'; otherwise, returns the alphabetical position of the letter.
+     *
+     * @param string $toConv The letter to convert.
+     * @return int The numeric value used in the checksum.
+     */
     private function letterToNumber(string $toConv): int
     {
         if ('W' === $toConv || 'w' === $toConv) {

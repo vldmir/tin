@@ -39,13 +39,20 @@ final class Poland extends CountryHandler
      */
     public const PATTERN_2 = '\d{11}';
 
+    /**
+     * Returns a sample valid PESEL number for Poland.
+     *
+     * @return string Example of a valid Polish TIN (PESEL).
+     */
     public function getPlaceholder(): string
     {
         return '85071803874';
     }
 
     /**
-     * Get all TIN types supported by Poland.
+     * Returns an array describing the TIN types supported in Poland.
+     *
+     * @return array An array containing information about the Polish PESEL TIN type, including its code, name, and description.
      */
     public function getTinTypes(): array
     {
@@ -58,6 +65,14 @@ final class Poland extends CountryHandler
         ];
     }
 
+    /**
+     * Validates the date portion of an 11-digit Polish TIN (PESEL) based on encoded year, month, and day.
+     *
+     * Determines the correct century from the month value and checks if the extracted date is valid.
+     *
+     * @param string $tin The 11-digit TIN to validate.
+     * @return bool True if the date portion is valid, false otherwise.
+     */
     protected function hasValidDateWhenPattern2(string $tin): bool
     {
         $year = (int) (substr($tin, 0, 2));
@@ -159,6 +174,14 @@ final class Poland extends CountryHandler
         return $this->digitAt($tin, 9) === $remainderBy11;
     }
 
+    /**
+     * Validates the checksum of an 11-digit Polish TIN (PESEL) using the official algorithm.
+     *
+     * Calculates a weighted sum of the first 10 digits, applies modulo 10, and checks if the result matches the last digit of the TIN.
+     *
+     * @param string $tin The 11-digit TIN to validate.
+     * @return bool True if the checksum is valid, false otherwise.
+     */
     private function isFollowRulePoland2(string $tin): bool
     {
         $map = [

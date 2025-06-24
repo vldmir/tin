@@ -29,13 +29,20 @@ final class Finland extends CountryHandler
      */
     public const PATTERN = '[0-3]\d[0-1]\d{3}[+-A]\d{3}[0-9A-Z]';
 
+    /**
+     * Returns a sample Finnish TIN (Personal Identity Code) as a placeholder.
+     *
+     * @return string Example TIN in the correct Finnish format.
+     */
     public function getPlaceholder(): string
     {
         return '131052-308T';
     }
 
     /**
-     * Get all TIN types supported by Finland.
+     * Returns an array describing the Finnish TIN types supported.
+     *
+     * @return array An array containing information about the Finnish HETU (Personal Identity Code) type.
      */
     public function getTinTypes(): array
     {
@@ -48,6 +55,12 @@ final class Finland extends CountryHandler
         ];
     }
 
+    /**
+     * Checks if the date portion of a Finnish TIN is valid based on its encoded century and date fields.
+     *
+     * @param string $tin The Finnish TIN to validate.
+     * @return bool True if the TIN contains a valid date, otherwise false.
+     */
     protected function hasValidDate(string $tin): bool
     {
         $day = (int) (substr($tin, 0, 2));
@@ -75,6 +88,14 @@ final class Finland extends CountryHandler
         return $this->getMatch($remainderBy31) === $c11;
     }
 
+    /**
+     * Returns the character corresponding to a given number for Finnish TIN checksum calculation.
+     *
+     * For numbers 0–9, returns the number as a string. For numbers 10–30, returns a specific letter according to the Finnish TIN checksum mapping. Returns a space character for numbers outside the 0–30 range.
+     *
+     * @param int $number The number to map to a checksum character.
+     * @return string The corresponding checksum character or a space if out of range.
+     */
     private function getMatch(int $number): string
     {
         if (10 > $number) {

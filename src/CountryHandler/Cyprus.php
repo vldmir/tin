@@ -31,13 +31,20 @@ final class Cyprus extends CountryHandler
      */
     public const PATTERN = '\d{8}[a-zA-Z]';
 
+    /**
+     * Returns a sample Cyprus Tax Identification Number (TIN) in the correct format.
+     *
+     * @return string Example TIN value for Cyprus.
+     */
     public function getPlaceholder(): string
     {
         return '12345678L';
     }
 
     /**
-     * Get all TIN types supported by Cyprus.
+     * Returns an array describing the supported Tax Identification Number (TIN) types for Cyprus.
+     *
+     * @return array An array containing information about each supported TIN type, including code, name, and description.
      */
     public function getTinTypes(): array
     {
@@ -50,6 +57,14 @@ final class Cyprus extends CountryHandler
         ];
     }
 
+    /**
+     * Validates a Cyprus TIN according to country-specific checksum rules.
+     *
+     * Applies a calculation involving the sum of even-position digits, a recoding of odd-position digits, and a modulo 26 operation to verify the check character.
+     *
+     * @param string $tin The Cyprus TIN to validate.
+     * @return bool True if the TIN passes the Cyprus validation algorithm, false otherwise.
+     */
     protected function hasValidRule(string $tin): bool
     {
         $c1 = $this->digitAt($tin, 0);

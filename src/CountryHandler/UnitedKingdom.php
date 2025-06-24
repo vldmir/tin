@@ -41,13 +41,20 @@ final class UnitedKingdom extends CountryHandler
      */
     public const PATTERN_2 = '[a-ceg-hj-pr-tw-zA-CEG-HJ-PR-TW-Z][a-ceg-hj-npr-tw-zA-CEG-HJ-NPR-TW-Z]\d{6}[abcdABCD ]';
 
+    /**
+     * Returns a sample UK Tax Identification Number (TIN) in the standard format.
+     *
+     * @return string Example TIN string ('AB123456C').
+     */
     public function getPlaceholder(): string
     {
         return 'AB123456C';
     }
 
     /**
-     * Get all TIN types supported by United Kingdom.
+     * Returns an array of supported UK TIN types, including UTR and NINO, with their codes, names, and descriptions.
+     *
+     * @return array An associative array describing the Unique Taxpayer Reference (UTR) and National Insurance Number (NINO) TIN types.
      */
     public function getTinTypes(): array
     {
@@ -66,7 +73,12 @@ final class UnitedKingdom extends CountryHandler
     }
 
     /**
-     * Identify the TIN type for a given UK TIN.
+     * Determines the type of a UK Tax Identification Number (TIN) as either UTR or NINO.
+     *
+     * Returns an array describing the TIN type if the input matches the format for a Unique Taxpayer Reference (UTR) or a National Insurance Number (NINO), or null if the TIN does not match either type.
+     *
+     * @param string $tin The TIN to be identified.
+     * @return array|null The TIN type information array if identified, or null if no match is found.
      */
     public function identifyTinType(string $tin): ?array
     {
@@ -86,6 +98,14 @@ final class UnitedKingdom extends CountryHandler
         return null;
     }
 
+    /**
+     * Checks if the provided TIN has a valid length for UK TIN types.
+     *
+     * Pads the TIN to length 9 and returns true if it matches the required length for either UTR (10 digits) or NINO (9 characters).
+     *
+     * @param string $tin The Tax Identification Number to check.
+     * @return bool True if the TIN has a valid length, false otherwise.
+     */
     protected function hasValidLength(string $tin): bool
     {
         $tin = str_pad($tin, 9, ' ', STR_PAD_RIGHT);
@@ -128,6 +148,14 @@ final class UnitedKingdom extends CountryHandler
         return $this->matchPattern($tin, self::PATTERN_2) && $this->isFollowStructureSubRule2($tin);
     }
 
+    /**
+     * Checks if the first two characters of the TIN do not match any disallowed prefixes for NINO validation.
+     *
+     * Returns true if the TIN does not start with 'GB', 'NK', 'TN', or 'ZZ'; otherwise, returns false.
+     *
+     * @param string $tin The Tax Identification Number to check.
+     * @return bool True if the TIN passes the structural sub-rule, false otherwise.
+     */
     private function isFollowStructureSubRule2(string $tin): bool
     {
         $c1c2 = substr($tin, 0, 2);

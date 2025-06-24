@@ -50,7 +50,12 @@ final class Canada extends CountryHandler
     public const PATTERN_SIN = '^\d{3}-?\d{3}-?\d{3}$';
 
     /**
-     * Format input according to TIN type.
+     * Formats a Canadian TIN input as either a SIN or BN, applying standard presentation rules.
+     *
+     * Normalizes the input by removing non-alphanumeric characters and converting to uppercase. Formats extended Business Numbers (BN) as "123456789 RC0001" and 9-digit numbers as Social Insurance Numbers (SIN) in the "999-999-999" format. Returns the normalized input if it does not match these patterns.
+     *
+     * @param string $input The raw TIN input to format.
+     * @return string The formatted TIN string.
      */
     public function formatInput(string $input): string
     {
@@ -85,7 +90,11 @@ final class Canada extends CountryHandler
     }
 
     /**
-     * Get input mask based on the TIN type.
+     * Returns the default input mask for Canadian TINs.
+     *
+     * The mask '999-999-999' is used for Social Insurance Numbers (SIN).
+     *
+     * @return string The input mask for formatting Canadian TINs.
      */
     public function getInputMask(): string
     {
@@ -94,7 +103,9 @@ final class Canada extends CountryHandler
     }
 
     /**
-     * Get placeholder based on the TIN type.
+     * Returns the placeholder string for Canadian TIN input fields.
+     *
+     * @return string The placeholder value '123-456-789' representing the SIN format.
      */
     public function getPlaceholder(): string
     {
@@ -102,7 +113,11 @@ final class Canada extends CountryHandler
     }
 
     /**
-     * Get all TIN types supported by Canada.
+     * Returns an array describing the supported Canadian TIN types.
+     *
+     * Each entry includes the code, name, and description for either the Social Insurance Number (SIN) or Business Number (BN).
+     *
+     * @return array Supported TIN types for Canada.
      */
     public function getTinTypes(): array
     {
@@ -121,7 +136,12 @@ final class Canada extends CountryHandler
     }
 
     /**
-     * Identify the TIN type for a given Canadian TIN.
+     * Determines whether the provided Canadian TIN is a Social Insurance Number (SIN) or Business Number (BN).
+     *
+     * Normalizes the input and checks if it matches the format and validation rules for SIN or BN, including extended BN with program account suffix.
+     *
+     * @param string $tin The input Tax Identification Number to identify.
+     * @return array|null The TIN type metadata if identified, or null if the input does not match any supported type.
      */
     public function identifyTinType(string $tin): ?array
     {
@@ -150,6 +170,14 @@ final class Canada extends CountryHandler
         return null;
     }
 
+    /**
+     * Checks if the provided TIN has a valid length for a Canadian SIN or BN.
+     *
+     * Returns true if the normalized TIN is exactly 9 digits (SIN) or 9 digits followed by an optional 2-letter and 4-digit suffix (BN).
+     *
+     * @param string $tin The input Tax Identification Number.
+     * @return bool True if the TIN length is valid for SIN or BN, false otherwise.
+     */
     protected function hasValidLength(string $tin): bool
     {
         $normalizedTin = preg_replace('/[^0-9A-Z]/', '', $tin);
@@ -167,11 +195,25 @@ final class Canada extends CountryHandler
         return false;
     }
 
+    /**
+     * Checks if the provided TIN matches the Canadian SIN or BN pattern.
+     *
+     * @param string $tin The Tax Identification Number to validate.
+     * @return bool True if the TIN matches the expected pattern; false otherwise.
+     */
     protected function hasValidPattern(string $tin): bool
     {
         return $this->matchPattern($tin, self::PATTERN);
     }
 
+    /**
+     * Determines if the provided TIN satisfies the rule-based validation for Canadian SIN or BN formats.
+     *
+     * Returns true if the input is a valid SIN (using Luhn algorithm and prefix rules), a valid 9-digit BN, or a valid extended BN (9 digits plus program account suffix). Returns false otherwise.
+     *
+     * @param string $tin The Tax Identification Number to validate.
+     * @return bool True if the TIN passes rule-based validation for SIN or BN; false otherwise.
+     */
     protected function hasValidRule(string $tin): bool
     {
         $normalizedTin = preg_replace('/[^0-9A-Z]/', '', $tin);
@@ -197,7 +239,10 @@ final class Canada extends CountryHandler
     }
 
     /**
-     * Validate Business Number.
+     * Checks if the provided Business Number (BN) is a valid 9-digit number and not all zeros.
+     *
+     * @param string $bn The Business Number to validate.
+     * @return bool True if the BN is exactly 9 digits and not all zeros; false otherwise.
      */
     private function isValidBN(string $bn): bool
     {
@@ -217,7 +262,12 @@ final class Canada extends CountryHandler
     }
 
     /**
-     * Validate SIN using Luhn algorithm.
+     * Determines if a Canadian Social Insurance Number (SIN) is valid.
+     *
+     * Validates that the SIN does not start with 0, 8, or 9, and that it passes the Luhn checksum algorithm.
+     *
+     * @param string $sin The SIN to validate, consisting of 9 digits.
+     * @return bool True if the SIN is valid, false otherwise.
      */
     private function isValidSIN(string $sin): bool
     {

@@ -50,7 +50,12 @@ final class Brazil extends CountryHandler
     public const PATTERN_CPF = '^\d{3}\.?\d{3}\.?\d{3}-?\d{2}$';
 
     /**
-     * Format input according to TIN type.
+     * Formats a Brazilian TIN input string as either CPF or CNPJ, applying standard punctuation.
+     *
+     * Removes all non-digit characters from the input. If the resulting number has 11 or fewer digits, formats it as CPF (`999.999.999-99`). If it has up to 14 digits, formats it as CNPJ (`99.999.999/9999-99`). Returns an empty string if the input contains no digits.
+     *
+     * @param string $input The raw TIN input string.
+     * @return string The formatted CPF or CNPJ string, or an empty string if input is empty.
      */
     public function formatInput(string $input): string
     {
@@ -94,7 +99,9 @@ final class Brazil extends CountryHandler
     }
 
     /**
-     * Get input mask based on the TIN type.
+     * Returns the default input mask for Brazilian TINs in CPF format.
+     *
+     * @return string The input mask string '999.999.999-99'.
      */
     public function getInputMask(): string
     {
@@ -103,7 +110,9 @@ final class Brazil extends CountryHandler
     }
 
     /**
-     * Get placeholder based on the TIN type.
+     * Returns a placeholder string representing the standard CPF format.
+     *
+     * @return string The placeholder for CPF input (e.g., '123.456.789-09').
      */
     public function getPlaceholder(): string
     {
@@ -111,7 +120,9 @@ final class Brazil extends CountryHandler
     }
 
     /**
-     * Get all TIN types supported by Brazil.
+     * Returns an array describing the supported Brazilian TIN types: CPF for individuals and CNPJ for businesses.
+     *
+     * @return array An array with metadata for CPF and CNPJ TIN types.
      */
     public function getTinTypes(): array
     {
@@ -130,7 +141,13 @@ final class Brazil extends CountryHandler
     }
 
     /**
-     * Identify the TIN type for a given Brazilian TIN.
+     * Determines whether the given Brazilian TIN is a CPF or CNPJ and returns its type information.
+     *
+     * Normalizes the input and validates it as either a CPF (11 digits) or CNPJ (14 digits).
+     * Returns the corresponding TIN type metadata if valid, or null if the input does not match either type.
+     *
+     * @param string $tin The Brazilian TIN to identify.
+     * @return array|null The TIN type information if valid, or null if unrecognized or invalid.
      */
     public function identifyTinType(string $tin): ?array
     {
@@ -147,6 +164,12 @@ final class Brazil extends CountryHandler
         return null;
     }
 
+    /**
+     * Checks if the normalized TIN has a valid length for CPF (11 digits) or CNPJ (14 digits).
+     *
+     * @param string $tin The input Tax Identification Number.
+     * @return bool True if the TIN has a valid length, false otherwise.
+     */
     protected function hasValidLength(string $tin): bool
     {
         $normalizedTin = preg_replace('/[^0-9]/', '', $tin);
@@ -155,11 +178,23 @@ final class Brazil extends CountryHandler
         return 11 === $length || 14 === $length; // CPF or CNPJ
     }
 
+    /**
+     * Checks if the provided TIN matches the CPF or CNPJ format pattern.
+     *
+     * @param string $tin The tax identification number to validate.
+     * @return bool True if the TIN matches the expected pattern, false otherwise.
+     */
     protected function hasValidPattern(string $tin): bool
     {
         return $this->matchPattern($tin, self::PATTERN);
     }
 
+    /**
+     * Validates the TIN by checking for repeated digits and verifying CPF or CNPJ checksums.
+     *
+     * @param string $tin The input Tax Identification Number.
+     * @return bool True if the TIN passes rule-based validation for CPF or CNPJ; false otherwise.
+     */
     protected function hasValidRule(string $tin): bool
     {
         $normalizedTin = preg_replace('/[^0-9]/', '', $tin);
@@ -182,7 +217,10 @@ final class Brazil extends CountryHandler
     }
 
     /**
-     * Validate CNPJ checksum.
+     * Checks if a CNPJ number has valid check digits according to Brazilian rules.
+     *
+     * @param string $cnpj The numeric CNPJ string (14 digits, no formatting).
+     * @return bool True if the CNPJ is valid, false otherwise.
      */
     private function isValidCNPJ(string $cnpj): bool
     {
@@ -220,7 +258,10 @@ final class Brazil extends CountryHandler
     }
 
     /**
-     * Validate CPF checksum.
+     * Checks if a CPF number is valid by verifying its check digits according to official Brazilian rules.
+     *
+     * @param string $cpf The CPF number as a numeric string (11 digits, no formatting).
+     * @return bool True if the CPF is valid; false otherwise.
      */
     private function isValidCPF(string $cpf): bool
     {

@@ -29,13 +29,20 @@ final class Slovenia extends CountryHandler
      */
     public const PATTERN = '[1-9]\d{7}';
 
+    /**
+     * Returns a sample valid Slovenian TIN for placeholder purposes.
+     *
+     * @return string A sample TIN string.
+     */
     public function getPlaceholder(): string
     {
         return '15012557';
     }
 
     /**
-     * Get all TIN types supported by Slovenia.
+     * Returns an array of supported TIN types for Slovenia.
+     *
+     * @return array An associative array describing the Slovenian TIN type(s), including code, name, and description.
      */
     public function getTinTypes(): array
     {
@@ -48,6 +55,12 @@ final class Slovenia extends CountryHandler
         ];
     }
 
+    /**
+     * Determines if the provided TIN satisfies both the range and checksum validation rules for Slovenia.
+     *
+     * @param string $tin The Tax Identification Number to validate.
+     * @return bool True if the TIN passes all Slovenian validation rules, false otherwise.
+     */
     protected function hasValidRule(string $tin): bool
     {
         return $this->isFollowRangeRule($tin) && $this->isFollowSloveniaRule($tin);

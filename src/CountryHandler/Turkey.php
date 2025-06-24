@@ -35,7 +35,11 @@ final class Turkey extends CountryHandler
     public const PATTERN = '^\d{10,11}$';
 
     /**
-     * Get placeholder text.
+     * Returns a sample Turkish TIN as a placeholder string.
+     *
+     * This placeholder represents the format of a valid Turkish personal identification number (T.C. Kimlik No).
+     *
+     * @return string Example TIN placeholder.
      */
     public function getPlaceholder(): string
     {
@@ -43,7 +47,9 @@ final class Turkey extends CountryHandler
     }
 
     /**
-     * Get all TIN types supported by Turkey.
+     * Returns an array of supported Turkish TIN types, including personal and business identification numbers.
+     *
+     * @return array An associative array describing each TIN type with code, name, and description.
      */
     public function getTinTypes(): array
     {
@@ -62,7 +68,12 @@ final class Turkey extends CountryHandler
     }
 
     /**
-     * Identify the TIN type for a given Turkish TIN.
+     * Determines the type of a Turkish TIN (Tax Identification Number) based on its format and validity.
+     *
+     * Returns an array describing the TIN type if the input is a valid Turkish personal or business TIN, or null if unrecognized or invalid.
+     *
+     * @param string $tin The Turkish TIN to evaluate.
+     * @return array|null The TIN type metadata if valid, or null if the TIN is invalid or unrecognized.
      */
     public function identifyTinType(string $tin): ?array
     {
@@ -79,6 +90,12 @@ final class Turkey extends CountryHandler
         return null;
     }
 
+    /**
+     * Checks if the TIN has a valid length of either 10 or 11 digits.
+     *
+     * @param string $tin The Tax Identification Number to check.
+     * @return bool True if the TIN length is valid, false otherwise.
+     */
     protected function hasValidLength(string $tin): bool
     {
         $length = strlen($tin);
@@ -86,11 +103,25 @@ final class Turkey extends CountryHandler
         return 10 === $length || 11 === $length;
     }
 
+    /**
+     * Checks if the provided TIN matches the required Turkish TIN pattern.
+     *
+     * @param string $tin The tax identification number to validate.
+     * @return bool True if the TIN matches the pattern; false otherwise.
+     */
     protected function hasValidPattern(string $tin): bool
     {
         return $this->matchPattern($tin, self::PATTERN);
     }
 
+    /**
+     * Validates a Turkish TIN using the appropriate checksum rule based on its length.
+     *
+     * Applies the personal ID validation algorithm for 11-digit TINs and the business tax ID validation algorithm for 10-digit TINs. Returns false for any other length.
+     *
+     * @param string $tin The Turkish TIN to validate.
+     * @return bool True if the TIN passes the relevant checksum validation; false otherwise.
+     */
     protected function hasValidRule(string $tin): bool
     {
         $length = strlen($tin);
@@ -107,7 +138,12 @@ final class Turkey extends CountryHandler
     }
 
     /**
-     * Validate Vergi Kimlik No (business tax ID).
+     * Validates a 10-digit Turkish business tax identification number (Vergi Kimlik No) using its checksum algorithm.
+     *
+     * The function returns true if the provided ID passes the checksum validation and is not all zeros; otherwise, it returns false.
+     *
+     * @param string $id The 10-digit business tax identification number to validate.
+     * @return bool True if the ID is valid, false otherwise.
      */
     private function isValidBusinessID(string $id): bool
     {
@@ -149,8 +185,12 @@ final class Turkey extends CountryHandler
     }
 
     /**
-     * Validate T.C. Kimlik No (personal ID).
-     * Uses specific checksum algorithm.
+     * Validates an 11-digit Turkish personal identification number (T.C. Kimlik No) using checksum algorithms.
+     *
+     * The function checks that the first digit is not zero, the number is not composed of identical digits, and both the 10th and 11th digits are valid according to official checksum rules.
+     *
+     * @param string $id The 11-digit personal identification number to validate.
+     * @return bool True if the ID is valid; false otherwise.
      */
     private function isValidPersonalID(string $id): bool
     {

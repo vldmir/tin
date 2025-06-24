@@ -48,13 +48,20 @@ final class Italy extends CountryHandler
      */
     private $listSet = [];
 
+    /**
+     * Returns a sample Italian Fiscal Code (Codice Fiscale) as a placeholder.
+     *
+     * @return string Example of a valid Italian TIN.
+     */
     public function getPlaceholder(): string
     {
         return 'RSSMRA85T10A562S';
     }
 
     /**
-     * Get all TIN types supported by Italy.
+     * Returns an array describing the supported Italian TIN types.
+     *
+     * @return array An array containing information about the Italian Fiscal Code (Codice Fiscale).
      */
     public function getTinTypes(): array
     {
@@ -67,6 +74,14 @@ final class Italy extends CountryHandler
         ];
     }
 
+    /**
+     * Validates the date component of an Italian Fiscal Code (TIN).
+     *
+     * Checks if the extracted day, month, and year values from the TIN represent a valid calendar date, accounting for both male and female encoding conventions.
+     *
+     * @param string $tin The Italian Fiscal Code to validate.
+     * @return bool True if the date portion is valid, false otherwise.
+     */
     protected function hasValidDate(string $tin): bool
     {
         $day = (int) ($this->convertCharToNumber(substr($tin, 9, 2)));
@@ -101,6 +116,14 @@ final class Italy extends CountryHandler
         return ($containsUpper || $containsLower) && parent::hasValidPattern($tin);
     }
 
+    /**
+     * Validates the checksum of an Italian Fiscal Code (Codice Fiscale) using the official algorithm.
+     *
+     * Calculates a weighted sum of the first 15 characters, applies modulo 26, and compares the result to the alphabetical position of the 16th character to determine validity.
+     *
+     * @param string $tin The Italian Fiscal Code to validate.
+     * @return bool True if the checksum is valid, false otherwise.
+     */
     protected function hasValidRule(string $tin): bool
     {
         $sum = 0;
@@ -279,6 +302,14 @@ final class Italy extends CountryHandler
         }
     }
 
+    /**
+     * Converts a character to its corresponding numeric value for Italian TIN validation.
+     *
+     * Digits '0'-'9' are returned as their integer value. Letters 'L'-'V' are mapped to numbers 0-9 according to Italian Fiscal Code rules. Returns -1 if the character is not recognized.
+     *
+     * @param string $m The character to convert.
+     * @return int The numeric value of the character, or -1 if invalid.
+     */
     private function getNumberFromChar(string $m): int
     {
         if (is_numeric($m)) {

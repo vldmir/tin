@@ -29,13 +29,20 @@ final class Netherlands extends CountryHandler
      */
     public const PATTERN = '\d{9}';
 
+    /**
+     * Returns a sample Dutch TIN (BSN) in unformatted form.
+     *
+     * @return string Example TIN value for the Netherlands.
+     */
     public function getPlaceholder(): string
     {
         return '123456782';
     }
 
     /**
-     * Get all TIN types supported by Netherlands.
+     * Returns an array describing the supported TIN types for the Netherlands.
+     *
+     * @return array An array of TIN type definitions, including code, name, and description.
      */
     public function getTinTypes(): array
     {
@@ -48,6 +55,14 @@ final class Netherlands extends CountryHandler
         ];
     }
 
+    /**
+     * Validates a Dutch TIN (BSN) using the 11-proof checksum rule.
+     *
+     * Returns true if the provided TIN passes the Dutch BSN validation algorithm; false otherwise.
+     *
+     * @param string $tin The TIN to validate.
+     * @return bool True if the TIN is valid according to the Dutch BSN checksum rule, false otherwise.
+     */
     protected function hasValidRule(string $tin): bool
     {
         $c1 = $this->digitAt($tin, 0);

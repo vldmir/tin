@@ -29,13 +29,20 @@ final class Portugal extends CountryHandler
      */
     public const PATTERN = '\d{9}';
 
+    /**
+     * Returns a sample Portuguese Tax Identification Number (TIN) placeholder.
+     *
+     * @return string Example TIN in the correct format.
+     */
     public function getPlaceholder(): string
     {
         return '123456789';
     }
 
     /**
-     * Get all TIN types supported by Portugal.
+     * Returns an array of supported Portuguese TIN types with their codes, names, and descriptions.
+     *
+     * @return array An associative array describing each supported TIN type for Portugal.
      */
     public function getTinTypes(): array
     {
@@ -48,6 +55,15 @@ final class Portugal extends CountryHandler
         ];
     }
 
+    /**
+     * Validates a Portuguese TIN (NIF) using its official check digit algorithm.
+     *
+     * Applies the Portuguese NIF validation rule by calculating a weighted sum of the first eight digits,
+     * determining the check digit, and comparing it to the ninth digit as specified by the official algorithm.
+     *
+     * @param string $tin The TIN to validate.
+     * @return bool True if the TIN is valid according to the check digit rule, false otherwise.
+     */
     protected function hasValidRule(string $tin): bool
     {
         $c1 = $this->digitAt($tin, 0);

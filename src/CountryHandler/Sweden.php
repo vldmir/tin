@@ -51,13 +51,20 @@ final class Sweden extends CountryHandler
      */
     public const PATTERN_4 = '(1[89]|20)\d{2}(0[1-9]|1[012])(6[1-9]|[7-8][0-9]|9[0-1])\d{4}';
 
+    /**
+     * Returns a sample Swedish Personal Number (Personnummer) in the standard format.
+     *
+     * @return string Example TIN: '640823-3234'.
+     */
     public function getPlaceholder(): string
     {
         return '640823-3234';
     }
 
     /**
-     * Get all TIN types supported by Sweden.
+     * Returns an array describing the supported Swedish TIN types.
+     *
+     * @return array An array containing information about the Swedish Personal Number (Personnummer) TIN type.
      */
     public function getTinTypes(): array
     {
@@ -70,6 +77,12 @@ final class Sweden extends CountryHandler
         ];
     }
 
+    /**
+     * Checks if the provided TIN has a valid length for Swedish Personal Numbers.
+     *
+     * @param string $tin The Tax Identification Number to validate.
+     * @return bool True if the TIN length is either 10 or 12 characters, false otherwise.
+     */
     protected function hasValidLength(string $tin): bool
     {
         return $this->isFollowLength1And2($tin) || $this->isFollowLength3And4($tin);
@@ -206,6 +219,14 @@ final class Sweden extends CountryHandler
         return 0 === $c10;
     }
 
+    /**
+     * Validates the checksum of a 12-digit Swedish TIN (Personnummer) according to Swedish rules.
+     *
+     * Applies the Swedish checksum algorithm for 12-digit TINs, using alternating digit sums and multiplications, and compares the result to the last digit.
+     *
+     * @param string $tin The TIN to validate.
+     * @return bool True if the checksum is valid, false otherwise.
+     */
     private function isFollowSwedenRule3And4(string $tin): bool
     {
         $c3 = $this->digitAt($tin, 2);

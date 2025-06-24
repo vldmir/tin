@@ -59,13 +59,20 @@ final class CzechRepublic extends CountryHandler
      */
     private const MONTH_FEMALE = 50;
 
+    /**
+     * Returns a sample Czech Birth Number (Rodné číslo) in the correct format.
+     *
+     * @return string Example TIN for the Czech Republic.
+     */
     public function getPlaceholder(): string
     {
         return '855230/3174';
     }
 
     /**
-     * Get all TIN types supported by Czech Republic.
+     * Returns an array describing the supported TIN types for the Czech Republic.
+     *
+     * @return array An array containing information about each supported TIN type, including code, name, and description.
      */
     public function getTinTypes(): array
     {
@@ -78,6 +85,14 @@ final class CzechRepublic extends CountryHandler
         ];
     }
 
+    /**
+     * Validates the date portion of a Czech TIN (Rodné číslo).
+     *
+     * Checks if the extracted month and day values from the TIN are within allowed ranges, accounting for gender and special month adjustments for births after 2004.
+     *
+     * @param string $tin The Czech TIN to validate.
+     * @return bool True if the date portion is valid, false otherwise.
+     */
     protected function hasValidDate(string $tin): bool
     {
         // If we reach this point, it means that it's already validated.
@@ -171,6 +186,12 @@ final class CzechRepublic extends CountryHandler
         return $this->matchLength($tin, self::LENGTH_1);
     }
 
+    /**
+     * Checks if the TIN has a length equal to the defined LENGTH_2 constant (10 characters).
+     *
+     * @param string $tin The Tax Identification Number to check.
+     * @return bool True if the TIN length is 10 characters, false otherwise.
+     */
     private function isFollowLength2(string $tin): bool
     {
         return $this->matchLength($tin, self::LENGTH_2);

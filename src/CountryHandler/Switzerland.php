@@ -49,7 +49,12 @@ final class Switzerland extends CountryHandler
     public const PATTERN_UID = '^CHE-?\d{3}\.?\d{3}\.?\d{3}$';
 
     /**
-     * Format input according to TIN type.
+     * Formats a Swiss TIN input string as either AVS/AHV or UID, applying the appropriate separators.
+     *
+     * Normalizes the input by removing non-alphanumeric characters and converting to uppercase. If the input starts with '756' and is up to 13 characters, it is formatted as an AVS/AHV number (`756.9999.9999.99`). If it starts with 'CHE' and the following digits are up to 9 characters, it is formatted as a UID (`CHE-999.999.999`). Otherwise, returns the normalized input.
+     *
+     * @param string $input The raw TIN input string.
+     * @return string The formatted TIN string.
      */
     public function formatInput(string $input): string
     {
@@ -101,7 +106,9 @@ final class Switzerland extends CountryHandler
     }
 
     /**
-     * Get input mask based on the TIN type.
+     * Returns the default input mask for Swiss TINs in AVS format.
+     *
+     * @return string The input mask string '756.9999.9999.99'.
      */
     public function getInputMask(): string
     {
@@ -110,7 +117,9 @@ final class Switzerland extends CountryHandler
     }
 
     /**
-     * Get placeholder based on the TIN type.
+     * Returns a placeholder string representing the Swiss AVS TIN format.
+     *
+     * @return string The placeholder in the format '756.1234.5678.90'.
      */
     public function getPlaceholder(): string
     {
@@ -118,7 +127,9 @@ final class Switzerland extends CountryHandler
     }
 
     /**
-     * Get all TIN types supported by Switzerland.
+     * Returns an array describing the supported Swiss TIN types: AVS/AHV (social security number) and UID (business identification number).
+     *
+     * @return array List of TIN types with code, name, and description.
      */
     public function getTinTypes(): array
     {
@@ -137,7 +148,12 @@ final class Switzerland extends CountryHandler
     }
 
     /**
-     * Identify the TIN type for a given Swiss TIN.
+     * Determines the type of a Swiss TIN (AVS/AHV or UID) based on its format and validity.
+     *
+     * Returns an array describing the TIN type if the input matches and validates as either AVS/AHV or UID, or null if the type cannot be identified.
+     *
+     * @param string $tin The Swiss TIN to evaluate.
+     * @return array|null The TIN type information array, or null if the TIN is invalid or unrecognized.
      */
     public function identifyTinType(string $tin): ?array
     {
@@ -154,6 +170,15 @@ final class Switzerland extends CountryHandler
         return null;
     }
 
+    /**
+     * Checks if the provided TIN has a valid length for Swiss AVS or UID formats.
+     *
+     * For AVS numbers (starting with '756'), the numeric part must be exactly 13 digits.
+     * For UID numbers (starting with 'CHE'), the numeric part must be exactly 9 digits.
+     *
+     * @param string $tin The TIN to check.
+     * @return bool True if the TIN has a valid length for its type, false otherwise.
+     */
     protected function hasValidLength(string $tin): bool
     {
         // Check AVS format
@@ -173,12 +198,26 @@ final class Switzerland extends CountryHandler
         return false;
     }
 
+    /**
+     * Checks if the provided TIN matches the AVS or UID format patterns.
+     *
+     * @param string $tin The tax identification number to check.
+     * @return bool True if the TIN matches either the AVS or UID pattern, false otherwise.
+     */
     protected function hasValidPattern(string $tin): bool
     {
         return $this->matchPattern($tin, self::PATTERN_AVS)
                || $this->matchPattern($tin, self::PATTERN_UID);
     }
 
+    /**
+     * Validates the TIN according to Swiss AVS or UID rules.
+     *
+     * Determines the TIN type based on its prefix and applies the corresponding checksum validation.
+     *
+     * @param string $tin The TIN to validate.
+     * @return bool True if the TIN passes the type-specific validation rules, false otherwise.
+     */
     protected function hasValidRule(string $tin): bool
     {
         // Check if it's AVS format
@@ -195,7 +234,12 @@ final class Switzerland extends CountryHandler
     }
 
     /**
-     * Validate AVS/AHV number.
+     * Validates a Swiss AVS/AHV (social security) number.
+     *
+     * Removes formatting, checks for correct length and Swiss prefix, and verifies the EAN-13 checksum.
+     *
+     * @param string $avs The AVS/AHV number to validate.
+     * @return bool True if the AVS/AHV number is valid, false otherwise.
      */
     private function isValidAVS(string $avs): bool
     {
@@ -216,7 +260,10 @@ final class Switzerland extends CountryHandler
     }
 
     /**
-     * Validate UID number.
+     * Validates a Swiss UID (business identification number) by checking its length and verifying the modulo 11 checksum.
+     *
+     * @param string $uid The UID to validate.
+     * @return bool True if the UID is valid, false otherwise.
      */
     private function isValidUID(string $uid): bool
     {
@@ -233,7 +280,12 @@ final class Switzerland extends CountryHandler
     }
 
     /**
-     * Validate EAN-13 checksum.
+     * Validates the EAN-13 checksum for a 13-digit number.
+     *
+     * Calculates the check digit using the EAN-13 algorithm and compares it to the last digit of the input.
+     *
+     * @param string $number The 13-digit number to validate.
+     * @return bool True if the checksum is valid, false otherwise.
      */
     private function validateEAN13Checksum(string $number): bool
     {
@@ -253,7 +305,12 @@ final class Switzerland extends CountryHandler
     }
 
     /**
-     * Validate UID modulo 11 checksum.
+     * Validates the Swiss UID number using the modulo 11 checksum algorithm.
+     *
+     * Applies predefined weights to the first 8 digits, calculates the checksum, and verifies it against the 9th digit. Returns false if the computed checksum is 10, as such UIDs are invalid.
+     *
+     * @param string $number The 9-digit UID number as a string.
+     * @return bool True if the checksum is valid, false otherwise.
      */
     private function validateUID11Checksum(string $number): bool
     {

@@ -28,6 +28,9 @@ class TINSpec extends ObjectBehavior
             ->shouldBeAnInstanceOf(TIN::class);
     }
 
+    /**
+     * Tests the validity check of TINs, ensuring that invalid TINs return false and valid TINs return true.
+     */
     public function it_can_check_if_a_tin_is_valid_or_not()
     {
         $this
@@ -42,6 +45,11 @@ class TINSpec extends ObjectBehavior
             ->shouldReturn(true);
     }
 
+    /**
+     * Tests that TIN types for a given country code are correctly returned.
+     *
+     * Verifies that the static method returns the expected array of TIN type definitions for Spain ('ES') and France ('FR').
+     */
     public function it_can_get_tin_types_for_a_country()
     {
         $this::getTinTypesForCountry('ES')
@@ -73,6 +81,9 @@ class TINSpec extends ObjectBehavior
             ]);
     }
 
+    /**
+     * Tests that a TIN instance created from a Spanish slug returns the correct array of TIN types for Spain.
+     */
     public function it_can_get_tin_types_from_instance()
     {
         $this::fromSlug('ES12345678Z')
@@ -96,6 +107,11 @@ class TINSpec extends ObjectBehavior
             ]);
     }
 
+    /**
+     * Tests that the TIN type is correctly identified for various Spanish TIN formats (DNI, NIE, CIF).
+     *
+     * Verifies that the `identifyTinType` method returns the expected type information based on the TIN slug format for Spain.
+     */
     public function it_can_identify_tin_type_for_spanish_tins()
     {
         // DNI example
@@ -126,6 +142,9 @@ class TINSpec extends ObjectBehavior
             ]);
     }
 
+    /**
+     * Tests that a TINException is thrown when attempting to check a TIN with an unrecognized or invalid slug.
+     */
     public function it_can_throw_an_exception_if_algorithm_is_not_found()
     {
         $this::fromSlug('foo1234')
@@ -145,11 +164,17 @@ class TINSpec extends ObjectBehavior
             ->during('check');
     }
 
+    /**
+     * Verifies that the subject under test is an instance of the TIN class.
+     */
     public function it_is_initializable()
     {
         $this->shouldHaveType(TIN::class);
     }
 
+    /**
+     * Verifies that requesting TIN types for an unsupported country code throws a TINException.
+     */
     public function it_throws_exception_for_unsupported_country_tin_types()
     {
         $this
@@ -157,6 +182,9 @@ class TINSpec extends ObjectBehavior
             ->during('getTinTypesForCountry', ['ZZ']);
     }
 
+    /**
+     * Initializes the test subject using the 'fromSlug' constructor with a sample slug before each test.
+     */
     public function let()
     {
         $this->beConstructedThrough('fromSlug', ['foo123']);

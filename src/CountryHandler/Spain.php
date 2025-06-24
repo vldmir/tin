@@ -66,13 +66,20 @@ final class Spain extends CountryHandler
      */
     public const PATTERN_2 = '(^[ABCDEFGHJKLMNPQRSUVW])(\d{7})([' . self::CONTROL_2 . '\d]$)';
 
+    /**
+     * Returns a sample Spanish TIN for placeholder purposes.
+     *
+     * @return string Example TIN string.
+     */
     public function getPlaceholder(): string
     {
         return '12345678Z';
     }
 
     /**
-     * Get all TIN types supported by Spain.
+     * Returns an array describing the types of Spanish TINs supported, including DNI, NIE, and CIF.
+     *
+     * @return array An associative array of TIN types with their codes, names, and descriptions.
      */
     public function getTinTypes(): array
     {
@@ -96,7 +103,10 @@ final class Spain extends CountryHandler
     }
 
     /**
-     * Identify the TIN type for a given Spanish TIN.
+     * Determines the type of a Spanish TIN (DNI, NIE, or CIF) based on its format.
+     *
+     * @param string $tin The Tax Identification Number to analyze.
+     * @return array|null The TIN type information array if recognized, or null if the type cannot be determined.
      */
     public function identifyTinType(string $tin): ?array
     {
@@ -121,6 +131,12 @@ final class Spain extends CountryHandler
         return null;
     }
 
+    /**
+     * Checks if the given TIN matches any of the supported Spanish TIN patterns.
+     *
+     * @param string $tin The Tax Identification Number to check.
+     * @return bool True if the TIN matches a recognized pattern; otherwise, false.
+     */
     protected function hasValidPattern(string $tin): bool
     {
         return $this->isFollowPattern1($tin) || $this->isFollowPattern2($tin);
@@ -200,6 +216,14 @@ final class Spain extends CountryHandler
         return $this->getChecksum($tinNumber) === $tinChecksum;
     }
 
+    /**
+     * Validates the checksum for Spanish TINs matching pattern 2 (CIF and similar).
+     *
+     * Returns true if the TIN's checksum character matches the calculated checksum according to rule 2; otherwise, returns false.
+     *
+     * @param string $tin The TIN to validate.
+     * @return bool True if the TIN passes rule 2 checksum validation, false otherwise.
+     */
     private function isFollowRule2(string $tin): bool
     {
         if (1 !== preg_match('~' . self::PATTERN_2 . '~', strtoupper($tin), $tinParts)) {

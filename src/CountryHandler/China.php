@@ -50,7 +50,9 @@ final class China extends CountryHandler
     public const PATTERN_PERSONAL = '^\d{17}[\dX]$';
 
     /**
-     * Get input mask based on the TIN type.
+     * Returns the input mask string for Chinese TIN entry, defaulting to the personal ID format (18 digits).
+     *
+     * @return string The input mask for TIN entry.
      */
     public function getInputMask(): string
     {
@@ -59,7 +61,9 @@ final class China extends CountryHandler
     }
 
     /**
-     * Get placeholder based on the TIN type.
+     * Returns a sample placeholder string for Chinese TIN input.
+     *
+     * @return string Example TIN placeholder, e.g., '11010519491231002X'.
      */
     public function getPlaceholder(): string
     {
@@ -67,7 +71,9 @@ final class China extends CountryHandler
     }
 
     /**
-     * Get all TIN types supported by China.
+     * Returns an array of supported Chinese TIN types, including personal ID numbers and business entity codes.
+     *
+     * @return array An array containing information about each supported TIN type, including code, name, and description.
      */
     public function getTinTypes(): array
     {
@@ -86,7 +92,10 @@ final class China extends CountryHandler
     }
 
     /**
-     * Identify the TIN type for a given Chinese TIN.
+     * Determines the type of a Chinese TIN (Personal ID or Business Code) based on its format and validity.
+     *
+     * @param string $tin The input Tax Identification Number to be analyzed.
+     * @return array|null The TIN type information array if valid, or null if the TIN is invalid or unrecognized.
      */
     public function identifyTinType(string $tin): ?array
     {
@@ -103,16 +112,36 @@ final class China extends CountryHandler
         return null;
     }
 
+    /**
+     * Checks if the TIN has the required length of 18 characters.
+     *
+     * @param string $tin The Tax Identification Number to check.
+     * @return bool True if the TIN is exactly 18 characters long, false otherwise.
+     */
     protected function hasValidLength(string $tin): bool
     {
         return strlen($tin) === self::LENGTH;
     }
 
+    /**
+     * Checks if the provided TIN matches the combined pattern for valid Chinese personal or business identifiers.
+     *
+     * @param string $tin The Tax Identification Number to validate.
+     * @return bool True if the TIN matches the required pattern, false otherwise.
+     */
     protected function hasValidPattern(string $tin): bool
     {
         return $this->matchPattern($tin, self::PATTERN);
     }
 
+    /**
+     * Validates the TIN according to its type-specific rules.
+     *
+     * Determines whether the provided TIN is a valid personal ID or business code by matching its pattern and applying the corresponding validation logic.
+     *
+     * @param string $tin The normalized TIN to validate.
+     * @return bool True if the TIN passes all type-specific validation rules, false otherwise.
+     */
     protected function hasValidRule(string $tin): bool
     {
         // Check if it's personal ID
@@ -129,7 +158,12 @@ final class China extends CountryHandler
     }
 
     /**
-     * Override normalizeTin to preserve X in personal IDs.
+     * Normalizes the TIN by removing all non-alphanumeric characters except 'X' and converting to uppercase.
+     *
+     * Preserves the 'X' character, which is valid in Chinese personal ID numbers.
+     *
+     * @param string $tin The input Tax Identification Number.
+     * @return string The normalized TIN string.
      */
     protected function normalizeTin(string $tin): string
     {
@@ -142,7 +176,14 @@ final class China extends CountryHandler
     }
 
     /**
-     * Validate birth date.
+     * Checks if the provided year, month, and day constitute a valid birth date.
+     *
+     * Validates that the year is within a reasonable range (not before 1900 and not in the future), the month is between 1 and 12, and the day is between 1 and 31. Uses PHP's `checkdate` to confirm the date is valid in the calendar.
+     *
+     * @param int $year The year component of the date.
+     * @param int $month The month component of the date.
+     * @param int $day The day component of the date.
+     * @return bool True if the date is a valid birth date, false otherwise.
      */
     private function isValidBirthDate(int $year, int $month, int $day): bool
     {
@@ -164,7 +205,12 @@ final class China extends CountryHandler
     }
 
     /**
-     * Validate Business Code (Unified Social Credit Code).
+     * Validates a Chinese Unified Social Credit Code (business code).
+     *
+     * Checks that the code contains only allowed characters and that its checksum is correct.
+     *
+     * @param string $code The business code to validate.
+     * @return bool True if the code is valid; otherwise, false.
      */
     private function isValidBusinessCode(string $code): bool
     {
@@ -183,7 +229,12 @@ final class China extends CountryHandler
     }
 
     /**
-     * Validate business code checksum.
+     * Validates the checksum of a Chinese business code (Unified Social Credit Code).
+     *
+     * Calculates the checksum using the prescribed character mapping and weighting algorithm, and verifies that the final character matches the expected checksum character.
+     *
+     * @param string $code The 18-character business code to validate.
+     * @return bool True if the checksum is valid, false otherwise.
      */
     private function isValidBusinessCodeChecksum(string $code): bool
     {
@@ -217,7 +268,10 @@ final class China extends CountryHandler
     }
 
     /**
-     * Validate Personal ID number.
+     * Validates a Chinese Personal ID number by checking the region code, birth date, and checksum.
+     *
+     * @param string $id The 18-character Personal ID number to validate.
+     * @return bool True if the Personal ID is valid; otherwise, false.
      */
     private function isValidPersonalID(string $id): bool
     {
@@ -246,7 +300,12 @@ final class China extends CountryHandler
     }
 
     /**
-     * Validate personal ID checksum.
+     * Checks if the checksum digit of a Chinese personal ID (resident identity card number) is valid.
+     *
+     * Calculates the checksum using the official weighting algorithm and compares it to the last character of the ID.
+     *
+     * @param string $id The 18-character personal ID to validate.
+     * @return bool True if the checksum is valid, false otherwise.
      */
     private function isValidPersonalIDChecksum(string $id): bool
     {
@@ -266,7 +325,10 @@ final class China extends CountryHandler
     }
 
     /**
-     * Validate region code.
+     * Checks if the provided region code corresponds to a valid Chinese province code.
+     *
+     * @param string $region The region code extracted from a Chinese personal ID.
+     * @return bool True if the region code is valid, false otherwise.
      */
     private function isValidRegionCode(string $region): bool
     {

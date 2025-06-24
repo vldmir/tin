@@ -51,7 +51,12 @@ final class UnitedStates extends CountryHandler
     public const PATTERN_SSN_ITIN = '^\d{3}-?\d{2}-?\d{4}$';
 
     /**
-     * Format input according to TIN type.
+     * Formats a United States TIN input string as either EIN (99-9999999) or SSN/ITIN (999-99-9999) based on its prefix and length.
+     *
+     * Removes all non-digit characters from the input and applies the appropriate formatting. Returns an empty string if the input contains no digits.
+     *
+     * @param string $input The raw TIN input string.
+     * @return string The formatted TIN string, or an empty string if input is empty after normalization.
      */
     public function formatInput(string $input): string
     {
@@ -103,7 +108,9 @@ final class UnitedStates extends CountryHandler
     }
 
     /**
-     * Get input mask based on the TIN type.
+     * Returns the default input mask for United States TINs in SSN/ITIN format.
+     *
+     * @return string The input mask '999-99-9999'.
      */
     public function getInputMask(): string
     {
@@ -112,7 +119,9 @@ final class UnitedStates extends CountryHandler
     }
 
     /**
-     * Get placeholder based on the TIN type.
+     * Returns a placeholder string representing the standard US TIN format.
+     *
+     * @return string The placeholder '123-45-6789'.
      */
     public function getPlaceholder(): string
     {
@@ -120,7 +129,9 @@ final class UnitedStates extends CountryHandler
     }
 
     /**
-     * Get all TIN types supported by United States.
+     * Returns an array describing the supported United States TIN types: SSN, ITIN, and EIN.
+     *
+     * @return array List of TIN types, each with code, name, and description.
      */
     public function getTinTypes(): array
     {
@@ -144,7 +155,12 @@ final class UnitedStates extends CountryHandler
     }
 
     /**
-     * Identify the TIN type for a given US TIN.
+     * Determines the type of a US Taxpayer Identification Number (TIN).
+     *
+     * Analyzes the provided TIN to identify whether it is an SSN, ITIN, or EIN based on its format and validation rules.
+     *
+     * @param string $tin The TIN to be analyzed.
+     * @return array|null An array describing the TIN type if recognized, or null if the TIN is invalid or unrecognized.
      */
     public function identifyTinType(string $tin): ?array
     {
@@ -175,6 +191,12 @@ final class UnitedStates extends CountryHandler
         return null;
     }
 
+    /**
+     * Checks if the normalized TIN has the required length of 9 digits.
+     *
+     * @param string $tin The input Taxpayer Identification Number.
+     * @return bool True if the TIN contains exactly 9 digits after normalization, false otherwise.
+     */
     protected function hasValidLength(string $tin): bool
     {
         $normalizedTin = preg_replace('/[^0-9]/', '', $tin);
@@ -182,11 +204,25 @@ final class UnitedStates extends CountryHandler
         return strlen($normalizedTin) === self::LENGTH;
     }
 
+    /**
+     * Checks if the provided TIN matches the combined US TIN pattern for SSN, ITIN, or EIN formats.
+     *
+     * @param string $tin The Taxpayer Identification Number to validate.
+     * @return bool True if the TIN matches the expected pattern; otherwise, false.
+     */
     protected function hasValidPattern(string $tin): bool
     {
         return $this->matchPattern($tin, self::PATTERN);
     }
 
+    /**
+     * Validates a US TIN by applying specific rules for SSN, ITIN, or EIN formats.
+     *
+     * Returns true if the input passes the rule-based validation for its detected TIN type; otherwise, returns false.
+     *
+     * @param string $tin The Taxpayer Identification Number to validate.
+     * @return bool True if the TIN is valid according to its type-specific rules, false otherwise.
+     */
     protected function hasValidRule(string $tin): bool
     {
         $normalizedTin = preg_replace('/[^0-9]/', '', $tin);
@@ -205,7 +241,12 @@ final class UnitedStates extends CountryHandler
     }
 
     /**
-     * Validate EIN specific rules.
+     * Checks if the given TIN has a valid EIN prefix.
+     *
+     * Extracts the first two digits of the TIN and verifies that they are within the list of valid EIN prefixes.
+     *
+     * @param string $tin The Taxpayer Identification Number to validate.
+     * @return bool True if the prefix is valid for an EIN, false otherwise.
      */
     private function isValidEIN(string $tin): bool
     {
@@ -225,7 +266,10 @@ final class UnitedStates extends CountryHandler
     }
 
     /**
-     * Check if prefix is valid for EIN.
+     * Determines if the given prefix is a valid Employer Identification Number (EIN) prefix.
+     *
+     * @param int $prefix The first two digits of the EIN.
+     * @return bool True if the prefix is valid for an EIN, false otherwise.
      */
     private function isValidEINPrefix(int $prefix): bool
     {
@@ -241,7 +285,12 @@ final class UnitedStates extends CountryHandler
     }
 
     /**
-     * Validate ITIN specific rules.
+     * Determines if a TIN is a valid Individual Taxpayer Identification Number (ITIN) based on US-specific rules.
+     *
+     * An ITIN must start with '9', and its fourth and fifth digits must fall within the ranges 50–65, 70–88, 90–92, or 94–99.
+     *
+     * @param string $tin The normalized TIN to validate.
+     * @return bool True if the TIN meets ITIN criteria; otherwise, false.
      */
     private function isValidITIN(string $tin): bool
     {
@@ -269,7 +318,12 @@ final class UnitedStates extends CountryHandler
     }
 
     /**
-     * Validate SSN/ITIN specific rules.
+     * Checks whether a TIN satisfies SSN or ITIN-specific validation rules.
+     *
+     * Returns true if the input passes all SSN/ITIN requirements, including non-zero digit groups, valid area codes, and special handling for ITINs starting with '9'.
+     *
+     * @param string $tin The normalized TIN to validate.
+     * @return bool True if the TIN is a valid SSN or ITIN; false otherwise.
      */
     private function isValidSSNorITIN(string $tin): bool
     {

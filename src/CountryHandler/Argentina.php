@@ -36,7 +36,12 @@ final class Argentina extends CountryHandler
     public const PATTERN = '^\d{2}-?\d{8}-?\d{1}$';
 
     /**
-     * Format input according to CUIT format.
+     * Formats a string into the standard CUIT pattern (99-99999999-9).
+     *
+     * Removes all non-digit characters from the input and applies the CUIT mask if enough digits are present. Returns an empty string if the input contains no digits.
+     *
+     * @param string $input The input string to format as a CUIT.
+     * @return string The formatted CUIT string or an empty string if input is invalid.
      */
     public function formatInput(string $input): string
     {
@@ -65,7 +70,9 @@ final class Argentina extends CountryHandler
     }
 
     /**
-     * Get placeholder text.
+     * Returns a sample CUIT placeholder in the standard Argentina TIN format.
+     *
+     * @return string Example CUIT formatted as '20-12345678-9'.
      */
     public function getPlaceholder(): string
     {
@@ -73,7 +80,9 @@ final class Argentina extends CountryHandler
     }
 
     /**
-     * Get all TIN types supported by Argentina.
+     * Returns an array describing the supported Tax Identification Number (TIN) types for Argentina.
+     *
+     * @return array An array containing metadata for each supported TIN type, including code, name, and description.
      */
     public function getTinTypes(): array
     {
@@ -86,6 +95,12 @@ final class Argentina extends CountryHandler
         ];
     }
 
+    /**
+     * Checks if the provided TIN has a valid length after removing non-digit characters.
+     *
+     * @param string $tin The Tax Identification Number to validate.
+     * @return bool True if the normalized TIN is exactly 11 digits long, false otherwise.
+     */
     protected function hasValidLength(string $tin): bool
     {
         $normalizedTin = preg_replace('/[^0-9]/', '', $tin);
@@ -93,11 +108,25 @@ final class Argentina extends CountryHandler
         return strlen($normalizedTin) === self::LENGTH;
     }
 
+    /**
+     * Checks if the provided TIN matches the CUIT format pattern for Argentina.
+     *
+     * @param string $tin The Tax Identification Number to validate.
+     * @return bool True if the TIN matches the CUIT regex pattern; otherwise, false.
+     */
     protected function hasValidPattern(string $tin): bool
     {
         return $this->matchPattern($tin, self::PATTERN);
     }
 
+    /**
+     * Validates the CUIT by checking its type prefix and verifying the checksum.
+     *
+     * The method normalizes the input, ensures it is 11 digits, checks that the type prefix is valid for Argentina's CUIT, and confirms the check digit using the CUIT checksum algorithm.
+     *
+     * @param string $tin The CUIT to validate.
+     * @return bool True if the CUIT passes type and checksum validation; false otherwise.
+     */
     protected function hasValidRule(string $tin): bool
     {
         $normalizedTin = preg_replace('/[^0-9]/', '', $tin);
@@ -121,7 +150,10 @@ final class Argentina extends CountryHandler
     }
 
     /**
-     * Validate CUIT type prefix.
+     * Checks if the provided CUIT type prefix is valid for individuals or companies in Argentina.
+     *
+     * @param string $type The two-digit CUIT type prefix.
+     * @return bool True if the prefix is valid, false otherwise.
      */
     private function isValidType(string $type): bool
     {
@@ -134,7 +166,13 @@ final class Argentina extends CountryHandler
     }
 
     /**
-     * Validate CUIT checksum using modulo 11.
+     * Validates the CUIT checksum using the modulo 11 algorithm.
+     *
+     * Calculates the check digit for the given CUIT and verifies it matches the last digit.
+     * Returns false for special cases where the check digit is 10, as these require additional handling not implemented here.
+     *
+     * @param string $cuit The normalized 11-digit CUIT string.
+     * @return bool True if the checksum is valid, false otherwise.
      */
     private function validateChecksum(string $cuit): bool
     {
