@@ -5,6 +5,48 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.6](https://github.com/vldmir/tin/compare/2.0.5...2.0.6) - 2025-01-25
+
+### Fixed
+
+- **German TIN Validation**: Fixed critical issue where German TINs with spaces, dashes, or dots caused validation failures
+- **Argentina TIN Testing**: Fixed test cases with valid CUIT numbers that properly pass checksum validation
+- **Slug Parsing**: Fixed issue where TIN::from() method created invalid slugs when TIN contained spaces, causing "Invalid length" errors instead of proper validation
+- **Normalization Consistency**: Synchronized both normalization methods to use consistent `#[^[:alnum:]]#u` pattern
+
+### Technical
+
+- **TIN::from() Method**: Modified to normalize TIN before creating slug: `$countryCode . $normalizedTin`
+- **Slug Creation**: Fixed slug parsing where `sscanf($slug, '%2s%s')` stopped at first space in formatted TINs
+- **Argentina Tests**: Updated test constants with valid CUIT numbers that pass checksum validation algorithm
+- **Input Processing**: All separator formats (spaces, dashes, dots, mixed) now handled consistently
+
+### Countries Affected
+
+This release fixes TIN validation issues for:
+
+- 🇩🇪 **Germany**: German TINs with separators - `48 036 952 129`, `48-036-952-129`, `48.036.952.129` now work correctly
+- 🇦🇷 **Argentina**: Argentine CUIT numbers - Updated tests with valid checksums for accurate validation testing
+
+### Example Usage
+
+```php
+use vldmir\Tin\TIN;
+
+// All these German TIN formats now work correctly:
+$tin1 = TIN::from('DE', '48 036 952 129');   // With spaces - NOW WORKS ✅
+$tin2 = TIN::from('DE', '48-036-952-129');   // With dashes - NOW WORKS ✅
+$tin3 = TIN::from('DE', '48.036.952.129');   // With dots - NOW WORKS ✅
+$tin4 = TIN::from('DE', '48036952129');      // Without separators - Still works ✅
+
+// Validation works consistently
+echo $tin1->isValid() ? 'Valid' : 'Invalid'; // Returns: Valid
+```
+
+### Migration Guide
+
+**No breaking changes** - this is a pure bug fix release. All existing functionality remains intact, but now works correctly with formatted TIN input.
+
 ## [2.0.5](https://github.com/vldmir/tin/compare/2.0.4...2.0.5) - 2025-06-24
 
 ### Fixed
