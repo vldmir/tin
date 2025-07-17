@@ -151,7 +151,7 @@ final class TIN
         return self::fromSlug($countryCode . $normalizedTin);
     }
 
-    public static function fromSlug(string $slug): TIN
+    private static function fromSlug(string $slug): TIN
     {
         return new self($slug);
     }

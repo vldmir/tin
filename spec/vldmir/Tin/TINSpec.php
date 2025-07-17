@@ -19,10 +19,10 @@ class TINSpec extends ObjectBehavior
             ->shouldBeAnInstanceOf(TIN::class);
     }
 
-    public function it_can_be_constructed_from_a_slug()
+    public function it_can_be_constructed_from_country_and_tin()
     {
         $this
-            ->beConstructedThrough('fromSlug', ['be1234567890']);
+            ->beConstructedThrough('from', ['BE', '1234567890']);
 
         $this
             ->shouldBeAnInstanceOf(TIN::class);
@@ -33,11 +33,11 @@ class TINSpec extends ObjectBehavior
         $this
             ->beConstructedThrough('from', ['be', '1234567890']);
 
-        $this::fromSlug('be123456789')
+        $this::from('BE', '123456789')
             ->isValid()
             ->shouldReturn(false);
 
-        $this::fromSlug('be00012511119')
+        $this::from('BE', '00012511119')
             ->isValid()
             ->shouldReturn(true);
     }
@@ -75,7 +75,7 @@ class TINSpec extends ObjectBehavior
 
     public function it_can_get_tin_types_from_instance()
     {
-        $this::fromSlug('ES12345678Z')
+        $this::from('ES', '12345678Z')
             ->getTinTypes()
             ->shouldReturn([
                 1 => [
@@ -99,7 +99,7 @@ class TINSpec extends ObjectBehavior
     public function it_can_identify_tin_type_for_spanish_tins()
     {
         // DNI example
-        $this::fromSlug('ES12345678Z')
+        $this::from('ES', '12345678Z')
             ->identifyTinType()
             ->shouldReturn([
                 'code' => 'DNI',
@@ -108,7 +108,7 @@ class TINSpec extends ObjectBehavior
             ]);
 
         // NIE example (starts with X, Y, or Z)
-        $this::fromSlug('ESX1234567L')
+        $this::from('ES', 'X1234567L')
             ->identifyTinType()
             ->shouldReturn([
                 'code' => 'NIE',
@@ -117,7 +117,7 @@ class TINSpec extends ObjectBehavior
             ]);
 
         // CIF example (starts with a letter A-W except vowels)
-        $this::fromSlug('ESA12345674')
+        $this::from('ES', 'A12345674')
             ->identifyTinType()
             ->shouldReturn([
                 'code' => 'CIF',
@@ -128,19 +128,19 @@ class TINSpec extends ObjectBehavior
 
     public function it_can_throw_an_exception_if_algorithm_is_not_found()
     {
-        $this::fromSlug('foo1234')
+        $this::from('FO', '1234')
             ->shouldThrow(TINException::class)
             ->during('check');
 
-        $this::fromSlug('ww1234')
+        $this::from('WW', '1234')
             ->shouldThrow(TINException::class)
             ->during('check');
 
-        $this::fromSlug('ww')
+        $this::from('ZZ', '')
             ->shouldThrow(TINException::class)
             ->during('check');
 
-        $this::fromSlug('1234')
+        $this::from('XX', '1234')
             ->shouldThrow(TINException::class)
             ->during('check');
     }
@@ -159,6 +159,6 @@ class TINSpec extends ObjectBehavior
 
     public function let()
     {
-        $this->beConstructedThrough('fromSlug', ['foo123']);
+        $this->beConstructedThrough('from', ['FO', '123']);
     }
 }

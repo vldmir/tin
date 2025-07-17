@@ -43,7 +43,7 @@ This document provides comprehensive information about Tax Identification Number
 
 #### Example:
 ```php
-$tin = TIN::fromSlug('AR20-12345678-9');
+$tin = TIN::from('AR', '20-12345678-9');
 if ($tin->isValid()) {
     echo "Valid CUIT";
 }
@@ -64,10 +64,10 @@ if ($tin->isValid()) {
 #### Example:
 ```php
 // TFN
-$tfn = TIN::fromSlug('AU865414088');
+$tfn = TIN::from('AU', '865414088');
 
 // ABN
-$abn = TIN::fromSlug('AU53004085616');
+$abn = TIN::from('AU', '53004085616');
 ```
 
 ---
@@ -87,10 +87,10 @@ $abn = TIN::fromSlug('AU53004085616');
 #### Example:
 ```php
 // CPF
-$cpf = TIN::fromSlug('BR123.456.789-09');
+$cpf = TIN::from('BR', '123.456.789-09');
 
 // CNPJ
-$cnpj = TIN::fromSlug('BR11.222.333/0001-81');
+$cnpj = TIN::from('BR', '11.222.333/0001-81');
 ```
 
 ---
@@ -109,10 +109,10 @@ $cnpj = TIN::fromSlug('BR11.222.333/0001-81');
 #### Example:
 ```php
 // SIN
-$sin = TIN::fromSlug('CA130-692-544');
+$sin = TIN::from('CA', '130-692-544');
 
 // BN with program account
-$bn = TIN::fromSlug('CA123456789RC0001');
+$bn = TIN::from('CA', '123456789RC0001');
 ```
 
 ---
@@ -134,10 +134,10 @@ $bn = TIN::fromSlug('CA123456789RC0001');
 #### Example:
 ```php
 // Personal ID
-$personalId = TIN::fromSlug('CN11010519491231002X');
+$personalId = TIN::from('CN', '11010519491231002X');
 
 // Business Code
-$businessCode = TIN::fromSlug('CN91110108MA01A3F52F');
+$businessCode = TIN::from('CN', '91110108MA01A3F52F');
 ```
 
 ---
@@ -167,7 +167,7 @@ $businessCode = TIN::fromSlug('CN91110108MA01A3F52F');
 
 #### Example:
 ```php
-$pan = TIN::fromSlug('INAFZPK7190K');
+$pan = TIN::from('IN', 'AFZPK7190K');
 ```
 
 ---
@@ -185,7 +185,7 @@ $pan = TIN::fromSlug('INAFZPK7190K');
 
 #### Example:
 ```php
-$npwp = TIN::fromSlug('ID01.234.567.8-901.234');
+$npwp = TIN::from('ID', '01.234.567.8-901.234');
 ```
 
 ---
@@ -204,10 +204,10 @@ $npwp = TIN::fromSlug('ID01.234.567.8-901.234');
 #### Example:
 ```php
 // My Number
-$myNumber = TIN::fromSlug('JP123456789018');
+$myNumber = TIN::from('JP', '123456789018');
 
 // Corporate Number
-$corporateNumber = TIN::fromSlug('JP1234567890123');
+$corporateNumber = TIN::from('JP', '1234567890123');
 ```
 
 ---
@@ -233,10 +233,10 @@ $corporateNumber = TIN::fromSlug('JP1234567890123');
 #### Example:
 ```php
 // Personal
-$rfcPersonal = TIN::fromSlug('MXGODE561231GR8');
+$rfcPersonal = TIN::from('MX', 'GODE561231GR8');
 
 // Business
-$rfcBusiness = TIN::fromSlug('MXABC010203AB1');
+$rfcBusiness = TIN::from('MX', 'ABC010203AB1');
 ```
 
 ---
@@ -251,7 +251,7 @@ $rfcBusiness = TIN::fromSlug('MXABC010203AB1');
 
 #### Example:
 ```php
-$tin = TIN::fromSlug('NG1234567890');
+$tin = TIN::from('NG', '1234567890');
 ```
 
 ---
@@ -279,10 +279,10 @@ $tin = TIN::fromSlug('NG1234567890');
 #### Example:
 ```php
 // Personal
-$personalInn = TIN::fromSlug('RU500100732259');
+$personalInn = TIN::from('RU', '500100732259');
 
 // Company
-$companyInn = TIN::fromSlug('RU7707083893');
+$companyInn = TIN::from('RU', '7707083893');
 ```
 
 ---
@@ -295,7 +295,7 @@ $companyInn = TIN::fromSlug('RU7707083893');
 
 #### Example:
 ```php
-$tin = TIN::fromSlug('SA300123456789015');
+$tin = TIN::from('SA', '300123456789015');
 ```
 
 ---
@@ -309,7 +309,7 @@ $tin = TIN::fromSlug('SA300123456789015');
 
 #### Example:
 ```php
-$tin = TIN::fromSlug('ZA0001339050');
+$tin = TIN::from('ZA', '0001339050');
 ```
 
 ---
@@ -338,10 +338,10 @@ $tin = TIN::fromSlug('ZA0001339050');
 #### Example:
 ```php
 // RRN
-$rrn = TIN::fromSlug('KR900101-1234563');
+$rrn = TIN::from('KR', '900101-1234563');
 
 // BRN
-$brn = TIN::fromSlug('KR220-86-05173');
+$brn = TIN::from('KR', '220-86-05173');
 ```
 
 ---
@@ -360,10 +360,10 @@ $brn = TIN::fromSlug('KR220-86-05173');
 #### Example:
 ```php
 // AVS/AHV
-$avs = TIN::fromSlug('CH756.1234.5678.90');
+$avs = TIN::from('CH', '756.1234.5678.90');
 
 // UID
-$uid = TIN::fromSlug('CHCHE-123.456.789');
+$uid = TIN::from('CH', 'CHE-123.456.789');
 ```
 
 ---
@@ -383,10 +383,10 @@ $uid = TIN::fromSlug('CHCHE-123.456.789');
 #### Example:
 ```php
 // Personal
-$tckn = TIN::fromSlug('TR10000000146');
+$tckn = TIN::from('TR', '10000000146');
 
 // Business
-$vkn = TIN::fromSlug('TR1234567890');
+$vkn = TIN::from('TR', '1234567890');
 ```
 
 ---
@@ -409,7 +409,7 @@ $vkn = TIN::fromSlug('TR1234567890');
 
 #### Example:
 ```php
-$tin = TIN::fromSlug('UA1234567890');
+$tin = TIN::from('UA', '1234567890');
 if ($tin->isValid()) {
     echo "Valid Ukrainian TIN";
 }
@@ -439,13 +439,13 @@ if ($tin->isValid()) {
 #### Example:
 ```php
 // SSN
-$ssn = TIN::fromSlug('US123-45-6789');
+$ssn = TIN::from('US', '123-45-6789');
 
 // ITIN
-$itin = TIN::fromSlug('US950-70-1234');
+$itin = TIN::from('US', '950-70-1234');
 
 // EIN
-$ein = TIN::fromSlug('US12-3456789');
+$ein = TIN::from('US', '12-3456789');
 ```
 
 ---
@@ -459,8 +459,8 @@ use vldmir\Tin\TIN;
 // Create TIN from country code + number
 $tin = TIN::from('BR', '12345678909');
 
-// Create from slug
-$tin = TIN::fromSlug('BR12345678909');
+// Create from country and TIN
+$tin = TIN::from('BR', '12345678909');
 
 // Validate
 if ($tin->isValid()) {
@@ -482,14 +482,14 @@ $types = TIN::getTinTypesForCountry('US');
 // Returns array of TIN types (SSN, ITIN, EIN)
 
 // Identify specific TIN type
-$tin = TIN::fromSlug('US950-70-1234');
+$tin = TIN::from('US', '950-70-1234');
 $type = $tin->identifyTinType();
 // Returns: ['code' => 'ITIN', 'name' => 'Individual Taxpayer Identification Number', ...]
 ```
 
 ### Format Input
 ```php
-$tin = TIN::fromSlug('BR12345678909');
+$tin = TIN::from('BR', '12345678909');
 $formatted = $tin->formatInput('12345678909');
 // Returns: '123.456.789-09'
 ```

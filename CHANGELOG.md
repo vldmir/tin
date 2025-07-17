@@ -5,19 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.8] - 2025-01-27
+## [3.0.0] - 2025-01-27
 
 ### Enhanced
 
 - **Argentina TIN Validation**: Updated test cases with more comprehensive validation coverage
 - **TIN Normalization**: Enhanced `TIN::from()` method to properly normalize TIN input before slug creation
 - **Test Case Quality**: Improved Argentina test cases with valid CUIT numbers containing correct checksums
+- **API Design**: Made `fromSlug()` method private to encourage proper usage of `from()` method with automatic normalization
 
 ### Changed
 
+- **Method Visibility**: Changed `fromSlug()` from public to private - users should use `TIN::from('DE', '123 456 789')` instead
 - **Normalization Method**: Made `normalizeTin()` method static for better reusability in factory methods
 - **Regex Pattern**: Updated normalization regex from `#[^[:alnum:]\-+]#u` to `#[^[:alnum:]]#u` for stricter alphanumeric-only filtering
 - **Test Structure**: Simplified Argentina pattern tests due to global normalization improvements
+- **Documentation**: Updated all examples to use `TIN::from()` instead of `TIN::fromSlug()`
 
 ### Fixed
 
@@ -28,11 +31,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Technical Details
 
 - **Method Enhancement**: `TIN::from(string $countryCode, string $tin)` now calls `self::normalizeTin($tin)` before slug creation
+- **API Improvement**: `fromSlug()` is now private, preventing direct slug manipulation and ensuring proper normalization
+- **Documentation Updates**: 
+  - Updated `README.md` with `TIN::from()` examples instead of `fromSlug()`
+  - Updated `docs/TIN-Global-Countries.md` with proper country/TIN separation
+  - Updated PHPSpec tests to use `from()` method
 - **Argentina Test Cases**: 
   - Updated `VALID_NUMBER` array with correct CUIT checksums (e.g., `20-12345678-6`, `20-87654321-5`)
   - Refined `INVALID_NUMBERS` with proper checksum validation examples
   - Simplified `INVALID_NUMBER_PATTERN` handling due to normalization improvements
 - **Core Logic**: Strengthened TIN processing pipeline for better input handling consistency
+
+### BREAKING CHANGES
+
+⚠️ **Major Version 3.0.0**: `fromSlug()` method is now private. Update your code:
+
+```php
+// OLD (no longer works)
+$tin = TIN::fromSlug('DE48036952129');
+
+// NEW (recommended approach)
+$tin = TIN::from('DE', '48 036 952 129'); // Handles any format automatically
+```
+
+This change ensures proper input normalization and prevents issues with formatted TIN numbers.
 
 ## [2.0.7](https://github.com/vldmir/tin/compare/2.0.6...2.0.7) - 2025-01-25
 

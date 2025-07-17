@@ -114,7 +114,7 @@ require __DIR__ . '/vendor/autoload.php';
 
 use vldmir\Tin\TIN;
 
-$bool = TIN::fromSlug('be71102512345')->isValid();
+$bool = TIN::from('BE', '71102512345')->isValid();
 ```
 
 If you want to get the reason why a number is invalid, you can use:
@@ -128,7 +128,7 @@ use vldmir\Tin\TIN;
 use vldmir\Tin\Exception\TINException;
 
 try {
-    TIN::fromSlug('be71102512345')->check();
+    TIN::from('BE', '71102512345')->check();
 } catch (TINException $e) {
     echo "Validation Error: " . $e->getMessage();
 }
@@ -146,7 +146,7 @@ The library provides comprehensive input mask and formatting capabilities:
 use vldmir\Tin\TIN;
 
 // Get the input mask for a country
-$tin = TIN::fromSlug('be71102512345');
+$tin = TIN::from('BE', '71102512345');
 $mask = $tin->getInputMask(); // Returns: "99.99.99-999.99"
 
 // Get a placeholder example
@@ -183,7 +183,7 @@ $types = TIN::getTinTypesForCountry('ES');
 // ]
 
 // Identify the type of a specific TIN
-$tin = TIN::fromSlug('es12345678Z');
+$tin = TIN::from('ES', '12345678Z');
 $type = $tin->identifyTinType(); 
 // Returns: ['code' => 'DNI', 'name' => 'Documento Nacional de Identidad', 'description' => 'Spanish Natural Persons ID']
 
@@ -311,7 +311,7 @@ foreach ($testCases as $test) {
     echo "Testing {$test['description']} ({$test['country']}): {$test['tin']}\n";
     
     try {
-        $tin = TIN::fromSlug($test['country'] . $test['tin']);
+        $tin = TIN::from($test['country'], $test['tin']);
         
         // Basic validation
         $isValid = $tin->isValid();
@@ -407,15 +407,15 @@ Each country implements sophisticated validation rules:
 
 ```php
 // Complex checksum validation (Brazil CPF)
-$cpf = TIN::fromSlug('BR12345678909');
+$cpf = TIN::from('BR', '12345678909');
 $isValid = $cpf->isValid(); // Uses dual modulo 11 checksum
 
 // Date-based validation (China Personal ID)
-$chinaId = TIN::fromSlug('CN11010519491231002X');
+$chinaId = TIN::from('CN', '11010519491231002X');
 $isValid = $chinaId->isValid(); // Validates birth date and checksum
 
 // Multi-format support (US SSN/ITIN/EIN)
-$usTin = TIN::fromSlug('US123-45-6789');
+$usTin = TIN::from('US', '123-45-6789');
 $type = $usTin->identifyTinType(); // Identifies SSN, ITIN, or EIN
 ```
 
@@ -425,16 +425,16 @@ Many countries support both business and individual TIN types:
 
 ```php
 // Brazil: CPF (individual) vs CNPJ (business)
-$cpf = TIN::fromSlug('BR12345678909'); // Individual
-$cnpj = TIN::fromSlug('BR11222333000181'); // Business
+$cpf = TIN::from('BR', '12345678909'); // Individual
+$cnpj = TIN::from('BR', '11222333000181'); // Business
 
 // Russia: INN Personal vs INN Company
-$personalInn = TIN::fromSlug('RU123456789012'); // 12 digits
-$companyInn = TIN::fromSlug('RU1234567890'); // 10 digits
+$personalInn = TIN::from('RU', '123456789012'); // 12 digits
+$companyInn = TIN::from('RU', '1234567890'); // 10 digits
 
 // Japan: My Number vs Corporate Number
-$myNumber = TIN::fromSlug('JP123456789012'); // Individual
-$corporateNumber = TIN::fromSlug('JP1234567890123'); // Business
+$myNumber = TIN::from('JP', '123456789012'); // Individual
+$corporateNumber = TIN::from('JP', '1234567890123'); // Business
 ```
 
 ### Comprehensive Documentation
@@ -537,10 +537,10 @@ is, using the raw TIN number), use the `strict` parameter in the `check` or
 `isValid` functions as shown below. By default, it is set to `false`.
 
 ```php
-TIN::fromSlug('be7110.2512345')->check(); // Not strict
-TIN::fromSlug('be7110.2512345')->check(strict: false); // Not strict
-TIN::fromSlug('be7110.2512345')->check(true); // Strict
-TIN::fromSlug('be7110.2512345')->check(strict: true); // Strict
+TIN::from('BE', '7110.2512345')->check(); // Not strict
+TIN::from('BE', '7110.2512345')->check(strict: false); // Not strict
+TIN::from('BE', '7110.2512345')->check(true); // Strict
+TIN::from('BE', '7110.2512345')->check(strict: true); // Strict
 ```
 
 ## Code Quality, Tests and Benchmarks
