@@ -29,13 +29,20 @@ final class Lithuania extends CountryHandler
      */
     public const PATTERN = '[1-6]\d{2}[0-1]\d[0-3]\d{5}';
 
+    /**
+     * Returns a sample valid Lithuanian TIN for use as a placeholder.
+     *
+     * @return string Example Lithuanian TIN.
+     */
     public function getPlaceholder(): string
     {
         return '33309240064';
     }
 
     /**
-     * Get all TIN types supported by Lithuania.
+     * Returns an array of supported Lithuanian TIN types.
+     *
+     * @return array An array containing information about each supported TIN type, including code, name, and description.
      */
     public function getTinTypes(): array
     {
@@ -48,6 +55,14 @@ final class Lithuania extends CountryHandler
         ];
     }
 
+    /**
+     * Validates a Lithuanian TIN using the official checksum algorithm.
+     *
+     * Applies a two-step weighted checksum calculation to verify the control digit of the provided TIN.
+     *
+     * @param string $tin The Lithuanian TIN to validate.
+     * @return bool True if the TIN passes the checksum validation; otherwise, false.
+     */
     protected function hasValidRule(string $tin): bool
     {
         $sum = 0;
@@ -111,6 +126,15 @@ final class Lithuania extends CountryHandler
         }
     }
 
+    /**
+     * Multiplies a digit by its position-specific weight for the second Lithuanian TIN checksum calculation.
+     *
+     * Returns -1 if the index is not in the range 0–9.
+     *
+     * @param int $val The digit to be weighted.
+     * @param int $index The position index of the digit (0-based).
+     * @return int The weighted value or -1 for invalid indices.
+     */
     private function multiplyAccordingToWeight2(int $val, int $index): int
     {
         switch ($index) {

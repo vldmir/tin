@@ -33,7 +33,9 @@ final class SaudiArabia extends CountryHandler
     public const PATTERN = '^3\d{14}$';
 
     /**
-     * Get placeholder text.
+     * Returns a sample Saudi Arabia VAT registration number as a placeholder.
+     *
+     * @return string Example TIN in the correct format.
      */
     public function getPlaceholder(): string
     {
@@ -41,7 +43,9 @@ final class SaudiArabia extends CountryHandler
     }
 
     /**
-     * Get all TIN types supported by Saudi Arabia.
+     * Returns an array of supported TIN types for Saudi Arabia.
+     *
+     * @return array An array containing information about the Saudi VAT Number TIN type.
      */
     public function getTinTypes(): array
     {
@@ -54,11 +58,25 @@ final class SaudiArabia extends CountryHandler
         ];
     }
 
+    /**
+     * Checks if the provided TIN matches the required Saudi Arabia VAT number pattern.
+     *
+     * @param string $tin The Tax Identification Number to validate.
+     * @return bool True if the TIN matches the pattern; otherwise, false.
+     */
     protected function hasValidPattern(string $tin): bool
     {
         return $this->matchPattern($tin, self::PATTERN);
     }
 
+    /**
+     * Validates the Saudi Arabia VAT TIN against country-specific rules.
+     *
+     * Checks that the TIN starts with '3', is not composed of identical digits, and that the check digit (15th digit) is valid according to the Saudi VAT algorithm.
+     *
+     * @param string $tin The TIN to validate.
+     * @return bool True if the TIN passes all rule-based validations, false otherwise.
+     */
     protected function hasValidRule(string $tin): bool
     {
         // Must start with 3
@@ -76,7 +94,12 @@ final class SaudiArabia extends CountryHandler
     }
 
     /**
-     * Validate check digit using modulo 11 algorithm.
+     * Validates the check digit of a Saudi Arabia VAT number using the modulo 11 algorithm.
+     *
+     * Applies predefined weights to the first 14 digits, computes the weighted sum, and derives the check digit according to Saudi VAT rules. Returns true if the calculated check digit matches the 15th digit of the TIN.
+     *
+     * @param string $tin The 15-digit Saudi VAT number to validate.
+     * @return bool True if the check digit is valid, false otherwise.
      */
     private function validateCheckDigit(string $tin): bool
     {

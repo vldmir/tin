@@ -28,13 +28,20 @@ final class Slovakia extends CountryHandler
 
     public const PATTERN = '([1-9]\d[234789]\d{7})|(\d{2}[0156]\d[0-3]\d{4,5})';
 
+    /**
+     * Returns a sample Slovak TIN as a placeholder value.
+     *
+     * @return string Example TIN string for Slovakia.
+     */
     public function getPlaceholder(): string
     {
         return '7103192745';
     }
 
     /**
-     * Get all TIN types supported by Slovakia.
+     * Returns an array describing the supported Slovak TIN types.
+     *
+     * @return array An array of TIN type definitions, each including a code, name, and description.
      */
     public function getTinTypes(): array
     {
@@ -47,6 +54,14 @@ final class Slovakia extends CountryHandler
         ];
     }
 
+    /**
+     * Validates a Slovak TIN according to country-specific checksum rules.
+     *
+     * For 10-digit TINs, checks if the number is divisible by 11 or if the last digit matches the calculated checksum. For other lengths, returns true by default.
+     *
+     * @param string $tin The Tax Identification Number to validate.
+     * @return bool True if the TIN passes the Slovak validation rules, false otherwise.
+     */
     public function hasValidRule(string $tin): bool
     {
         if (strlen($tin) === 10) {
@@ -60,6 +75,14 @@ final class Slovakia extends CountryHandler
         return true;
     }
 
+    /**
+     * Determines if the provided TIN has a valid length according to Slovak rules.
+     *
+     * For TINs where the first two digits are less than 54, both 9- and 10-digit lengths are accepted. Otherwise, only the standard length is valid.
+     *
+     * @param string $tin The Tax Identification Number to check.
+     * @return bool True if the TIN length is valid for Slovakia, false otherwise.
+     */
     protected function hasValidLength(string $tin): bool
     {
         $c1c2 = substr($tin, 0, 2);

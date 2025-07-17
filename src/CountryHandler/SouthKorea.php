@@ -49,7 +49,15 @@ final class SouthKorea extends CountryHandler
     public const PATTERN_RRN = '^\d{6}-?\d{7}$';
 
     /**
-     * Format input according to TIN type.
+     * Formats a South Korean TIN input as either a Resident Registration Number (RRN) or Business Registration Number (BRN).
+     *
+     * Normalizes the input by removing non-digit characters, then applies the appropriate formatting:
+     * - RRN: `999999-9999997` for 7–13 digits.
+     * - BRN: `999-99-99999` for exactly 10 digits.
+     * Returns the normalized digits if no format applies or the input is empty.
+     *
+     * @param string $input The raw TIN input string.
+     * @return string The formatted TIN string or an empty string if input is empty.
      */
     public function formatInput(string $input): string
     {
@@ -75,7 +83,9 @@ final class SouthKorea extends CountryHandler
     }
 
     /**
-     * Get input mask based on the TIN type.
+     * Returns the default input mask for South Korean Resident Registration Numbers (RRN).
+     *
+     * @return string The input mask '999999-9999999' for RRN formatting.
      */
     public function getInputMask(): string
     {
@@ -84,7 +94,9 @@ final class SouthKorea extends CountryHandler
     }
 
     /**
-     * Get placeholder based on the TIN type.
+     * Returns a placeholder example for a South Korean Resident Registration Number (RRN).
+     *
+     * @return string Example placeholder in RRN format.
      */
     public function getPlaceholder(): string
     {
@@ -92,7 +104,9 @@ final class SouthKorea extends CountryHandler
     }
 
     /**
-     * Get all TIN types supported by South Korea.
+     * Returns an array of supported South Korean TIN types, including codes, names, and descriptions for both Resident Registration Numbers (RRN) and Business Registration Numbers (BRN).
+     *
+     * @return array List of TIN types with metadata.
      */
     public function getTinTypes(): array
     {
@@ -111,7 +125,10 @@ final class SouthKorea extends CountryHandler
     }
 
     /**
-     * Identify the TIN type for a given Korean TIN.
+     * Determines whether the provided TIN is a valid South Korean Resident Registration Number (RRN) or Business Registration Number (BRN), and returns the corresponding TIN type information.
+     *
+     * @param string $tin The input Tax Identification Number to evaluate.
+     * @return array|null The TIN type metadata if valid (RRN or BRN), or null if the TIN is invalid or unrecognized.
      */
     public function identifyTinType(string $tin): ?array
     {
@@ -128,6 +145,12 @@ final class SouthKorea extends CountryHandler
         return null;
     }
 
+    /**
+     * Checks if the normalized TIN has a valid length for South Korean RRN (13 digits) or BRN (10 digits).
+     *
+     * @param string $tin The input Tax Identification Number.
+     * @return bool True if the TIN has a valid length, false otherwise.
+     */
     protected function hasValidLength(string $tin): bool
     {
         $normalizedTin = preg_replace('/[^0-9]/', '', $tin);
@@ -136,11 +159,25 @@ final class SouthKorea extends CountryHandler
         return 10 === $length || 13 === $length;
     }
 
+    /**
+     * Checks if the provided TIN matches the South Korean RRN or BRN pattern.
+     *
+     * @param string $tin The tax identification number to validate.
+     * @return bool True if the TIN matches the expected pattern, false otherwise.
+     */
     protected function hasValidPattern(string $tin): bool
     {
         return $this->matchPattern($tin, self::PATTERN);
     }
 
+    /**
+     * Validates the TIN according to South Korean RRN or BRN rules.
+     *
+     * Determines the type of TIN based on its length and applies the appropriate validation algorithm for Resident Registration Numbers (RRN) or Business Registration Numbers (BRN).
+     *
+     * @param string $tin The input TIN to validate.
+     * @return bool True if the TIN is valid according to its type's rules, false otherwise.
+     */
     protected function hasValidRule(string $tin): bool
     {
         $normalizedTin = preg_replace('/[^0-9]/', '', $tin);
@@ -157,7 +194,10 @@ final class SouthKorea extends CountryHandler
     }
 
     /**
-     * Get century based on gender/century digit.
+     * Determines the century of birth based on the gender/century digit in a South Korean Resident Registration Number (RRN).
+     *
+     * @param int $genderDigit The digit indicating gender and century in the RRN.
+     * @return int|null The century (e.g., 1900, 2000, 1800) or null if the digit is invalid.
      */
     private function getCentury(int $genderDigit): ?int
     {
@@ -188,7 +228,12 @@ final class SouthKorea extends CountryHandler
     }
 
     /**
-     * Validate birth date.
+     * Checks if the provided year, month, and day constitute a valid birth date that is not in the future.
+     *
+     * @param int $year The year component of the date.
+     * @param int $month The month component of the date.
+     * @param int $day The day component of the date.
+     * @return bool True if the date is valid and not in the future, false otherwise.
      */
     private function isValidBirthDate(int $year, int $month, int $day): bool
     {
@@ -215,7 +260,10 @@ final class SouthKorea extends CountryHandler
     }
 
     /**
-     * Validate Business Registration Number.
+     * Validates a South Korean Business Registration Number (BRN) using its checksum algorithm.
+     *
+     * @param string $brn The BRN as a 10-digit string.
+     * @return bool True if the BRN is valid according to the checksum; otherwise, false.
      */
     private function isValidBRN(string $brn): bool
     {
@@ -236,7 +284,12 @@ final class SouthKorea extends CountryHandler
     }
 
     /**
-     * Validate Resident Registration Number.
+     * Validates a South Korean Resident Registration Number (RRN).
+     *
+     * Checks the RRN for correct birth date encoding, valid century digit, and a valid checksum.
+     *
+     * @param string $rrn The RRN to validate, consisting of 13 digits.
+     * @return bool True if the RRN is valid; false otherwise.
      */
     private function isValidRRN(string $rrn): bool
     {
@@ -265,7 +318,10 @@ final class SouthKorea extends CountryHandler
     }
 
     /**
-     * Validate RRN checksum.
+     * Checks if a South Korean Resident Registration Number (RRN) has a valid checksum.
+     *
+     * @param string $rrn The 13-digit RRN to validate.
+     * @return bool True if the checksum is valid, false otherwise.
      */
     private function isValidRRNChecksum(string $rrn): bool
     {

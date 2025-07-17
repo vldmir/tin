@@ -35,7 +35,9 @@ final class India extends CountryHandler
     public const PATTERN = '^[A-Z]{5}\d{4}[A-Z]$';
 
     /**
-     * Get placeholder text.
+     * Returns a sample Indian PAN (Permanent Account Number) as a placeholder.
+     *
+     * @return string Example PAN value.
      */
     public function getPlaceholder(): string
     {
@@ -43,7 +45,9 @@ final class India extends CountryHandler
     }
 
     /**
-     * Get all TIN types supported by India.
+     * Returns an array of supported Indian TIN types, including metadata for the Permanent Account Number (PAN).
+     *
+     * @return array An associative array describing the supported TIN types for India.
      */
     public function getTinTypes(): array
     {
@@ -56,11 +60,25 @@ final class India extends CountryHandler
         ];
     }
 
+    /**
+     * Checks if the provided TIN matches the Indian PAN format pattern.
+     *
+     * @param string $tin The TIN to validate.
+     * @return bool True if the TIN matches the PAN regex pattern, false otherwise.
+     */
     protected function hasValidPattern(string $tin): bool
     {
         return $this->matchPattern($tin, self::PATTERN);
     }
 
+    /**
+     * Validates additional structural rules for an Indian PAN (Permanent Account Number) beyond basic pattern matching.
+     *
+     * Checks that the fourth character represents a valid holder type and that the third character is a valid uppercase letter as required by PAN rules.
+     *
+     * @param string $tin The PAN to validate.
+     * @return bool True if the PAN passes all rule-based checks; false otherwise.
+     */
     protected function hasValidRule(string $tin): bool
     {
         // Extract components
@@ -84,7 +102,10 @@ final class India extends CountryHandler
     }
 
     /**
-     * Get holder type description.
+     * Returns the descriptive name for a PAN holder type letter.
+     *
+     * @param string $letter The fourth character of the PAN representing the holder type.
+     * @return string The description of the holder type, or 'Unknown' if the letter is not recognized.
      */
     private function getHolderTypeDescription(string $letter): string
     {
@@ -105,7 +126,10 @@ final class India extends CountryHandler
     }
 
     /**
-     * Validate holder type (fourth letter).
+     * Checks if the provided letter is a valid PAN holder type.
+     *
+     * @param string $letter The fourth character of the PAN to validate.
+     * @return bool True if the letter is a recognized PAN holder type, false otherwise.
      */
     private function isValidHolderType(string $letter): bool
     {
@@ -115,7 +139,13 @@ final class India extends CountryHandler
     }
 
     /**
-     * Validate third letter based on holder type.
+     * Checks if the third letter of a PAN is a single uppercase letter, as required by PAN rules.
+     *
+     * The validation does not verify correspondence with a surname or company name, only that the character is an uppercase letter.
+     *
+     * @param string $thirdLetter The third character of the PAN.
+     * @param string $fourthLetter The fourth character of the PAN, indicating holder type.
+     * @return bool True if the third letter is a single uppercase letter, false otherwise.
      */
     private function isValidThirdLetter(string $thirdLetter, string $fourthLetter): bool
     {

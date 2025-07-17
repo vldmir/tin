@@ -29,13 +29,20 @@ final class Hungary extends CountryHandler
      */
     public const PATTERN = '8\d{9}';
 
+    /**
+     * Returns a placeholder string for a Hungarian Tax Identification Number (TIN).
+     *
+     * @return string The placeholder value for a Hungarian TIN.
+     */
     public function getPlaceholder(): string
     {
         return '8123456789';
     }
 
     /**
-     * Get all TIN types supported by Hungary.
+     * Returns an array describing the supported Hungarian TIN types.
+     *
+     * @return array An array of TIN type metadata, including code, name, and description.
      */
     public function getTinTypes(): array
     {
@@ -48,6 +55,14 @@ final class Hungary extends CountryHandler
         ];
     }
 
+    /**
+     * Validates a Hungarian TIN using the official checksum algorithm.
+     *
+     * Calculates a weighted sum of the first nine digits of the TIN, applies modulo 11, and checks if the result matches the tenth digit.
+     *
+     * @param string $tin The Tax Identification Number to validate.
+     * @return bool True if the TIN passes the checksum validation; otherwise, false.
+     */
     protected function hasValidRule(string $tin): bool
     {
         $c10 = $this->digitAt($tin, 9);

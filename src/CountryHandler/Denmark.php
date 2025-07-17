@@ -31,13 +31,20 @@ final class Denmark extends CountryHandler
      */
     public const PATTERN = '[0-3]\d[0-1]\d{3}\d{4}';
 
+    /**
+     * Returns a sample valid Danish CPR number without formatting.
+     *
+     * @return string Example TIN: '2110625629'.
+     */
     public function getPlaceholder(): string
     {
         return '2110625629';
     }
 
     /**
-     * Get all TIN types supported by Denmark.
+     * Returns an array describing the supported TIN types for Denmark.
+     *
+     * @return array An array of TIN type definitions, including code, name, and description.
      */
     public function getTinTypes(): array
     {
@@ -50,6 +57,12 @@ final class Denmark extends CountryHandler
         ];
     }
 
+    /**
+     * Checks if the date encoded in the TIN is a valid calendar date in either the 1900s or 2000s.
+     *
+     * @param string $tin The Danish TIN (CPR number) to validate.
+     * @return bool True if the extracted date is valid for either century, false otherwise.
+     */
     protected function hasValidDate(string $tin): bool
     {
         $day = (int) (substr($tin, 0, 2));
@@ -63,32 +76,12 @@ final class Denmark extends CountryHandler
     }
 
     /**
-     * @see https://cpr.dk/cpr-systemet/personnumre-uden-kontrolciffer-modulus-11-kontrol/
+     * Validates a Danish CPR number according to official rules, including exceptions for certain birth dates and modulus 11 checksum.
      *
-     * The CPR office has since 2007 given out social security numbers without the so called modulus 11 control.
-     * The social security numbers without modulus 11 are completely valid
-     * and are given out, as some birth years no longer have the capacity to provide them with modulus 11 control.
+     * Returns true if the TIN passes all structural and checksum rules, accounting for special cases where modulus 11 validation is not required for specific birth dates. Returns false if the TIN fails any mandatory rule or checksum.
      *
-     * We should not check modulus 11 control for the following birthdays:
-     *
-     * 1st of January 1960
-     * 1st of January 1964
-     * 1st of January 1965
-     * 1st of January 1966
-     * 1st of January 1969
-     * 1st of January 1970
-     * 1st of January 1974
-     * 1st of January 1980
-     * 1st of January 1982
-     * 1st of January 1984
-     * 1st of January 1985
-     * 1st of January 1986
-     * 1st of January 1987
-     * 1st of January 1988
-     * 1st of January 1989
-     * 1st of January 1990
-     * 1st of January 1991
-     * 1st of January 1992
+     * @param string $tin The Danish CPR number to validate.
+     * @return bool True if the CPR number is valid according to Danish rules; false otherwise.
      */
     protected function hasValidRule(string $tin): bool
     {
