@@ -104,7 +104,7 @@ The `test-tin.php` script demonstrates:
 Once inside the container (`make shell`), you can run PHP directly:
 
 ```php
-php -r "require 'vendor/autoload.php'; use loophp\Tin\TIN; echo TIN::fromSlug('be71102512345')->getInputMask();"
+php -r "require 'vendor/autoload.php'; use vldmir\Tin\TIN; echo TIN::fromSlug('be71102512345')->getInputMask();"
 ```
 
 Or create your own test files and run them:
@@ -112,7 +112,7 @@ Or create your own test files and run them:
 ```bash
 echo '<?php
 require "vendor/autoload.php";
-use loophp\Tin\TIN;
+use vldmir\Tin\TIN;
 
 $tin = TIN::fromSlug("es12345678Z");
 echo "Valid: " . ($tin->isValid() ? "Yes" : "No") . "\n";

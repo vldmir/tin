@@ -1,10 +1,12 @@
 #!/usr/bin/env php
 <?php
 
+declare(strict_types=1);
+
 require __DIR__ . '/vendor/autoload.php';
 
-use loophp\Tin\TIN;
-use loophp\Tin\Exception\TINException;
+use vldmir\Tin\Exception\TINException;
+use vldmir\Tin\TIN;
 
 echo "=== TIN Library Test Script ===\n\n";
 
@@ -20,45 +22,46 @@ $testCases = [
 foreach ($testCases as $test) {
     echo "Testing {$test['description']} ({$test['country']}): {$test['tin']}\n";
     echo str_repeat('-', 50) . "\n";
-    
+
     try {
         $tin = TIN::fromSlug($test['country'] . $test['tin']);
-        
+
         // Basic validation
         $isValid = $tin->isValid();
-        echo "Valid: " . ($isValid ? 'YES' : 'NO') . "\n";
-        
+        echo 'Valid: ' . ($isValid ? 'YES' : 'NO') . "\n";
+
         // Get input mask
         $mask = $tin->getInputMask();
-        echo "Input Mask: $mask\n";
-        
+        echo "Input Mask: {$mask}\n";
+
         // Get placeholder
         $placeholder = $tin->getPlaceholder();
-        echo "Placeholder: $placeholder\n";
-        
+        echo "Placeholder: {$placeholder}\n";
+
         // Format input
         $formatted = $tin->formatInput($test['tin']);
-        echo "Formatted: $formatted\n";
-        
+        echo "Formatted: {$formatted}\n";
+
         // Identify TIN type (if applicable)
         $tinType = $tin->identifyTinType();
+
         if ($tinType) {
             echo "TIN Type: {$tinType['code']} - {$tinType['name']}\n";
+
             if (isset($tinType['description'])) {
                 echo "Description: {$tinType['description']}\n";
             }
         }
-        
+
         // Check validation (will throw exception if invalid)
         $tin->check();
         echo "Validation: PASSED\n";
-        
     } catch (TINException $e) {
-        echo "Validation Error: " . $e->getMessage() . "\n";
-    } catch (\Exception $e) {
-        echo "Error: " . $e->getMessage() . "\n";
+        echo 'Validation Error: ' . $e->getMessage() . "\n";
+    } catch (Exception $e) {
+        echo 'Error: ' . $e->getMessage() . "\n";
     }
-    
+
     echo "\n";
 }
 
@@ -67,9 +70,10 @@ echo "=== Static Method Tests ===\n";
 echo str_repeat('-', 50) . "\n";
 
 $countries = ['BE', 'ES', 'DE', 'FR', 'IT'];
+
 foreach ($countries as $country) {
     $maskInfo = TIN::getMaskForCountry($country);
-    echo "$country: Mask = {$maskInfo['mask']}, Placeholder = {$maskInfo['placeholder']}\n";
+    echo "{$country}: Mask = {$maskInfo['mask']}, Placeholder = {$maskInfo['placeholder']}\n";
 }
 
 echo "\n";
@@ -79,11 +83,13 @@ echo "=== TIN Types by Country ===\n";
 echo str_repeat('-', 50) . "\n";
 
 $countriesWithTypes = ['ES', 'DE', 'UK'];
+
 foreach ($countriesWithTypes as $country) {
     $types = TIN::getTinTypesForCountry($country);
-    echo "$country TIN Types:\n";
+    echo "{$country} TIN Types:\n";
+
     foreach ($types as $type => $info) {
-        echo "  - $type: {$info['description']}\n";
+        echo "  - {$type}: {$info['description']}\n";
     }
 }
 

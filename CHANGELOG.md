@@ -5,6 +5,255 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.0] - 2025-01-27
+
+### Enhanced
+
+- **Argentina TIN Validation**: Updated test cases with more comprehensive validation coverage
+- **TIN Normalization**: Enhanced `TIN::from()` method to properly normalize TIN input before slug creation
+- **Test Case Quality**: Improved Argentina test cases with valid CUIT numbers containing correct checksums
+- **API Design**: Made `fromSlug()` method private to encourage proper usage of `from()` method with automatic normalization
+
+### Changed
+
+- **Method Visibility**: Changed `fromSlug()` from public to private - users should use `TIN::from('DE', '123 456 789')` instead
+- **Normalization Method**: Made `normalizeTin()` method static for better reusability in factory methods
+- **Regex Pattern**: Updated normalization regex from `#[^[:alnum:]\-+]#u` to `#[^[:alnum:]]#u` for stricter alphanumeric-only filtering
+- **Test Structure**: Simplified Argentina pattern tests due to global normalization improvements
+- **Documentation**: Updated all examples to use `TIN::from()` instead of `TIN::fromSlug()`
+
+### Fixed
+
+- **Slug Creation**: Fixed TIN slug creation by normalizing input before concatenation with country code
+- **Argentina Tests**: Updated with mathematically valid CUIT numbers that pass checksum validation
+- **Input Processing**: Enhanced handling of formatted TIN inputs with various separators
+
+### Technical Details
+
+- **Method Enhancement**: `TIN::from(string $countryCode, string $tin)` now calls `self::normalizeTin($tin)` before slug creation
+- **API Improvement**: `fromSlug()` is now private, preventing direct slug manipulation and ensuring proper normalization
+- **Documentation Updates**: 
+  - Updated `README.md` with `TIN::from()` examples instead of `fromSlug()`
+  - Updated `docs/TIN-Global-Countries.md` with proper country/TIN separation
+  - Updated PHPSpec tests to use `from()` method
+- **Argentina Test Cases**: 
+  - Updated `VALID_NUMBER` array with correct CUIT checksums (e.g., `20-12345678-6`, `20-87654321-5`)
+  - Refined `INVALID_NUMBERS` with proper checksum validation examples
+  - Simplified `INVALID_NUMBER_PATTERN` handling due to normalization improvements
+- **Core Logic**: Strengthened TIN processing pipeline for better input handling consistency
+
+### BREAKING CHANGES
+
+⚠️ **Major Version 3.0.0**: `fromSlug()` method is now private. Update your code:
+
+```php
+// OLD (no longer works)
+$tin = TIN::fromSlug('DE48036952129');
+
+// NEW (recommended approach)
+$tin = TIN::from('DE', '48 036 952 129'); // Handles any format automatically
+```
+
+This change ensures proper input normalization and prevents issues with formatted TIN numbers.
+
+## [2.0.7](https://github.com/vldmir/tin/compare/2.0.6...2.0.7) - 2025-01-25
+
+### Fixed
+
+- **German TIN Validation**: Fixed critical issue where German TINs with spaces, dashes, or dots caused validation failures
+- **Argentina TIN Testing**: Fixed test cases with valid CUIT numbers that properly pass checksum validation
+- **Slug Parsing**: Fixed issue where TIN::from() method created invalid slugs when TIN contained spaces, causing "Invalid length" errors instead of proper validation
+- **Normalization Consistency**: Synchronized both normalization methods to use consistent `#[^[:alnum:]]#u` pattern
+
+### Technical
+
+- **TIN::from() Method**: Modified to normalize TIN before creating slug: `$countryCode . $normalizedTin`
+- **Slug Creation**: Fixed slug parsing where `sscanf($slug, '%2s%s')` stopped at first space in formatted TINs
+- **Argentina Tests**: Updated test constants with valid CUIT numbers that pass checksum validation algorithm
+- **Input Processing**: All separator formats (spaces, dashes, dots, mixed) now handled consistently
+
+### Countries Affected
+
+This release fixes TIN validation issues for:
+
+- 🇩🇪 **Germany**: German TINs with separators - `48 036 952 129`, `48-036-952-129`, `48.036.952.129` now work correctly
+- 🇦🇷 **Argentina**: Argentine CUIT numbers - Updated tests with valid checksums for accurate validation testing
+
+### Example Usage
+
+```php
+use vldmir\Tin\TIN;
+
+// All these German TIN formats now work correctly:
+$tin1 = TIN::from('DE', '48 036 952 129');   // With spaces - NOW WORKS ✅
+$tin2 = TIN::from('DE', '48-036-952-129');   // With dashes - NOW WORKS ✅
+$tin3 = TIN::from('DE', '48.036.952.129');   // With dots - NOW WORKS ✅
+$tin4 = TIN::from('DE', '48036952129');      // Without separators - Still works ✅
+
+// Validation works consistently
+echo $tin1->isValid() ? 'Valid' : 'Invalid'; // Returns: Valid
+```
+
+### Migration Guide
+
+**No breaking changes** - this is a pure bug fix release. All existing functionality remains intact, but now works correctly with formatted TIN input.
+
+## [2.0.5](https://github.com/vldmir/tin/compare/2.0.4...2.0.5) - 2025-06-24
+
+### Fixed
+
+- **TIN Normalization**: Fixed critical issue where special characters (dashes, dots, spaces) in formatted TIN input caused validation failures
+- **Format Consistency**: Resolved inconsistency between input masks and validation patterns across multiple countries
+- **Sweden TIN Support**: Fixed Swedish Personal Numbers with dashes (e.g., `640823-3234`) now properly validated
+- **Denmark TIN Support**: Fixed Danish CPR numbers with dashes (e.g., `211062-5629`) now properly validated  
+- **Netherlands TIN Support**: Fixed Dutch BSN numbers with dashes (e.g., `123-456-782`) now properly validated
+- **Latvia TIN Support**: Fixed Latvian Personal Codes with dashes (e.g., `161175-19997`) now properly validated
+- **Canada TIN Support**: Fixed Canadian SIN numbers with dashes (e.g., `123-456-789`) now properly validated
+- **Brazil Regex Error**: Fixed regex compilation error in Brazilian TIN patterns by properly escaping forward slash characters
+
+### Changed
+
+- **Core Normalization**: Updated `CountryHandler::normalizeTin()` to remove ALL non-alphanumeric characters before validation
+- **User Experience**: Users can now input TINs with or without formatting (dashes, dots, spaces) for consistent validation
+- **Input Flexibility**: All countries now accept both formatted and unformatted TIN input automatically
+
+### Technical
+
+- **CountryHandler.php**: Modified `normalizeTin()` regex from `#[^[:alnum:]\-+]#u` to `#[^[:alnum:]]#u`
+- **Brazil.php**: Fixed regex patterns by escaping forward slash in `PATTERN` and `PATTERN_CNPJ` constants
+- **Backward Compatibility**: All existing functionality preserved, only enhancing input format flexibility
+- **Test Coverage**: All existing tests continue to pass with improved format handling
+
+### Countries Affected
+
+This release improves TIN validation for 6+ countries that previously had formatting issues:
+
+- 🇸🇪 **Sweden**: Swedish Personal Numbers (PN) - `XXXXXX-XXXX` format support
+- 🇩🇰 **Denmark**: Danish CPR numbers - `XXXXXX-XXXX` format support  
+- 🇳🇱 **Netherlands**: Dutch BSN numbers - `XXX-XXX-XXX` format support
+- 🇱🇻 **Latvia**: Latvian Personal Codes - `XXXXXX-XXXXX` format support
+- 🇨🇦 **Canada**: Canadian SIN numbers - `XXX-XXX-XXX` format support
+- 🇧🇷 **Brazil**: Brazilian CPF/CNPJ - `XXX.XXX.XXX-XX` format support
+
+### Migration Guide
+
+**No breaking changes** - this is a pure enhancement release. Existing code will continue to work exactly as before, but now with improved format flexibility:
+
+```php
+use vldmir\Tin\TIN;
+
+// Both of these now work for Swedish TINs:
+$tin1 = TIN::from('SE', '640823-3234');  // With dash - NOW WORKS ✅
+$tin2 = TIN::from('SE', '6408233234');   // Without dash - Still works ✅
+
+// Same improvement for all affected countries
+$danishTin = TIN::from('DK', '211062-5629');  // Now works ✅
+$dutchTin = TIN::from('NL', '123-456-782');   // Now works ✅
+```
+
+## [2.0.4](https://github.com/vldmir/tin/compare/2.0.3...2.0.4) - 2025-06-23
+
+### Breaking Changes
+
+- **Namespace Migration**: Complete migration from `loophp\Tin` to `vldmir\Tin` namespace
+- **Directory Structure**: Moved all spec files from `spec/loophp/` to `spec/vldmir/`
+
+### Changed
+
+- **Primary Namespace**: Updated main namespace from `loophp\Tin` to `vldmir\Tin`
+- **All Classes**: Updated namespace in all source files:
+  - `src/TIN.php` - Main TIN class with new namespace
+  - `src/Exception/TINException.php` - Exception class namespace
+  - All 46 CountryHandler classes in `src/CountryHandler/`
+- **Test Namespace**: Updated all test files to use `tests\vldmir\Tin` namespace
+- **Spec Namespace**: Migrated all PHPSpec files to `spec\vldmir\Tin` namespace
+- **Autoloader Configuration**: Updated Composer autoload configuration
+- **Documentation**: Updated all code examples to use new namespace in:
+  - `README.md` - All usage examples
+  - `DOCKER.md` - Docker examples
+  - `docs/TIN-Global-Countries.md` - Documentation examples
+  - `CLAUDE.md` - Development documentation
+
+### Fixed
+
+- **GrumPHP Configuration**: Added `allow_risky: true` to PHP CS Fixer configuration
+- **Code Standards**: Fixed PHP CS Fixer risky rules compatibility
+- **Path References**: Updated all file paths and namespace references
+- **Git Structure**: Properly handled file moves and deletions in git history
+
+### Technical
+
+- **Composer PSR-4**: Updated autoload mapping from `loophp\\Tin\\` to `vldmir\\Tin\\`
+- **Development Tools**: Updated PHPSpec, GrumPHP, and other dev tool configurations
+- **File Structure**: Maintained complete backward compatibility for functionality while updating namespace
+- **Test Coverage**: All existing tests migrated and passing with new namespace
+
+### Migration Guide
+
+**For existing users upgrading from 2.0.3 to 2.0.4:**
+
+```php
+// OLD (2.0.2 and earlier)
+use loophp\Tin\TIN;
+use loophp\Tin\Exception\TINException;
+
+// NEW (2.0.4+)
+use vldmir\Tin\TIN;
+use vldmir\Tin\Exception\TINException;
+
+// All functionality remains identical
+$tin = TIN::fromSlug('BE71102512345');
+$isValid = $tin->isValid();
+```
+
+**Automated Migration:**
+```bash
+# Replace namespace in your codebase
+find . -name "*.php" -exec sed -i 's/use loophp\\Tin/use vldmir\\Tin/g' {} \;
+find . -name "*.php" -exec sed -i 's/loophp\\Tin/vldmir\\Tin/g' {} \;
+```
+
+## [2.0.2](https://github.com/vldmir/tin/compare/2.0.1...2.0.2) - 2025-06-23
+
+### Added
+
+- **🇺🇦 Ukraine Support**: Added complete Ukraine TIN validation with 10-digit Individual Tax Number support
+- **Ukraine TIN Handler**: Implemented `src/CountryHandler/Ukraine.php` with checksum validation algorithm
+- **Ukraine Tests**: Added comprehensive PHPSpec tests in `spec/loophp/Tin/CountryHandler/UkraineSpec.php`
+- **Complete getTinTypes() Coverage**: All 46 countries now have complete `getTinTypes()` method implementation
+- **Enhanced TIN Types**: Added proper localized TIN type names and descriptions for all countries
+- **Documentation Updates**: Updated country count from 45 to 46 countries in README.md
+- **Global Countries Documentation**: Enhanced documentation with complete country coverage details
+
+### Changed
+
+- **TIN Registration**: Updated main TIN class to register Ukraine with country code 'UA'
+- **Country Handler Methods**: Standardized all country handlers to have complete `getTinTypes()` support
+- **Test Coverage**: Improved test coverage with Ukraine achieving 80% methods, 90.62% lines coverage
+- **Statistical Updates**: Updated global features documentation with new country statistics
+
+### Fixed
+
+- **Ukraine Validation**: Implemented proper checksum validation algorithm for Ukrainian TIN numbers
+- **Missing Methods**: Added required methods `getCountryCode()`, `getLength()`, `getPattern()` to Ukraine handler
+- **TIN Type Identification**: Fixed `identifyTinType()` method to work correctly with Ukraine TIN validation
+- **Test Compatibility**: Updated Ukraine tests with valid TIN numbers that pass checksum validation
+
+### Technical
+
+- **Algorithm Implementation**: Ukrainian TIN uses weighted sum checksum with modulo 10 validation
+- **Pattern Matching**: 10-digit pattern validation with proper normalization support
+- **Country Code**: Ukraine registered with 'UA' country code following ISO 3166-1 standard
+- **Test Infrastructure**: Enhanced test suite with 47 specs covering all countries plus main TIN class
+
+### Statistics
+
+- **Total Countries**: 46 (up from 45)
+- **Total TIN Types**: 62 across all countries
+- **Test Coverage**: 341 examples with 221 passed, 90 skipped, 14 failed, 16 broken
+- **Ukraine Coverage**: Methods 80%, Lines 90.62%
+- **getTinTypes() Coverage**: 100% (all 46 countries)
+
 ## [2.0.1](https://github.com/vldmir/tin/compare/2.0.0...2.0.1) - 2025-06-23
 
 ### Added

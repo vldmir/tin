@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace loophp\Tin\CountryHandler;
+namespace vldmir\Tin\CountryHandler;
 
 /**
  * Lithuania.
@@ -22,12 +22,31 @@ final class Lithuania extends CountryHandler
     /**
      * @var string
      */
-    public const PATTERN = '[1-6]\d{2}[0-1]\d[0-3]\d{5}';
+    public const MASK = '99999999999';
 
     /**
      * @var string
      */
-    public const MASK = '99999999999';
+    public const PATTERN = '[1-6]\d{2}[0-1]\d[0-3]\d{5}';
+
+    public function getPlaceholder(): string
+    {
+        return '33309240064';
+    }
+
+    /**
+     * Get all TIN types supported by Lithuania.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'AK',
+                'name' => 'Lithuanian AK',
+                'description' => 'Lithuanian Personal Code (Asmens kodas)',
+            ],
+        ];
+    }
 
     protected function hasValidRule(string $tin): bool
     {
@@ -126,10 +145,5 @@ final class Lithuania extends CountryHandler
             default:
                 return -1;
         }
-    }
-
-    public function getPlaceholder(): string
-    {
-        return '33309240064';
     }
 }

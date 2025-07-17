@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace loophp\Tin\Exception;
+namespace vldmir\Tin\Exception;
 
 use Exception;
+
+use function sprintf;
 
 /**
  * Base class for all exceptions.

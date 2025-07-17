@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace loophp\Tin\CountryHandler;
+namespace vldmir\Tin\CountryHandler;
 
 use function in_array;
 
@@ -24,12 +24,31 @@ final class Denmark extends CountryHandler
     /**
      * @var string
      */
-    public const PATTERN = '[0-3]\d[0-1]\d{3}\d{4}';
+    public const MASK = '999999-9999';
 
     /**
      * @var string
      */
-    public const MASK = '999999-9999';
+    public const PATTERN = '[0-3]\d[0-1]\d{3}\d{4}';
+
+    public function getPlaceholder(): string
+    {
+        return '2110625629';
+    }
+
+    /**
+     * Get all TIN types supported by Denmark.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'CPR',
+                'name' => 'Danish CPR',
+                'description' => 'Danish Central Person Register Number (CPR-nummer)',
+            ],
+        ];
+    }
 
     protected function hasValidDate(string $tin): bool
     {
@@ -110,10 +129,5 @@ final class Denmark extends CountryHandler
         }
 
         return 11 - $remainderBy11 === $c10;
-    }
-
-    public function getPlaceholder(): string
-    {
-        return '211062-5629';
     }
 }
