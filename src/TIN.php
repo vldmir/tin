@@ -146,7 +146,9 @@ final class TIN
 
     public static function from(string $countryCode, string $tin): TIN
     {
-        return self::fromSlug($countryCode . $tin);
+        // Normalize TIN to remove spaces and other non-alphanumeric characters
+        $normalizedTin = self::normalizeTin($tin);
+        return self::fromSlug($countryCode . $normalizedTin);
     }
 
     public static function fromSlug(string $slug): TIN
@@ -337,9 +339,9 @@ final class TIN
         throw TINException::invalidCountry($country);
     }
 
-    private function normalizeTin(string $tin): string
+    private static function normalizeTin(string $tin): string
     {
-        if (null !== $string = preg_replace('#[^[:alnum:]\-+]#u', '', $tin)) {
+        if (null !== $string = preg_replace('#[^[:alnum:]]#u', '', $tin)) {
             return strtoupper($string);
         }
 
