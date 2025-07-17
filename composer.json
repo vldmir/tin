@@ -3,7 +3,7 @@
     "description": "Enhanced Taxpayer Identification Number validator with input masks (fork of loophp/tin)",
     "license": "MIT",
     "type": "library",
-    "version": "2.0.7",
+    "version": "2.0.8",
     "keywords": [
         "tin",
         "tax",
