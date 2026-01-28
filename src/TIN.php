@@ -60,6 +60,15 @@ use vldmir\Tin\Exception\TINException;
 final class TIN
 {
     /**
+     * Country code aliases mapping (ISO 3166-1 alpha-2 to internal codes).
+     *
+     * @var array<string, string>
+     */
+    private static $countryAliases = [
+        'GB' => 'UK', // Great Britain -> United Kingdom
+    ];
+
+    /**
      * @var array<string, class-string>
      */
     private static $algorithms = [
@@ -146,9 +155,12 @@ final class TIN
 
     public static function from(string $countryCode, string $tin): TIN
     {
+        // Normalize country code (e.g., GB -> UK)
+        $normalizedCountry = self::normalizeCountryCode($countryCode);
         // Normalize TIN to remove spaces and other non-alphanumeric characters
         $normalizedTin = self::normalizeTin($tin);
-        return self::fromSlug($countryCode . $normalizedTin);
+
+        return self::fromSlug($normalizedCountry . $normalizedTin);
     }
 
     private static function fromSlug(string $slug): TIN
@@ -174,20 +186,22 @@ final class TIN
      */
     public static function getMaskForCountry(string $countryCode): array
     {
+        $normalizedCode = self::normalizeCountryCode($countryCode);
+
         // Check if country is supported first
-        if (!self::isCountrySupported($countryCode)) {
+        if (!self::isCountrySupported($normalizedCode)) {
             throw TINException::invalidCountry($countryCode);
         }
 
         // Create handler directly without TIN validation
         foreach (self::$algorithms as $algorithm) {
-            if ($algorithm::supports($countryCode)) {
+            if ($algorithm::supports($normalizedCode)) {
                 $handler = new $algorithm();
 
                 return [
                     'mask' => $handler->getInputMask(),
                     'placeholder' => $handler->getPlaceholder(),
-                    'country' => $countryCode,
+                    'country' => $normalizedCode,
                 ];
             }
         }
@@ -267,14 +281,16 @@ final class TIN
      */
     public static function getTinTypesForCountry(string $countryCode): array
     {
+        $normalizedCode = self::normalizeCountryCode($countryCode);
+
         // Check if country is supported first
-        if (!self::isCountrySupported($countryCode)) {
+        if (!self::isCountrySupported($normalizedCode)) {
             throw TINException::invalidCountry($countryCode);
         }
 
         // Create handler directly without TIN validation
         foreach (self::$algorithms as $algorithm) {
-            if ($algorithm::supports($countryCode)) {
+            if ($algorithm::supports($normalizedCode)) {
                 $handler = new $algorithm();
 
                 return $handler->getTinTypes();
@@ -301,8 +317,10 @@ final class TIN
 
     public static function isCountrySupported(string $countryCode): bool
     {
+        $normalizedCode = self::normalizeCountryCode($countryCode);
+
         foreach (self::$algorithms as $algorithm) {
-            if (true === $algorithm::supports($countryCode)) {
+            if (true === $algorithm::supports($normalizedCode)) {
                 return true;
             }
         }
@@ -337,6 +355,16 @@ final class TIN
         }
 
         throw TINException::invalidCountry($country);
+    }
+
+    /**
+     * Normalize country code using aliases.
+     */
+    private static function normalizeCountryCode(string $countryCode): string
+    {
+        $code = strtoupper($countryCode);
+
+        return self::$countryAliases[$code] ?? $code;
     }
 
     private static function normalizeTin(string $tin): string
