@@ -114,7 +114,7 @@ final class Switzerland extends CountryHandler
      */
     public function getPlaceholder(): string
     {
-        return '756.1234.5678.90';
+        return '756.1234.5678.97';
     }
 
     /**

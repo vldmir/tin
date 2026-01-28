@@ -61,7 +61,7 @@ final class CzechRepublic extends CountryHandler
 
     public function getPlaceholder(): string
     {
-        return '855230/3174';
+        return '000101/999';
     }
 
     /**

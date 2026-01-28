@@ -31,7 +31,7 @@ final class Austria extends CountryHandler
 
     public function getPlaceholder(): string
     {
-        return '12 310170';
+        return '931736581';
     }
 
     /**

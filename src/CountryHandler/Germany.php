@@ -43,7 +43,7 @@ final class Germany extends CountryHandler
 
     public function getPlaceholder(): string
     {
-        return '123 456 789 01';
+        return '269 543 718 27';
     }
 
     /**

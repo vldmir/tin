@@ -31,7 +31,7 @@ final class Belgium extends CountryHandler
 
     public function getPlaceholder(): string
     {
-        return '85.07.30-033.61';
+        return '00.01.25-111.19';
     }
 
     /**
