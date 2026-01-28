@@ -29,25 +29,25 @@ final class Brazil extends CountryHandler
     public const MASK = '999.999.999-99'; // Default to CPF
 
     /**
-     * Combined pattern for all types.
+     * Combined pattern: 11 digits (CPF) or 14 digits (CNPJ) after normalization.
      *
      * @var string
      */
-    public const PATTERN = '^(\d{3}\.?\d{3}\.?\d{3}-?\d{2}|\d{2}\.?\d{3}\.?\d{3}\/?\d{4}-?\d{2})$';
+    public const PATTERN = '^(\d{11}|\d{14})$';
 
     /**
-     * CNPJ Pattern: 99.999.999/9999-99 (14 digits).
+     * CNPJ Pattern: 14 digits after normalization.
      *
      * @var string
      */
-    public const PATTERN_CNPJ = '^\d{2}\.?\d{3}\.?\d{3}\/?\d{4}-?\d{2}$';
+    public const PATTERN_CNPJ = '^\d{14}$';
 
     /**
-     * CPF Pattern: 999.999.999-99 (11 digits).
+     * CPF Pattern: 11 digits after normalization.
      *
      * @var string
      */
-    public const PATTERN_CPF = '^\d{3}\.?\d{3}\.?\d{3}-?\d{2}$';
+    public const PATTERN_CPF = '^\d{11}$';
 
     /**
      * Format input according to TIN type.

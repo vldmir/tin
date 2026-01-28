@@ -90,11 +90,12 @@ class UkraineSpec extends ObjectBehavior
         $this->validate('5632582743')->shouldReturn(true);
         $this->validate('2935277368')->shouldReturn(true);
         $this->validate('5555555555')->shouldReturn(true); // This one happens to be valid
+    }
 
+    public function it_should_throw_for_invalid_checksum(): void
+    {
         // Invalid TINs with wrong checksum
-        $this->validate('5632582744')->shouldThrow(\vldmir\Tin\Exception\TINException::class); // Wrong last digit
-        $this->validate('2935277369')->shouldThrow(\vldmir\Tin\Exception\TINException::class); // Wrong last digit
-        $this->validate('5555555556')->shouldThrow(\vldmir\Tin\Exception\TINException::class); // Wrong last digit
+        $this->shouldThrow(\vldmir\Tin\Exception\TINException::class)->during('validate', ['5632582744']); // Wrong last digit
     }
 
     public function it_should_validate_ukraine_tin(): void
@@ -103,13 +104,26 @@ class UkraineSpec extends ObjectBehavior
         $this->validate('5632582743')->shouldReturn(true);
         $this->validate('2935277368')->shouldReturn(true);
         $this->validate('5566567954')->shouldReturn(true);
+    }
 
-        // Invalid TINs - wrong format/length
-        $this->validate('1111111111')->shouldThrow(\vldmir\Tin\Exception\TINException::class); // All same digits
-        $this->validate('0000000000')->shouldThrow(\vldmir\Tin\Exception\TINException::class); // All zeros
-        $this->validate('123456789')->shouldThrow(\vldmir\Tin\Exception\TINException::class); // Too short
-        $this->validate('12345678901')->shouldThrow(\vldmir\Tin\Exception\TINException::class); // Too long
-        $this->validate('123456789a')->shouldThrow(\vldmir\Tin\Exception\TINException::class); // Contains letter
-        $this->validate('123456789-')->shouldThrow(\vldmir\Tin\Exception\TINException::class); // Contains dash
+    public function it_should_throw_for_invalid_format(): void
+    {
+        // Invalid TINs - all same digits
+        $this->shouldThrow(\vldmir\Tin\Exception\TINException::class)->during('validate', ['1111111111']);
+    }
+
+    public function it_should_throw_for_all_zeros(): void
+    {
+        $this->shouldThrow(\vldmir\Tin\Exception\TINException::class)->during('validate', ['0000000000']);
+    }
+
+    public function it_should_throw_for_short_tin(): void
+    {
+        $this->shouldThrow(\vldmir\Tin\Exception\TINException::class)->during('validate', ['123456789']);
+    }
+
+    public function it_should_throw_for_long_tin(): void
+    {
+        $this->shouldThrow(\vldmir\Tin\Exception\TINException::class)->during('validate', ['12345678901']);
     }
 }

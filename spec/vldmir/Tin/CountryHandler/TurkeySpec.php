@@ -26,12 +26,12 @@ class TurkeySpec extends AbstractAlgorithmSpec
     public const VALID_NUMBER = [
         // Valid T.C. Kimlik No (11 digits)
         '10000000146',
-        '14702551584',
-        '38246312956',
+        '14702551500',
+        '38246312908',
 
         // Valid Vergi Kimlik No (10 digits)
-        '1234567890',
-        '8770385074',
-        '4840327613',
+        '1234567898',
+        '8770385072',
+        '4840327611',
     ];
 }

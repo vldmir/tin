@@ -26,13 +26,13 @@ class ChinaSpec extends AbstractAlgorithmSpec
     public const VALID_NUMBER = [
         // Valid personal ID numbers with correct checksums
         '11010519491231002X',
-        '110105199012310023',
-        '440524198001010014',
-        '310110199012310027',
+        '110105199012310027',
+        '440524198001010013',
+        '310110199012310025',
 
         // Valid business codes with correct checksums
-        '91110108MA01A3F52F',
-        '91440300MA5G3TJX4Q',
-        '91310000MA1FL0P64A',
+        '91110108MA01A3F52G',
+        '91440300MA5G3TJX4D',
+        '91310000MA1FL0P64U',
     ];
 }

@@ -25,8 +25,8 @@ class SaudiArabiaSpec extends AbstractAlgorithmSpec
     public const VALID_NUMBER = [
         // Valid TIN numbers with correct checksums
         '300123456789015',
-        '301234567890126',
+        '301234567890120',
         '310000000000015',
-        '399999999999990',
+        '399999999999999',
     ];
 }

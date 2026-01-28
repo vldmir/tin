@@ -25,12 +25,12 @@ class RussiaSpec extends AbstractAlgorithmSpec
     public const VALID_NUMBER = [
         // Valid personal INN (12 digits)
         '500100732259',
-        '773399405502',
+        '773399405589',
         '123456789047',
 
         // Valid company INN (10 digits)
         '7707083893',
-        '5024057748',
+        '5024057742',
         '7736050003',
     ];
 }

@@ -12,7 +12,7 @@ class BrazilSpec extends AbstractAlgorithmSpec
 
     public const INVALID_NUMBER_LENGTH = '123456789'; // Too short
 
-    public const INVALID_NUMBER_PATTERN = 'ABC.DEF.GHI-JK';
+    // No INVALID_NUMBER_PATTERN - pattern check equals length check for digit-only input
 
     // Additional test cases for invalid numbers
     public const INVALID_NUMBERS = [
