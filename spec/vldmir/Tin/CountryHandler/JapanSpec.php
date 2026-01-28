@@ -26,11 +26,11 @@ class JapanSpec extends AbstractAlgorithmSpec
     public const VALID_NUMBER = [
         // Valid My Number (12 digits)
         '123456789018',
-        '987654321098',
+        '987654321093',
 
         // Valid Corporate Number (13 digits)
-        '1234567890123',
-        '5012345678909',
-        '8012345678906',
+        '1234567890127',
+        '5012345678901',
+        '8012345678904',
     ];
 }

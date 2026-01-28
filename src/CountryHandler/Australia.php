@@ -29,18 +29,18 @@ final class Australia extends CountryHandler
     public const MASK = '99 999 999 999'; // Default to ABN
 
     /**
-     * Combined pattern for all types.
+     * Combined pattern for all types (after normalization removes spaces).
      *
      * @var string
      */
-    public const PATTERN = '^(\d{8,9}|\d{2}\s?\d{3}\s?\d{3}\s?\d{3})$';
+    public const PATTERN = '^(\d{8,9}|\d{11})$';
 
     /**
-     * ABN Pattern: 11 digits (can be formatted as 99 999 999 999).
+     * ABN Pattern: 11 digits (after normalization removes spaces).
      *
      * @var string
      */
-    public const PATTERN_ABN = '^\d{2}\s?\d{3}\s?\d{3}\s?\d{3}$';
+    public const PATTERN_ABN = '^\d{11}$';
 
     /**
      * TFN Pattern: 8-9 digits.

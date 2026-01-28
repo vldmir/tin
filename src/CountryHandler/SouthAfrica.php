@@ -33,7 +33,7 @@ final class SouthAfrica extends CountryHandler
      *
      * @var string
      */
-    public const PATTERN = '^[0-3,9]\d{9}$';
+    public const PATTERN = '^[0-39]\d{9}$';
 
     /**
      * Get placeholder text.

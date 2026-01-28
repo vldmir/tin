@@ -20,7 +20,7 @@ final class Indonesia extends CountryHandler
     /**
      * @var int
      */
-    public const LENGTH = 16;
+    public const LENGTH = 15;
 
     /**
      * @var string
@@ -28,11 +28,11 @@ final class Indonesia extends CountryHandler
     public const MASK = '99.999.999.9-999.999';
 
     /**
-     * NPWP Pattern: 16 digits (can be formatted as 99.999.999.9-999.999).
+     * NPWP Pattern: 15 digits (can be formatted as 99.999.999.9-999.999).
      *
      * @var string
      */
-    public const PATTERN = '^\d{2}\.?\d{3}\.?\d{3}\.?\d{1}-?\d{3}\.?\d{3}$|^\d{16}$';
+    public const PATTERN = '^\d{15}$';
 
     /**
      * Format input according to NPWP format.
@@ -48,7 +48,7 @@ final class Indonesia extends CountryHandler
         // Format as: 99.999.999.9-999.999
         $result = '';
 
-        for ($i = 0; strlen($normalized) > $i && 16 > $i; ++$i) {
+        for ($i = 0; strlen($normalized) > $i && 15 > $i; ++$i) {
             if (2 === $i || 5 === $i || 8 === $i || 12 === $i) {
                 $result .= '.';
             } elseif (9 === $i) {
@@ -98,7 +98,7 @@ final class Indonesia extends CountryHandler
     {
         $normalizedTin = preg_replace('/[^0-9]/', '', $tin);
 
-        if (strlen($normalizedTin) !== 16) {
+        if (strlen($normalizedTin) !== 15) {
             return false;
         }
 

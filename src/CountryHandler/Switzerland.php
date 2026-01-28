@@ -28,25 +28,25 @@ final class Switzerland extends CountryHandler
     public const MASK = '756.9999.9999.99'; // Default to AVS
 
     /**
-     * Combined pattern for all types.
+     * Combined pattern for all types (after normalization removes separators).
      *
      * @var string
      */
-    public const PATTERN = '^(756\.\d{4}\.\d{4}\.\d{2}|CHE-?\d{3}\.?\d{3}\.?\d{3})$';
+    public const PATTERN = '^(756\d{10}|CHE\d{9})$';
 
     /**
-     * AVS/AHV Pattern: 756.9999.9999.99 (13 digits).
+     * AVS/AHV Pattern: 756 followed by 10 digits (13 total).
      *
      * @var string
      */
-    public const PATTERN_AVS = '^756\.\d{4}\.\d{4}\.\d{2}$';
+    public const PATTERN_AVS = '^756\d{10}$';
 
     /**
-     * UID Pattern: CHE-999.999.999 (9 digits after CHE).
+     * UID Pattern: CHE followed by 9 digits (12 chars total).
      *
      * @var string
      */
-    public const PATTERN_UID = '^CHE-?\d{3}\.?\d{3}\.?\d{3}$';
+    public const PATTERN_UID = '^CHE\d{9}$';
 
     /**
      * Format input according to TIN type.

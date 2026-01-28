@@ -12,7 +12,7 @@ class AustraliaSpec extends AbstractAlgorithmSpec
 
     public const INVALID_NUMBER_LENGTH = '1234567'; // Too short
 
-    public const INVALID_NUMBER_PATTERN = 'ABC DEF GHI JKL';
+    public const INVALID_NUMBER_PATTERN = '1234567890'; // 10 digits - not 8-9 (TFN) or 11 (ABN)
 
     // Additional test cases for invalid numbers
     public const INVALID_NUMBERS = [
@@ -33,7 +33,7 @@ class AustraliaSpec extends AbstractAlgorithmSpec
         '53004085616',
         '51 824 753 556',
         '51824753556',
-        '11 000 001 243',
-        '11000001243',
+        '83 914 571 673',
+        '83914571673',
     ];
 }

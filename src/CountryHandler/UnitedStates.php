@@ -30,25 +30,25 @@ final class UnitedStates extends CountryHandler
     public const MASK = '999-99-9999';
 
     /**
-     * Combined pattern for all types.
+     * Combined pattern: 9 digits (after normalization removes dashes).
      *
      * @var string
      */
-    public const PATTERN = '^(\d{3}-?\d{2}-?\d{4}|\d{2}-?\d{7})$';
+    public const PATTERN = '^\d{9}$';
 
     /**
-     * EIN Pattern: 99-9999999.
+     * EIN Pattern: 9 digits (identified by prefix validation in hasValidRule).
      *
      * @var string
      */
-    public const PATTERN_EIN = '^\d{2}-?\d{7}$';
+    public const PATTERN_EIN = '^\d{9}$';
 
     /**
-     * SSN/ITIN Pattern: 999-99-9999.
+     * SSN/ITIN Pattern: 9 digits (identified by rules in hasValidRule).
      *
      * @var string
      */
-    public const PATTERN_SSN_ITIN = '^\d{3}-?\d{2}-?\d{4}$';
+    public const PATTERN_SSN_ITIN = '^\d{9}$';
 
     /**
      * Format input according to TIN type.
@@ -191,17 +191,17 @@ final class UnitedStates extends CountryHandler
     {
         $normalizedTin = preg_replace('/[^0-9]/', '', $tin);
 
-        // Check if it's SSN/ITIN format (9 digits starting with specific rules)
-        if ($this->matchPattern($tin, self::PATTERN_SSN_ITIN)) {
-            return $this->isValidSSNorITIN($normalizedTin);
+        if (strlen($normalizedTin) !== 9) {
+            return false;
         }
 
-        // Check if it's EIN format
-        if ($this->matchPattern($tin, self::PATTERN_EIN)) {
-            return $this->isValidEIN($normalizedTin);
+        // Try EIN validation first (based on prefix)
+        if ($this->isValidEIN($normalizedTin)) {
+            return true;
         }
 
-        return false;
+        // Try SSN/ITIN validation
+        return $this->isValidSSNorITIN($normalizedTin);
     }
 
     /**

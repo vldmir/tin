@@ -25,9 +25,13 @@ final class Latvia extends CountryHandler
     public const MASK = '999999-99999';
 
     /**
+     * Pattern for Latvian Personal Code.
+     * Old format: DDMMYY-NNNNN (day, month, year, serial) = 11 digits
+     * New format: 32XXXXXXXXX (starts with 32) = 11 digits
+     *
      * @var string
      */
-    public const PATTERN = '[0-3]\d[0-1]\d{3}\d{5}';
+    public const PATTERN = '^(32\d{9}|[0-3]\d[0-1]\d{8})$';
 
     public function getPlaceholder(): string
     {

@@ -28,25 +28,25 @@ final class SouthKorea extends CountryHandler
     public const MASK = '999999-9999999'; // Default to RRN
 
     /**
-     * Combined pattern for all types.
+     * Combined pattern for all types (after normalization removes dashes).
      *
      * @var string
      */
-    public const PATTERN = '^(\d{6}-?\d{7}|\d{3}-?\d{2}-?\d{5})$';
+    public const PATTERN = '^(\d{13}|\d{10})$';
 
     /**
-     * BRN Pattern: 999-99-99999 (10 digits).
+     * BRN Pattern: 10 digits.
      *
      * @var string
      */
-    public const PATTERN_BRN = '^\d{3}-?\d{2}-?\d{5}$';
+    public const PATTERN_BRN = '^\d{10}$';
 
     /**
-     * RRN Pattern: XXXXXX-XXXXXXX (13 digits with dash).
+     * RRN Pattern: 13 digits.
      *
      * @var string
      */
-    public const PATTERN_RRN = '^\d{6}-?\d{7}$';
+    public const PATTERN_RRN = '^\d{13}$';
 
     /**
      * Format input according to TIN type.

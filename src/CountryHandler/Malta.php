@@ -27,9 +27,12 @@ final class Malta extends CountryHandler
     public const MASK = '9999999A';
 
     /**
+     * Pattern: 7 digits followed by any uppercase letter.
+     * Valid letters (M, G, A, P, L, H, B, Z) are checked in hasValidRule.
+     *
      * @var string
      */
-    public const PATTERN = '\d{7}[MGAPLHBZ]';
+    public const PATTERN = '^\d{7}[A-Z]$';
 
     public function getPlaceholder(): string
     {

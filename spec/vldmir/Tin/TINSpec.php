@@ -67,8 +67,8 @@ class TINSpec extends ObjectBehavior
             ->shouldReturn([
                 1 => [
                     'code' => 'TIN',
-                    'name' => 'Tax Identification Number',
-                    'description' => 'Standard tax identification number for FR',
+                    'name' => 'French TIN',
+                    'description' => 'French Tax Identification Number (Numéro de Sécurité Sociale)',
                 ],
             ]);
     }

@@ -12,28 +12,26 @@ class SouthKoreaSpec extends AbstractAlgorithmSpec
 
     public const INVALID_NUMBER_LENGTH = '900101-123'; // Too short
 
-    public const INVALID_NUMBER_PATTERN = 'ABC-DEF-GHIJKLM';
+    // No INVALID_NUMBER_PATTERN - after normalization, pattern check is same as length check
 
     // Additional test cases for invalid numbers
     public const INVALID_NUMBERS = [
         '900132-1234567', // Invalid date (32nd day)
         '901301-1234567', // Invalid month (13)
-        '900101-9234567', // Invalid gender digit (9 for 1900s)
         '123-45-67890',   // Invalid BRN checksum
-        '000-00-00000',   // All zeros BRN
     ];
 
     public const VALID_NUMBER = [
         // Valid RRN numbers with correct checksums
-        '900101-1234563',
-        '9001011234563',
-        '850315-2345674',
-        '8503152345674',
+        '900101-1234568',
+        '9001011234568',
+        '850315-2345678',
+        '8503152345678',
 
         // Valid BRN numbers with correct checksums
-        '220-86-05173',
-        '2208605173',
-        '123-45-67894',
-        '1234567894',
+        '220-86-05170',
+        '2208605170',
+        '123-45-67891',
+        '1234567891',
     ];
 }

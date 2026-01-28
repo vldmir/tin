@@ -26,8 +26,8 @@ class SouthAfricaSpec extends AbstractAlgorithmSpec
         // Valid TIN numbers with correct Luhn checksums
         '0001339050',
         '1234567897',
-        '2345678906',
-        '3456789015',
-        '9012345640',
+        '2345678904',
+        '3456789019',
+        '9012345642',
     ];
 }

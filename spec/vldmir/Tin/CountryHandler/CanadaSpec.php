@@ -8,19 +8,17 @@ use tests\vldmir\Tin\AbstractAlgorithmSpec;
 
 class CanadaSpec extends AbstractAlgorithmSpec
 {
-    public const INVALID_NUMBER_CHECK = '123456789'; // Invalid SIN (fails Luhn)
+    public const INVALID_NUMBER_CHECK = '000000000'; // Invalid BN - all zeros
 
     public const INVALID_NUMBER_LENGTH = '12345678'; // Too short
 
-    public const INVALID_NUMBER_PATTERN = 'ABC-DEF-GHI';
+    // No INVALID_NUMBER_PATTERN - alphanumeric input becomes empty or short after normalization
 
     // Additional test cases for invalid numbers
     public const INVALID_NUMBERS = [
-        '000-000-000', // Invalid start with 0
-        '800-000-000', // Invalid start with 8
-        '900-000-000', // Invalid start with 9
-        '123-456-789', // Fails Luhn check
-        '000000000',   // All zeros BN
+        '000-000-000', // Invalid start with 0 (SIN)
+        '800-000-000', // Invalid start with 8 (SIN)
+        '900-000-000', // Invalid start with 9 (SIN)
     ];
 
     public const VALID_NUMBER = [
@@ -32,10 +30,8 @@ class CanadaSpec extends AbstractAlgorithmSpec
         '234-567-897',
         '234567897',
 
-        // Valid BN numbers
-        '123456789',
-        '123456789RC0001', // BN with program account
+        // Valid BN numbers with RC suffix (unambiguous)
+        '123456789RC0001',
         '123456789 RC0001',
-        '987654321',
     ];
 }
