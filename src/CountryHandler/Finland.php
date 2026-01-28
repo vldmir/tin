@@ -6,6 +6,10 @@ namespace vldmir\Tin\CountryHandler;
 
 /**
  * Finland.
+ *
+ * Finnish Personal Identity Code (Henkilötunnus/HETU) format: DDMMYY-NNNC
+ * Where the separator (+, -, A) indicates century but is removed during normalization.
+ * Validation works with 10-character normalized format: DDMMYYNNNC
  */
 final class Finland extends CountryHandler
 {
@@ -17,7 +21,7 @@ final class Finland extends CountryHandler
     /**
      * @var int
      */
-    public const LENGTH = 11;
+    public const LENGTH = 10;
 
     /**
      * @var string
@@ -27,7 +31,7 @@ final class Finland extends CountryHandler
     /**
      * @var string
      */
-    public const PATTERN = '[0-3]\d[0-1]\d{3}[+-A]\d{3}[0-9A-Z]';
+    public const PATTERN = '[0-3]\d[0-1]\d{6}[0-9A-Z]';
 
     public function getPlaceholder(): string
     {
@@ -53,26 +57,23 @@ final class Finland extends CountryHandler
         $day = (int) (substr($tin, 0, 2));
         $month = (int) (substr($tin, 2, 2));
         $year = (int) (substr($tin, 4, 2));
-        $c7 = substr($tin, 6, 1);
 
-        if ('+' === $c7) {
-            return checkdate($month, $day, 1800 + $year);
-        }
-
-        if ('-' === $c7) {
-            return checkdate($month, $day, 1900 + $year);
-        }
-
-        return 'A' === $c7 && checkdate($month, $day, 2000 + $year);
+        // Century indicator is lost during normalization, so check if date is valid
+        // in any possible century (1800s, 1900s, or 2000s)
+        return checkdate($month, $day, 1800 + $year)
+            || checkdate($month, $day, 1900 + $year)
+            || checkdate($month, $day, 2000 + $year);
     }
 
     protected function hasValidRule(string $tin): bool
     {
-        $number = (int) (substr($tin, 0, 6) . substr($tin, 7, 3));
+        // Format after normalization: DDMMYYNNNC (10 chars)
+        // Checksum is calculated from DDMMYYNNN (9 digits)
+        $number = (int) (substr($tin, 0, 9));
         $remainderBy31 = $number % 31;
-        $c11 = $tin[10];
+        $c10 = $tin[9];
 
-        return $this->getMatch($remainderBy31) === $c11;
+        return $this->getMatch($remainderBy31) === $c10;
     }
 
     private function getMatch(int $number): string
