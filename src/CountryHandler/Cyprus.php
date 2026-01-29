@@ -33,7 +33,7 @@ final class Cyprus extends CountryHandler
 
     public function getPlaceholder(): string
     {
-        return '12345678L';
+        return '00123123T';
     }
 
     /**

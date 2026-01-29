@@ -31,7 +31,7 @@ final class Hungary extends CountryHandler
 
     public function getPlaceholder(): string
     {
-        return '8123456789';
+        return '8071592153';
     }
 
     /**

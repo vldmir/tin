@@ -41,7 +41,7 @@ final class Poland extends CountryHandler
 
     public function getPlaceholder(): string
     {
-        return '85071803874';
+        return '02070803628';
     }
 
     /**

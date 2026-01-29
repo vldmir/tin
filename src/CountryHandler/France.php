@@ -31,7 +31,7 @@ final class France extends CountryHandler
 
     public function getPlaceholder(): string
     {
-        return '1 23 45 67 890 123';
+        return '1 23 45 67 890 066';
     }
 
     /**

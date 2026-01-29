@@ -36,7 +36,7 @@ final class Malta extends CountryHandler
 
     public function getPlaceholder(): string
     {
-        return '12345678';
+        return '1234567A';
     }
 
     /**
