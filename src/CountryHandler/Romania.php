@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace loophp\Tin\CountryHandler;
+namespace vldmir\Tin\CountryHandler;
 
 /**
  * Romania.
@@ -22,12 +22,31 @@ final class Romania extends CountryHandler
     /**
      * @var string
      */
-    public const PATTERN = '[1-8]\d{2}[0-1]\d[0-3]\d{6}';
+    public const MASK = '9999999999999';
 
     /**
      * @var string
      */
-    public const MASK = '9999999999999';
+    public const PATTERN = '[1-8]\d{2}[0-1]\d[0-3]\d{6}';
+
+    public function getPlaceholder(): string
+    {
+        return '1630615123457';
+    }
+
+    /**
+     * Get all TIN types supported by Romania.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'CNP',
+                'name' => 'Romanian CNP',
+                'description' => 'Romanian Personal Numerical Code (Codul Numeric Personal)',
+            ],
+        ];
+    }
 
     protected function hasValidDate(string $tin): bool
     {
@@ -56,10 +75,5 @@ final class Romania extends CountryHandler
         }
 
         return true;
-    }
-
-    public function getPlaceholder(): string
-    {
-        return '1630615123457';
     }
 }

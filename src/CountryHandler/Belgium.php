@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace loophp\Tin\CountryHandler;
+namespace vldmir\Tin\CountryHandler;
 
 /**
  * Belgium.
@@ -22,12 +22,31 @@ final class Belgium extends CountryHandler
     /**
      * @var string
      */
-    public const PATTERN = '\d{2}[0-1]\d[0-3]\d{6}';
+    public const MASK = '99.99.99-999.99';
 
     /**
      * @var string
      */
-    public const MASK = '99.99.99-999.99';
+    public const PATTERN = '\d{2}[0-1]\d[0-3]\d{6}';
+
+    public function getPlaceholder(): string
+    {
+        return '00.01.25-111.19';
+    }
+
+    /**
+     * Get all TIN types supported by Belgium.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'TIN',
+                'name' => 'Belgian TIN',
+                'description' => 'Belgian Tax Identification Number (Numéro de Registre National)',
+            ],
+        ];
+    }
 
     protected function hasValidDate(string $tin): bool
     {
@@ -89,10 +108,5 @@ final class Belgium extends CountryHandler
         $dateType = $this->getDateType($tin);
 
         return $this->isFollowBelgiumRule2($tin) && 2 <= $dateType;
-    }
-
-    public function getPlaceholder(): string
-    {
-        return '85.07.30-033.61';
     }
 }

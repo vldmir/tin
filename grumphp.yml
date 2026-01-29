@@ -1,12 +1,70 @@
-imports:
-    - { resource: vendor/drupol/php-conventions/config/php73/grumphp.yml }
+# Temporarily not importing due to license task compatibility issue
+# imports:
+#     - { resource: vendor/drupol/php-conventions/config/php73/grumphp.yml }
 
 parameters:
-    tasks.license.holder: Thomas Portelange, Pol Dellaiera
-    tasks.license.date_from: 2020
     extra_tasks:
         phpspec:
             verbose: true
+        infection:
+            threads: 10
+            test_framework: phpspec
+            configuration: infection.json
+            min_msi: 50
+            min_covered_msi: 50
+
+grumphp:
+    process_timeout: null
+    
+    testsuites:
+        cs:
+            tasks:
+                - composer
+                - composer_normalize
+                - yamllint
+                - jsonlint
+                - phplint
+                - phpcsfixer
+        
+        static-analysis:
+            tasks:
+                - phpstan
+                - psalm
+    
+    tasks:
+        composer:
+            no_check_all: false
+            no_check_publish: false
+            no_local_repository: false
+            
+        composer_normalize:
+            indent_size: 4
+            indent_style: space
+            
+        yamllint:
+            parse_custom_tags: true
+            
+        jsonlint:
+            detect_key_conflicts: true
+            
+        phplint: ~
+        
+        phpcsfixer:
+            config: vendor/drupol/php-conventions/config/php73/php_cs_fixer.config.php
+            allow_risky: true
+            
+        phpstan:
+            configuration: phpstan.neon
+            level: max
+            use_grumphp_paths: false
+            
+        psalm:
+            config: psalm.xml
+            show_info: false
+            
+        phpspec:
+            verbose: true
+            
         infection:
             threads: 10
             test_framework: phpspec

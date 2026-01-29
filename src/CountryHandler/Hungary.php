@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace loophp\Tin\CountryHandler;
+namespace vldmir\Tin\CountryHandler;
 
 /**
  * Hungary.
@@ -22,12 +22,31 @@ final class Hungary extends CountryHandler
     /**
      * @var string
      */
-    public const PATTERN = '8\d{9}';
+    public const MASK = '9999999999';
 
     /**
      * @var string
      */
-    public const MASK = '9999999999';
+    public const PATTERN = '8\d{9}';
+
+    public function getPlaceholder(): string
+    {
+        return '8071592153';
+    }
+
+    /**
+     * Get all TIN types supported by Hungary.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'ANUM',
+                'name' => 'Hungarian ANUM',
+                'description' => 'Hungarian Tax Number (Adóazonosító szám)',
+            ],
+        ];
+    }
 
     protected function hasValidRule(string $tin): bool
     {
@@ -41,10 +60,5 @@ final class Hungary extends CountryHandler
         $remainderBy11 = $sum % 11;
 
         return $remainderBy11 === $c10;
-    }
-
-    public function getPlaceholder(): string
-    {
-        return '8071592153';
     }
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace loophp\Tin\CountryHandler;
+namespace vldmir\Tin\CountryHandler;
 
 /**
  * Latvia.
@@ -22,12 +22,35 @@ final class Latvia extends CountryHandler
     /**
      * @var string
      */
-    public const PATTERN = '[0-3]\d[0-1]\d{3}\d{5}';
+    public const MASK = '999999-99999';
 
     /**
+     * Pattern for Latvian Personal Code.
+     * Old format: DDMMYY-NNNNN (day, month, year, serial) = 11 digits
+     * New format: 32XXXXXXXXX (starts with 32) = 11 digits
+     *
      * @var string
      */
-    public const MASK = '999999-99999';
+    public const PATTERN = '^(32\d{9}|[0-3]\d[0-1]\d{8})$';
+
+    public function getPlaceholder(): string
+    {
+        return '161175-19997';
+    }
+
+    /**
+     * Get all TIN types supported by Latvia.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'PK',
+                'name' => 'Latvian PK',
+                'description' => 'Latvian Personal Code (Personas kods)',
+            ],
+        ];
+    }
 
     protected function hasValidDate(string $tin): bool
     {
@@ -44,10 +67,5 @@ final class Latvia extends CountryHandler
         $y2 = checkdate($month, $day, 2000 + $year);
 
         return $y1 && $y2;
-    }
-
-    public function getPlaceholder(): string
-    {
-        return '161175-19997';
     }
 }

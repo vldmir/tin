@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace loophp\Tin\CountryHandler;
+namespace vldmir\Tin\CountryHandler;
 
 use function strlen;
 
@@ -29,6 +29,11 @@ final class Germany extends CountryHandler
     /**
      * @var string
      */
+    public const MASK = '999 999 999 99';
+
+    /**
+     * @var string
+     */
     public const PATTERN_1 = '[1-9]\d{10}';
 
     /**
@@ -36,10 +41,48 @@ final class Germany extends CountryHandler
      */
     public const PATTERN_2 = '[1-9]\d{10}';
 
+    public function getPlaceholder(): string
+    {
+        return '269 543 718 27';
+    }
+
     /**
-     * @var string
+     * Get all TIN types supported by Germany.
      */
-    public const MASK = '999 999 999 99';
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'IdNr',
+                'name' => 'Identifikationsnummer',
+                'description' => 'Personal Identification Number',
+            ],
+            2 => [
+                'code' => 'StNr',
+                'name' => 'Steuernummer',
+                'description' => 'Tax Number',
+            ],
+        ];
+    }
+
+    /**
+     * Identify the TIN type for a given German TIN.
+     */
+    public function identifyTinType(string $tin): ?array
+    {
+        $normalizedTin = $this->normalizeTin($tin);
+
+        // Both patterns follow specific validation rules
+        if ($this->isFollowPattern1($normalizedTin) && $this->isFollowRuleGermany1($normalizedTin)) {
+            return $this->getTinTypes()[1]; // IdNr
+        }
+
+        if ($this->isFollowPattern2($normalizedTin) && $this->isFollowRuleGermany2($normalizedTin)) {
+            return $this->getTinTypes()[2]; // StNr
+        }
+
+        return null;
+    }
 
     protected function hasValidLength(string $tin): bool
     {
@@ -231,48 +274,5 @@ final class Germany extends CountryHandler
     private function isFollowRuleGermany2(string $tin): bool
     {
         return $this->digitAt($tin, 10) === $this->calculateCheckDigit($tin);
-    }
-
-    public function getPlaceholder(): string
-    {
-        return '123 456 789 01';
-    }
-
-    /**
-     * Get all TIN types supported by Germany.
-     */
-    public function getTinTypes(): array
-    {
-        return [
-            1 => [
-                'code' => 'IdNr',
-                'name' => 'Identifikationsnummer',
-                'description' => 'Personal Identification Number',
-            ],
-            2 => [
-                'code' => 'StNr',
-                'name' => 'Steuernummer',
-                'description' => 'Tax Number',
-            ],
-        ];
-    }
-
-    /**
-     * Identify the TIN type for a given German TIN.
-     */
-    public function identifyTinType(string $tin): ?array
-    {
-        $normalizedTin = $this->normalizeTin($tin);
-        
-        // Both patterns follow specific validation rules
-        if ($this->isFollowPattern1($normalizedTin) && $this->isFollowRuleGermany1($normalizedTin)) {
-            return $this->getTinTypes()[1]; // IdNr
-        }
-        
-        if ($this->isFollowPattern2($normalizedTin) && $this->isFollowRuleGermany2($normalizedTin)) {
-            return $this->getTinTypes()[2]; // StNr
-        }
-        
-        return null;
     }
 }

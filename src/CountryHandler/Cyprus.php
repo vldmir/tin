@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace loophp\Tin\CountryHandler;
+namespace vldmir\Tin\CountryHandler;
 
 use function ord;
 
@@ -24,16 +24,30 @@ final class Cyprus extends CountryHandler
     /**
      * @var string
      */
-    public const PATTERN = '\d{8}[a-zA-Z]';
+    public const MASK = '99999999A';
 
     /**
      * @var string
      */
-    public const MASK = '99999999A';
+    public const PATTERN = '\d{8}[a-zA-Z]';
 
     public function getPlaceholder(): string
     {
-        return '12345678L';
+        return '00123123T';
+    }
+
+    /**
+     * Get all TIN types supported by Cyprus.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'TIN',
+                'name' => 'Cypriot TIN',
+                'description' => 'Cyprus Tax Identification Number',
+            ],
+        ];
     }
 
     protected function hasValidRule(string $tin): bool

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace loophp\Tin\CountryHandler;
+namespace vldmir\Tin\CountryHandler;
 
-use loophp\Tin\Exception\TINException;
+use vldmir\Tin\Exception\TINException;
 
 /**
  * Base interface for a validation algorithm, as used in TINValid class.
@@ -24,30 +24,12 @@ interface CountryHandlerInterface
     /**
      * @var string
      */
-    public const PATTERN = '';
+    public const MASK = '';
 
     /**
      * @var string
      */
-    public const MASK = '';
-
-    /**
-     * Check if the algorithm supports the TIN.
-     *
-     * @param string $country
-     *   The TIN.
-     *
-     * @return bool
-     *   True if it supports it, false otherwise.
-     */
-    public static function supports(string $country): bool;
-
-    /**
-     * Validate a tin number.
-     *
-     * @throws TINException
-     */
-    public function validate(string $tin): bool;
+    public const PATTERN = '';
 
     /**
      * Get input mask for TIN format.
@@ -83,4 +65,22 @@ interface CountryHandlerInterface
      *   The TIN type information or null if not identifiable
      */
     public function identifyTinType(string $tin): ?array;
+
+    /**
+     * Check if the algorithm supports the TIN.
+     *
+     * @param string $country
+     *   The TIN.
+     *
+     * @return bool
+     *   True if it supports it, false otherwise.
+     */
+    public static function supports(string $country): bool;
+
+    /**
+     * Validate a tin number.
+     *
+     * @throws TINException
+     */
+    public function validate(string $tin): bool;
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace loophp\Tin\CountryHandler;
+namespace vldmir\Tin\CountryHandler;
 
 /**
  * Austria.
@@ -22,12 +22,31 @@ final class Austria extends CountryHandler
     /**
      * @var string
      */
-    public const PATTERN = '\d{9}';
+    public const MASK = '999999999';
 
     /**
      * @var string
      */
-    public const MASK = '999999999';
+    public const PATTERN = '\d{9}';
+
+    public function getPlaceholder(): string
+    {
+        return '931736581';
+    }
+
+    /**
+     * Get all TIN types supported by Austria.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'TIN',
+                'name' => 'Austrian TIN',
+                'description' => 'Austrian Tax Identification Number (Steuernummer)',
+            ],
+        ];
+    }
 
     protected function hasValidRule(string $tin): bool
     {
@@ -55,10 +74,5 @@ final class Austria extends CountryHandler
         $check = $this->getLastDigit(100 - $sum);
 
         return $c9 === $check;
-    }
-
-    public function getPlaceholder(): string
-    {
-        return '123456789';
     }
 }

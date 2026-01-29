@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace loophp\Tin\CountryHandler;
+namespace vldmir\Tin\CountryHandler;
 
 /**
  * Netherlands.
@@ -22,16 +22,30 @@ final class Netherlands extends CountryHandler
     /**
      * @var string
      */
-    public const PATTERN = '\d{9}';
+    public const MASK = '999-999-999';
 
     /**
      * @var string
      */
-    public const MASK = '999-999-999';
+    public const PATTERN = '\d{9}';
 
     public function getPlaceholder(): string
     {
-        return '123-456-789';
+        return '123456782';
+    }
+
+    /**
+     * Get all TIN types supported by Netherlands.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'BSN',
+                'name' => 'Dutch BSN',
+                'description' => 'Dutch Burgerservicenummer (BSN) - Citizen Service Number',
+            ],
+        ];
     }
 
     protected function hasValidRule(string $tin): bool
