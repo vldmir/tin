@@ -26,7 +26,7 @@ final class Finland extends CountryHandler
     /**
      * @var string
      */
-    public const MASK = '999999-999A';
+    public const MASK = '999999-999X';
 
     /**
      * @var string

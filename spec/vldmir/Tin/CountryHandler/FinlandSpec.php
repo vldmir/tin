@@ -20,5 +20,10 @@ class FinlandSpec extends AbstractAlgorithmSpec
 
     public const INVALID_NUMBER_PATTERN = '9910523081';
 
-    public const VALID_NUMBER = '131052308T';
+    /**
+     * Valid HETUs include both letter and digit check characters.
+     * - 131052308T: check char is letter (T), remainder 25
+     * - 1310520040: check char is digit (0), remainder 0
+     */
+    public const VALID_NUMBER = ['131052308T', '1310520040'];
 }

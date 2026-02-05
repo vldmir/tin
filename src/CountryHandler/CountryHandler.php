@@ -46,6 +46,13 @@ abstract class CountryHandler implements CountryHandlerInterface
                 } else {
                     break;
                 }
+            } elseif ('X' === $maskChar) {
+                if (ctype_alnum($inputChar)) {
+                    $result .= strtoupper($inputChar);
+                    ++$inputIndex;
+                } else {
+                    break;
+                }
             } else {
                 // Separator character (space, dash, etc.)
                 $result .= $maskChar;
@@ -72,7 +79,7 @@ abstract class CountryHandler implements CountryHandlerInterface
     {
         $mask = $this->getInputMask();
 
-        return str_replace(['9', 'A', 'a'], ['1', 'A', 'a'], $mask);
+        return str_replace(['9', 'A', 'a', 'X'], ['1', 'A', 'a', 'X'], $mask);
     }
 
     /**
