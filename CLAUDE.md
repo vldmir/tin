@@ -10,7 +10,7 @@ This is a PHP library for validating Tax Identification Numbers (TINs) across Eu
 
 ### Testing
 - **Run PHPSpec tests:** `composer phpspec` or `vendor/bin/phpspec run -vvv --stop-on-failure`
-- **Run a single test:** `vendor/bin/phpspec run spec/loophp/Tin/CountryHandler/BelgiumSpec.php`
+- **Run a single test:** `vendor/bin/phpspec run spec/vldmir/Tin/CountryHandler/BelgiumSpec.php`
 - **Generate code coverage:** Tests are configured to output coverage to `build/` directory
 
 ### Code Quality
@@ -55,6 +55,6 @@ The library follows a handler-based architecture where each country has its own 
 ## Testing Approach
 
 - Uses PHPSpec for behavior-driven development
-- Each country handler has a corresponding spec file in `spec/loophp/Tin/CountryHandler/`
+- Each country handler has a corresponding spec file in `spec/vldmir/Tin/CountryHandler/`
 - Tests cover valid/invalid TINs, edge cases, and error conditions
 - Mutation testing ensures test quality with minimum 50% MSI

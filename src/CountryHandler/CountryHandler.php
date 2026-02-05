@@ -2,14 +2,118 @@
 
 declare(strict_types=1);
 
-namespace loophp\Tin\CountryHandler;
+namespace vldmir\Tin\CountryHandler;
 
-use loophp\Tin\Exception\TINException;
+use vldmir\Tin\Exception\TINException;
 
+use function sprintf;
 use function strlen;
 
 abstract class CountryHandler implements CountryHandlerInterface
 {
+    /**
+     * Format TIN input according to mask (for display purposes).
+     */
+    public function formatInput(string $input): string
+    {
+        $mask = $this->getInputMask();
+        $normalized = $this->normalizeTin($input);
+        $result = '';
+        $inputIndex = 0;
+
+        for ($i = 0; strlen($mask) > $i && strlen($normalized) > $inputIndex; ++$i) {
+            $maskChar = $mask[$i];
+            $inputChar = $normalized[$inputIndex] ?? '';
+
+            if ('9' === $maskChar) {
+                if (ctype_digit($inputChar)) {
+                    $result .= $inputChar;
+                    ++$inputIndex;
+                } else {
+                    break;
+                }
+            } elseif ('A' === $maskChar) {
+                if (ctype_alpha($inputChar)) {
+                    $result .= strtoupper($inputChar);
+                    ++$inputIndex;
+                } else {
+                    break;
+                }
+            } elseif ('a' === $maskChar) {
+                if (ctype_alpha($inputChar)) {
+                    $result .= strtolower($inputChar);
+                    ++$inputIndex;
+                } else {
+                    break;
+                }
+            } elseif ('X' === $maskChar) {
+                if (ctype_alnum($inputChar)) {
+                    $result .= strtoupper($inputChar);
+                    ++$inputIndex;
+                } else {
+                    break;
+                }
+            } else {
+                // Separator character (space, dash, etc.)
+                $result .= $maskChar;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get input mask for TIN format.
+     * Override in child classes for custom masks.
+     */
+    public function getInputMask(): string
+    {
+        return static::MASK ?? str_repeat('9', static::LENGTH);
+    }
+
+    /**
+     * Get placeholder text for TIN input.
+     * Override in child classes for custom placeholders.
+     */
+    public function getPlaceholder(): string
+    {
+        $mask = $this->getInputMask();
+
+        return str_replace(['9', 'A', 'a', 'X'], ['1', 'A', 'a', 'X'], $mask);
+    }
+
+    /**
+     * Get all TIN types supported by this country.
+     * Default implementation for countries with single TIN type.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'TIN',
+                'name' => 'Tax Identification Number',
+                'description' => 'Standard tax identification number for ' . static::COUNTRYCODE,
+            ],
+        ];
+    }
+
+    /**
+     * Identify the TIN type for a given TIN.
+     * Default implementation for countries with single TIN type.
+     */
+    public function identifyTinType(string $tin): ?array
+    {
+        $normalizedTin = $this->normalizeTin($tin);
+
+        if ($this->hasValidPattern($normalizedTin)) {
+            $types = $this->getTinTypes();
+
+            return $types[1] ?? null;
+        }
+
+        return null;
+    }
+
     final public static function supports(string $country): bool
     {
         return strtoupper($country) === strtoupper(static::COUNTRYCODE);
@@ -109,104 +213,10 @@ abstract class CountryHandler implements CountryHandlerInterface
 
     protected function normalizeTin(string $tin): string
     {
-        if (null !== $string = preg_replace('#[^[:alnum:]\-+]#u', '', $tin)) {
+        if (null !== $string = preg_replace('#[^[:alnum:]]#u', '', $tin)) {
             return strtoupper($string);
         }
 
         return '';
-    }
-
-    /**
-     * Get input mask for TIN format.
-     * Override in child classes for custom masks.
-     */
-    public function getInputMask(): string
-    {
-        return static::MASK ?? str_repeat('9', static::LENGTH);
-    }
-
-    /**
-     * Get placeholder text for TIN input.
-     * Override in child classes for custom placeholders.
-     */
-    public function getPlaceholder(): string
-    {
-        $mask = $this->getInputMask();
-        return str_replace(['9', 'A', 'a'], ['1', 'A', 'a'], $mask);
-    }
-
-    /**
-     * Format TIN input according to mask (for display purposes).
-     */
-    public function formatInput(string $input): string
-    {
-        $mask = $this->getInputMask();
-        $normalized = $this->normalizeTin($input);
-        $result = '';
-        $inputIndex = 0;
-        
-        for ($i = 0; $i < strlen($mask) && $inputIndex < strlen($normalized); $i++) {
-            $maskChar = $mask[$i];
-            $inputChar = $normalized[$inputIndex] ?? '';
-            
-            if ($maskChar === '9') {
-                if (ctype_digit($inputChar)) {
-                    $result .= $inputChar;
-                    $inputIndex++;
-                } else {
-                    break;
-                }
-            } elseif ($maskChar === 'A') {
-                if (ctype_alpha($inputChar)) {
-                    $result .= strtoupper($inputChar);
-                    $inputIndex++;
-                } else {
-                    break;
-                }
-            } elseif ($maskChar === 'a') {
-                if (ctype_alpha($inputChar)) {
-                    $result .= strtolower($inputChar);
-                    $inputIndex++;
-                } else {
-                    break;
-                }
-            } else {
-                // Separator character (space, dash, etc.)
-                $result .= $maskChar;
-            }
-        }
-        
-        return $result;
-    }
-
-    /**
-     * Get all TIN types supported by this country.
-     * Default implementation for countries with single TIN type.
-     */
-    public function getTinTypes(): array
-    {
-        return [
-            1 => [
-                'code' => 'TIN',
-                'name' => 'Tax Identification Number',
-                'description' => 'Standard tax identification number for ' . static::COUNTRYCODE,
-            ],
-        ];
-    }
-
-    /**
-     * Identify the TIN type for a given TIN.
-     * Default implementation for countries with single TIN type.
-     */
-    public function identifyTinType(string $tin): ?array
-    {
-        $normalizedTin = $this->normalizeTin($tin);
-        
-        if ($this->hasValidPattern($normalizedTin)) {
-            $types = $this->getTinTypes();
-            return $types[1] ?? null;
-        }
-        
-        return null;
     }
 }

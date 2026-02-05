@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace loophp\Tin\CountryHandler;
+namespace vldmir\Tin\CountryHandler;
 
 /**
  * Bulgaria.
@@ -22,12 +22,31 @@ final class Bulgaria extends CountryHandler
     /**
      * @var string
      */
-    public const PATTERN = '\d{10}';
+    public const MASK = '9999999999';
 
     /**
      * @var string
      */
-    public const MASK = '9999999999';
+    public const PATTERN = '\d{10}';
+
+    public function getPlaceholder(): string
+    {
+        return '7523169263';
+    }
+
+    /**
+     * Get all TIN types supported by Bulgaria.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'EGN',
+                'name' => 'Bulgarian EGN',
+                'description' => 'Bulgarian Unique Civil Number (Edinen Grazhdanski Nomer)',
+            ],
+        ];
+    }
 
     protected function hasValidDate(string $tin): bool
     {
@@ -66,10 +85,5 @@ final class Bulgaria extends CountryHandler
         }
 
         return $remainderBy11 === $c10;
-    }
-
-    public function getPlaceholder(): string
-    {
-        return '7523169263';
     }
 }

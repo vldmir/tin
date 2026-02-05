@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace loophp\Tin\CountryHandler;
+namespace vldmir\Tin\CountryHandler;
 
 use function in_array;
 use function strlen;
@@ -29,13 +29,6 @@ final class Italy extends CountryHandler
      */
     public const LENGTH = 16;
 
-    // phpcs:disable
-
-    /**
-     * @var string
-     */
-    public const PATTERN = '[a-zA-Z]{6}[LMNPQRSTUVlmnpqrstuv0-9]{2}[ABCDEHLMPRSTabcdehlmprst]([0Ll][1-9]|[1Mm2Nn4Qq5Rr6Ss][0-9]|[3Pp7Tt][0-1])[a-zA-Z][LMNPQRSTUVlmnpqrstuv0-9]{3}[a-zA-Z]';
-
     // phpcs:enable
 
     /**
@@ -43,10 +36,36 @@ final class Italy extends CountryHandler
      */
     public const MASK = 'AAAAAANNANNANAAA';
 
+    // phpcs:disable
+
+    /**
+     * @var string
+     */
+    public const PATTERN = '[a-zA-Z]{6}[LMNPQRSTUVlmnpqrstuv0-9]{2}[ABCDEHLMPRSTabcdehlmprst]([0Ll][1-9]|[1Mm2Nn4Qq5Rr6Ss][0-9]|[3Pp7Tt][0-1])[a-zA-Z][LMNPQRSTUVlmnpqrstuv0-9]{3}[a-zA-Z]';
+
     /**
      * @var array<int, string>
      */
     private $listSet = [];
+
+    public function getPlaceholder(): string
+    {
+        return 'RSSMRA85T10A562S';
+    }
+
+    /**
+     * Get all TIN types supported by Italy.
+     */
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'CF',
+                'name' => 'Italian CF',
+                'description' => 'Italian Fiscal Code (Codice Fiscale)',
+            ],
+        ];
+    }
 
     protected function hasValidDate(string $tin): bool
     {
@@ -87,9 +106,9 @@ final class Italy extends CountryHandler
         $sum = 0;
 
         for ($i = 0; 15 > $i; ++$i) {
-            $sum += 0 === $i % 2 ?
-                $this->convertOddCharacter($tin[$i]) :
-                $this->convertEvenCharacter($tin[$i]);
+            $sum += 0 === $i % 2
+                ? $this->convertOddCharacter($tin[$i])
+                : $this->convertEvenCharacter($tin[$i]);
         }
         $remainderBy26 = $sum % 26;
         $c16 = $tin[15];
@@ -300,10 +319,5 @@ final class Italy extends CountryHandler
             default:
                 return -1;
         }
-    }
-
-    public function getPlaceholder(): string
-    {
-        return 'RSSMRA85T10A562S';
     }
 }

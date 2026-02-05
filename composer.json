@@ -3,7 +3,16 @@
     "description": "Enhanced Taxpayer Identification Number validator with input masks (fork of loophp/tin)",
     "license": "MIT",
     "type": "library",
-    "keywords": ["tin", "tax", "validation", "input-mask", "bsn", "nino", "ssn"],
+    "version": "3.0.4",
+    "keywords": [
+        "tin",
+        "tax",
+        "validation",
+        "input-mask",
+        "bsn",
+        "nino",
+        "ssn"
+    ],
     "authors": [
         {
             "name": "Volodymyr Romantsov",
@@ -37,12 +46,12 @@
     },
     "autoload": {
         "psr-4": {
-            "loophp\\Tin\\": "src/"
+            "vldmir\\Tin\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "tests\\loophp\\Tin\\": "tests/src/"
+            "tests\\vldmir\\Tin\\": "tests/src/"
         }
     },
     "config": {

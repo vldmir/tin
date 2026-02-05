@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace loophp\Tin\CountryHandler;
+namespace vldmir\Tin\CountryHandler;
 
 /**
  * Poland.
@@ -27,6 +27,11 @@ final class Poland extends CountryHandler
     /**
      * @var string
      */
+    public const MASK = '99999999999';
+
+    /**
+     * @var string
+     */
     public const PATTERN_1 = '\d{10}';
 
     /**
@@ -34,10 +39,24 @@ final class Poland extends CountryHandler
      */
     public const PATTERN_2 = '\d{11}';
 
+    public function getPlaceholder(): string
+    {
+        return '02070803628';
+    }
+
     /**
-     * @var string
+     * Get all TIN types supported by Poland.
      */
-    public const MASK = '99999999999';
+    public function getTinTypes(): array
+    {
+        return [
+            1 => [
+                'code' => 'PESEL',
+                'name' => 'Polish PESEL',
+                'description' => 'Polish National Identity Number (Powszechny Elektroniczny System Ewidencji Ludności)',
+            ],
+        ];
+    }
 
     protected function hasValidDateWhenPattern2(string $tin): bool
     {
@@ -164,10 +183,5 @@ final class Poland extends CountryHandler
         $lastDigit = $sum % 10;
 
         return 10 - $lastDigit === $this->digitAt($tin, 10);
-    }
-
-    public function getPlaceholder(): string
-    {
-        return '85071803874';
     }
 }
